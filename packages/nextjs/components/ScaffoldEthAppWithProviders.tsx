@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Landing } from "./Landing";
 import { ScaffoldFooter } from "./ScaffoldFooter";
 import { ScaffoldHeader } from "./ScaffoldHeader";
 import { ScaffoldSidebar } from "./ScaffoldSidebar";
@@ -10,15 +11,16 @@ import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowki
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
-import { WagmiProvider } from "wagmi";
+import { WagmiProvider, useAccount } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();
+  const { isConnected } = useAccount();
 
-  return (
+  return isConnected ? (
     <SidebarProvider defaultOpen={false}>
       <Toaster richColors={true} position="top-center" />
       <ScaffoldSidebar />
@@ -28,14 +30,8 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         <ScaffoldFooter />
       </SidebarInset>
     </SidebarProvider>
-    // <>
-    //   <div className="flex flex-col min-h-screen">
-    //     <Header />
-    //     <main className="relative flex flex-col flex-1">{children}</main>
-    //     <Footer />
-    //   </div>
-    //   <Toaster />
-    // </>
+  ) : (
+    <Landing />
   );
 };
 

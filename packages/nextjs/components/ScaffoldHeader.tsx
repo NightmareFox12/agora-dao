@@ -8,6 +8,7 @@ import { useSidebar } from "./ui/shadcn/sidebar";
 import { BugIcon, Home, Menu } from "lucide-react";
 import { hardhat } from "viem/chains";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useHeaderStore } from "~~/services/store/header.store.";
 
 type HeaderMenuLink = {
   label: string;
@@ -33,6 +34,9 @@ export const ScaffoldHeader = () => {
   const isLocalNetwork = targetNetwork.id === hardhat.id;
   const pathname = usePathname();
   const { toggleSidebar } = useSidebar();
+  const { showHeader } = useHeaderStore();
+
+  if (!showHeader) return null;
 
   return (
     <header className="w-full border-b">
