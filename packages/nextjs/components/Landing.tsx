@@ -1,10 +1,12 @@
+import React from "react";
 import { ParticlesBackground } from "./ParticlesBackground";
+import RotatingText from "./ui/RotatingText";
 import { Badge } from "./ui/shadcn/badge";
 import { Button } from "./ui/shadcn/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/shadcn/card";
 import { ArrowRight, CheckCircle, Shield, Trophy, Users, Vote, Zap } from "lucide-react";
 
-export const Landing = () => {
+export const Landing: React.FC = () => {
   return (
     <div className="min-h-screen bg-background dark relative">
       <ParticlesBackground />
@@ -40,12 +42,27 @@ export const Landing = () => {
             🚀 Descentralización en Acción
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
-            Vota, Participa y Gana en la <span className="text-primary">Nueva Era</span> de la Gobernanza
+            <div className="flex justify-center">The platform for DAOs that work seriously</div>
+            {/* Vota, Participa y Gana en la <span className="text-primary">Nueva Era</span> de la Gobernanza */}
           </h1>
+          <RotatingText
+            texts={["Vote", "Participate", "Earn", "Organize", "Clear tasks", "Collective decisions"]}
+            mainClassName="text-4xl md:text-6xl font-bold text-foreground px-2 sm:px-2 md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+            staggerFrom={"last"}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-120%" }}
+            staggerDuration={0.025}
+            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+            elementLevelClassName="dark:text-blue-500"
+            transition={{ type: "keyframes", damping: 30, stiffness: 400 }}
+            rotationInterval={2000}
+          />
           <p className="text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
             AgoraDAO es la plataforma descentralizada donde tu voz cuenta. Participa en decisiones importantes, completa
             tareas y recibe recompensas por contribuir al ecosistema.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Comenzar Ahora
