@@ -10,7 +10,7 @@ import { ArrowRight, CheckCircle, Rocket, Shield, Trophy, Users, Vote, Zap } fro
 
 export const Landing: React.FC = () => {
   return (
-    <main className="min-h-screen bg-background dark relative scroll-smooth">
+    <main className="min-h-screen bg-background relative scroll-smooth dark">
       <ParticlesBackground />
 
       {/* Header */}
@@ -94,7 +94,7 @@ export const Landing: React.FC = () => {
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <Vote className="w-6 h-6 text-primary" />
                 </div>
-                <CardTitle className="text-foreground">Votación Transparente</CardTitle>
+                <CardTitle className="text-foreground">Transparent Voting</CardTitle>
                 <CardDescription>
                   Sistema de votación blockchain que garantiza transparencia y inmutabilidad en cada decisión
                 </CardDescription>
@@ -356,8 +356,8 @@ export const Landing: React.FC = () => {
             </div>
           </div>
 
-          <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 AgoraDAO. Todos los derechos reservados.</p>
+          <div className="border-t border-border pt-8 text-center text-muted-foreground">
+            <p>&copy; 2025 AgoraDAO. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
