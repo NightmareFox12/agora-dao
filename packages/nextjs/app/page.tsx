@@ -1,17 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bug, Search } from "lucide-react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
+import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorage";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
-  return (
-    <>
+  //states
+  const [daoAddress, setDaoAddress] = useState<string | null>(null);
+
+  //effects
+  useEffect(() => {
+    setDaoAddress(localStorage.getItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS));
+  }, []);
+
+  return daoAddress === null ? (
+    <main>
       <div className="flex items-center flex-col grow pt-10">
         <div className="px-5">
           <h1 className="text-center">
@@ -72,7 +82,9 @@ const Home: NextPage = () => {
           </div>
         </article>
       </div>
-    </>
+    </main>
+  ) : (
+    <main> ins</main>
   );
 };
 

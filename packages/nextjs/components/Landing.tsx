@@ -1,5 +1,7 @@
 import React from "react";
-import { ParticlesBackground } from "./ParticlesBackground";
+import { RainbowKitCustomConnectButton } from "./scaffold-eth";
+import DecryptedText from "./ui/DecryptedText";
+import { ParticlesBackground } from "./ui/ParticlesBackground";
 import RotatingText from "./ui/RotatingText";
 import { Badge } from "./ui/shadcn/badge";
 import { Button } from "./ui/shadcn/button";
@@ -8,7 +10,7 @@ import { ArrowRight, CheckCircle, Shield, Trophy, Users, Vote, Zap } from "lucid
 
 export const Landing: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background dark relative">
+    <main className="min-h-screen bg-background dark relative scroll-smooth">
       <ParticlesBackground />
 
       {/* Header */}
@@ -39,7 +41,14 @@ export const Landing: React.FC = () => {
       <section className="py-20 px-4 relative z-10">
         <div className="container mx-auto text-center max-w-4xl">
           <Badge variant="secondary" className="mb-6 bg-primary/10 text-primary border-primary/20">
-            🚀 Descentralización en Acción
+            🚀
+            <DecryptedText
+              text="Decentralization in Action"
+              animateOn="view"
+              speed={100}
+              maxIterations={15}
+              revealDirection="center"
+            />
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
             <div className="flex justify-center">The platform for DAOs that work seriously</div>
@@ -64,7 +73,8 @@ export const Landing: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <RainbowKitCustomConnectButton />
+            {/* <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Comenzar Ahora
               <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
@@ -74,7 +84,7 @@ export const Landing: React.FC = () => {
               className="border-primary text-primary hover:bg-primary/10 bg-transparent"
             >
               Ver Demo
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
@@ -362,6 +372,6 @@ export const Landing: React.FC = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 };
