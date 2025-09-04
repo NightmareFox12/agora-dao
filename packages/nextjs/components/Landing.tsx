@@ -6,7 +6,7 @@ import RotatingText from "./ui/RotatingText";
 import { Badge } from "./ui/shadcn/badge";
 import { Button } from "./ui/shadcn/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/shadcn/card";
-import { ArrowRight, CheckCircle, Shield, Trophy, Users, Vote, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle, Rocket, Shield, Trophy, Users, Vote, Zap } from "lucide-react";
 
 export const Landing: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ export const Landing: React.FC = () => {
       <ParticlesBackground />
 
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm  top-0 z-50 relative">
+      <header className="border-b bg-card/50 backdrop-blur-sm top-0 z-50 relative">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -41,7 +41,7 @@ export const Landing: React.FC = () => {
       <section className="py-20 px-4 relative z-10">
         <div className="container mx-auto text-center max-w-4xl">
           <Badge variant="secondary" className="mb-6 bg-primary/10 text-primary border-primary/20">
-            🚀
+            <Rocket />
             <DecryptedText
               text="Decentralization in Action"
               animateOn="view"
@@ -68,23 +68,12 @@ export const Landing: React.FC = () => {
             rotationInterval={2000}
           />
           <p className="text-xl text-muted-foreground mb-8 text-pretty max-w-2xl mx-auto">
-            AgoraDAO es la plataforma descentralizada donde tu voz cuenta. Participa en decisiones importantes, completa
-            tareas y recibe recompensas por contribuir al ecosistema.
+            AgoraDAO is the decentralized platform where your voice matters. Participate in important decisions,
+            complete tasks, and receive rewards for contributing to the ecosystem.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <RainbowKitCustomConnectButton />
-            {/* <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              Comenzar Ahora
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary/10 bg-transparent"
-            >
-              Ver Demo
-            </Button> */}
           </div>
         </div>
       </section>
@@ -93,9 +82,9 @@ export const Landing: React.FC = () => {
       <section id="features" className="py-20 px-4 bg-card/30 relative z-10">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Características Principales</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Main Features</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Descubre las herramientas que hacen de AgoraDAO la plataforma líder en gobernanza descentralizada
+              Discover the tools that make AgoraDAO the leading platform in decentralized governance.
             </p>
           </div>
 
