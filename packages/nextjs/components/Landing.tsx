@@ -52,7 +52,6 @@ export const Landing: React.FC = () => {
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
             <div className="flex justify-center">The platform for DAOs that work seriously</div>
-            {/* Vota, Participa y Gana en la <span className="text-primary">Nueva Era</span> de la Gobernanza */}
           </h1>
           <RotatingText
             texts={["Vote", "Participate", "Earn", "Organize", "Clear tasks", "Collective decisions"]}
@@ -63,7 +62,7 @@ export const Landing: React.FC = () => {
             exit={{ y: "-120%" }}
             staggerDuration={0.025}
             splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-            elementLevelClassName="dark:text-blue-500"
+            elementLevelClassName="text-blue-500"
             transition={{ type: "keyframes", damping: 30, stiffness: 400 }}
             rotationInterval={2000}
           />

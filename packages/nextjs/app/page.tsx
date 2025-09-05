@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useTransition } from "react";
 import Link from "next/link";
-import { Bug, Search } from "lucide-react";
+import { Bug, Loader, Search } from "lucide-react";
 import type { NextPage } from "next";
+import { useRouter } from "next-nprogress-bar";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
@@ -13,17 +14,32 @@ import { useHeaderStore } from "~~/services/store/header.store.";
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const { setShowHeader } = useHeaderStore();
+  const router = useRouter();
 
-  //states
-  const [daoAddress, setDaoAddress] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   //effects
   useEffect(() => {
-    setDaoAddress(localStorage.getItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS));
-    setShowHeader(true);
-  }, []);
+    setShowHeader(false);
+    if (localStorage.getItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS) === null) {
+      startTransition(() => {
+        router.push("/daos");
+      });
+    } else {
+      router.replace("/daos");
+      router.push("/");
+    }
+  }, [router, setShowHeader]);
 
-  return daoAddress === null ? (
+  if (isPending) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <Loader className="w-10 h-10 animate-spin" />
+      </main>
+    );
+  }
+
+  return (
     <main>
       <div className="flex items-center flex-col grow pt-10">
         <div className="px-5">
@@ -86,8 +102,6 @@ const Home: NextPage = () => {
         </article>
       </div>
     </main>
-  ) : (
-    <main> ins</main>
   );
 };
 
