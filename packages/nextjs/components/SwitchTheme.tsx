@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Switch } from "./ui/shadcn/switch";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
-export const SwitchTheme = ({ className }: { className?: string }) => {
+type SwitchThemeProps = {
+  className?: string;
+  moonIconDark?: false;
+  sunIconDark?: false;
+};
+
+export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDark }) => {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -28,21 +34,11 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
   return (
     <div className={`flex space-x-2 h-8 items-center justify-center text-sm ${className}`}>
       <Switch className="dark:bg-accent-foreground" checked={isDarkMode} onCheckedChange={handleToggle} />
-      {isDarkMode ? <Moon className="text-white" /> : <Sun />}
+      {isDarkMode ? (
+        <Moon className={moonIconDark ? "text-black" : "text-white"} />
+      ) : (
+        <Sun className={moonIconDark ? "text-black" : "text-white"} />
+      )}
     </div>
   );
 };
-
-// <div className={`flex space-x-2 h-8 items-center justify-center text-sm ${className}`}>
-//      <input
-//       id="theme-toggle"
-//       type="checkbox"
-//       className="toggle bg-secondary toggle-primary hover:bg-accent transition-all"
-//       onChange={handleToggle}
-//       checked={isDarkMode}
-//     />
-//     <label htmlFor="theme-toggle" className={`swap swap-rotate ${!isDarkMode ? "swap-active" : ""}`}>
-//       {/* <SunIcon className="swap-on h-5 w-5" />
-//       {/* <MoonIcon className="swap-off h-5 w-5" />
-//     </label>
-//   </div>

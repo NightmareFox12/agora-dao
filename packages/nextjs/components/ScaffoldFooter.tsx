@@ -4,12 +4,16 @@ import { Button } from "./ui/shadcn/button";
 import { CircleDollarSign, Search } from "lucide-react";
 import { hardhat } from "viem/chains";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-// import { BuidlGuidlLogo } from "~~/components/assets/BuidlGuidlLogo";
 import { Faucet } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useGlobalState } from "~~/services/store/store";
 
-export const ScaffoldFooter = () => {
+type ScaffoldFooterProps = {
+  moonIconDark?: false;
+  sunIconDark?: false;
+};
+
+export const ScaffoldFooter: React.FC<ScaffoldFooterProps> = ({ moonIconDark, sunIconDark }) => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
@@ -39,7 +43,11 @@ export const ScaffoldFooter = () => {
               </>
             )}
           </div>
-          <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+          <SwitchTheme
+            className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`}
+            moonIconDark={moonIconDark}
+            sunIconDark={sunIconDark}
+          />
         </div>
       </div>
       {/* <div className="w-full">

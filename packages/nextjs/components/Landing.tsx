@@ -10,30 +10,39 @@ import { ArrowRight, CheckCircle, Rocket, Shield, Trophy, Users, Vote, Zap } fro
 
 export const Landing: React.FC = () => {
   return (
-    <main className="min-h-screen bg-background relative scroll-smooth dark">
+    <section className="min-h-screen bg-background relative scroll-smooth dark:bg-foreground">
       <ParticlesBackground />
 
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm top-0 z-50 relative">
+      <header className="border-b bg-card/50 backdrop-blur-sm top-0 z-50 relative dark:bg-secondary-foreground dark:border-muted-foreground dark:text-primary-foreground">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Vote className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold text-foreground">AgoraDAO</span>
+            <span className="text-xl font-bold text-foreground dark:text-primary-foreground">AgoraDAO</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#features"
+              className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
+            >
               Características
             </a>
-            <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#how-it-works"
+              className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
+            >
               Cómo Funciona
             </a>
-            <a href="#rewards" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#rewards"
+              className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
+            >
               Recompensas
             </a>
           </nav>
-          <Button className="bg-primary hover:bg-primary/90">Conectar Wallet</Button>
+          <RainbowKitCustomConnectButton />
         </div>
       </header>
 
@@ -360,6 +369,6 @@ export const Landing: React.FC = () => {
           </div>
         </div>
       </footer>
-    </main>
+    </section>
   );
 };

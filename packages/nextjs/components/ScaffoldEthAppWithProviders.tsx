@@ -31,7 +31,10 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       </SidebarInset>
     </SidebarProvider>
   ) : (
-    <Landing />
+    <main>
+      <Landing />
+      <ScaffoldFooter />
+    </main>
   );
 };
 
