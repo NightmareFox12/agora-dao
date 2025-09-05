@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/shadcn/button";
@@ -9,8 +11,8 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useGlobalState } from "~~/services/store/store";
 
 type ScaffoldFooterProps = {
-  moonIconDark?: false;
-  sunIconDark?: false;
+  moonIconDark?: boolean;
+  sunIconDark?: boolean;
 };
 
 export const ScaffoldFooter: React.FC<ScaffoldFooterProps> = ({ moonIconDark, sunIconDark }) => {

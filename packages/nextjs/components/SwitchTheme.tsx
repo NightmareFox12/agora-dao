@@ -7,11 +7,11 @@ import { useTheme } from "next-themes";
 
 type SwitchThemeProps = {
   className?: string;
-  moonIconDark?: false;
-  sunIconDark?: false;
+  moonIconDark?: boolean;
+  sunIconDark?: boolean;
 };
 
-export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDark }) => {
+export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDark, sunIconDark }) => {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -37,7 +37,7 @@ export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDar
       {isDarkMode ? (
         <Moon className={moonIconDark ? "text-black" : "text-white"} />
       ) : (
-        <Sun className={moonIconDark ? "text-black" : "text-white"} />
+        <Sun className={sunIconDark ? "text-black" : "text-white"} />
       )}
     </div>
   );

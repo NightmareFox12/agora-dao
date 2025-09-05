@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Landing } from "./Landing";
 import { ScaffoldFooter } from "./ScaffoldFooter";
 import { ScaffoldHeader } from "./ScaffoldHeader";
 import { ScaffoldSidebar } from "./ScaffoldSidebar";
@@ -11,30 +10,26 @@ import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowki
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
-import { WagmiProvider, useAccount } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import { useHeaderStore } from "~~/services/store/header.store.";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();
-  const { isConnected } = useAccount();
+  const { showHeader } = useHeaderStore();
 
-  return isConnected ? (
+  return (
     <SidebarProvider defaultOpen={false}>
       <Toaster richColors={true} position="top-center" />
       <ScaffoldSidebar />
       <SidebarInset>
-        <ScaffoldHeader />
+        {showHeader && <ScaffoldHeader />}
         {children}
         <ScaffoldFooter />
       </SidebarInset>
     </SidebarProvider>
-  ) : (
-    <main>
-      <Landing />
-      <ScaffoldFooter />
-    </main>
   );
 };
 
