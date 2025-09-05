@@ -96,19 +96,19 @@ export const Landing: React.FC = () => {
                 </div>
                 <CardTitle className="text-foreground">Transparent Voting</CardTitle>
                 <CardDescription>
-                  Sistema de votación blockchain que garantiza transparencia y inmutabilidad en cada decisión
+                  Blockchain voting system that guarantees transparency and immutability in every decision
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="border-border hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-accent" />
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-primary" />
                 </div>
-                <CardTitle className="text-foreground">Tareas Gamificadas</CardTitle>
+                <CardTitle className="text-foreground">Gamified Tasks</CardTitle>
                 <CardDescription>
-                  Completa misiones, contribuye al ecosistema y gana experiencia mientras ayudas a la comunidad
+                  Complete missions, contribute to the ecosystem, and gain experience while helping the community.
                 </CardDescription>
               </CardHeader>
             </Card>

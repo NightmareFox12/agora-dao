@@ -8,9 +8,11 @@ import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
 import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorage";
+import { useHeaderStore } from "~~/services/store/header.store.";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
+  const { setShowHeader } = useHeaderStore();
 
   //states
   const [daoAddress, setDaoAddress] = useState<string | null>(null);
@@ -18,6 +20,7 @@ const Home: NextPage = () => {
   //effects
   useEffect(() => {
     setDaoAddress(localStorage.getItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS));
+    setShowHeader(true);
   }, []);
 
   return daoAddress === null ? (

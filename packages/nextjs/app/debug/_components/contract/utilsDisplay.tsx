@@ -87,7 +87,7 @@ export const ObjectFieldDisplay = ({
 }) => {
   return (
     <div className={`text-sm ${leftPad ? "ml-4" : ""}`}>
-      <span className="text-base-content/60 mr-2">{name}:</span>
+      <span className="text-base-content/60  mr-2">{name}:</span>
       <span className="text-base-content break-all text-sm">{displayTxResult(value, size)}</span>
     </div>
   );
@@ -95,7 +95,7 @@ export const ObjectFieldDisplay = ({
 
 const ArrayDisplay = ({ values, size }: { values: DisplayContent[]; size: ResultFontSize }) => {
   return (
-    <div className="flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-1 ">
       {values.length ? "array" : "[]"}
       {values.map((v, i) => (
         <ObjectFieldDisplay key={i} name={`[${i}]`} value={v} size={size} />
@@ -106,7 +106,7 @@ const ArrayDisplay = ({ values, size }: { values: DisplayContent[]; size: Result
 
 const StructDisplay = ({ struct, size }: { struct: Record<string, any>; size: ResultFontSize }) => {
   return (
-    <div className="flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-1 ">
       struct
       {Object.entries(struct).map(([k, v]) => (
         <ObjectFieldDisplay key={k} name={k} value={v} size={size} />

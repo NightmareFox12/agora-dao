@@ -6,6 +6,6 @@ type HeaderStore = {
 };
 
 export const useHeaderStore = create<HeaderStore>(set => ({
-  showHeader: false,
+  showHeader: true,
   setShowHeader: (show: boolean) => set(() => ({ showHeader: show })),
 }));

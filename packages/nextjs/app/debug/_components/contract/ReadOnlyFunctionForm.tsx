@@ -82,7 +82,7 @@ export const ReadOnlyFunctionForm = ({
       <div className="flex  md:flex-row justify-between gap-2 flex-wrap">
         <div className="grow basis-0 w-full md:max-w-[80%]">
           {result !== null && result !== undefined && (
-            <div className="bg-secondary rounded-3xl text-sm px-4 py-1.5 break-words overflow-auto">
+            <div className="bg-secondary rounded-3xl text-sm px-4 py-1.5 break-words overflow-auto dark:text-primary">
               <p className="font-bold m-0 mb-1">Result:</p>
               <pre className="whitespace-pre-wrap break-words">{displayTxResult(result, "sm")}</pre>
             </div>
