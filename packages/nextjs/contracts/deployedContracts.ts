@@ -6,8 +6,45 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
-    AgoraFabric: {
-      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    AgoraDao: {
+      address: "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      abi: [
+        {
+          inputs: [],
+          name: "daoCounter",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "userCounter",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 15,
+    },
+    AgoraDaoFabric: {
+      address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
       abi: [
         {
           inputs: [
@@ -41,6 +78,37 @@ const deployedContracts = {
           ],
           name: "OwnableUnauthorizedAccount",
           type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "daoID",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "creationTimestamp",
+              type: "uint256",
+            },
+          ],
+          name: "DaoCreated",
+          type: "event",
         },
         {
           anonymous: false,
@@ -87,6 +155,16 @@ const deployedContracts = {
               type: "string",
             },
             {
+              internalType: "uint256",
+              name: "_categoryID",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_imageURI",
+              type: "string",
+            },
+            {
               internalType: "bool",
               name: "_isPublic",
               type: "bool",
@@ -104,6 +182,60 @@ const deployedContracts = {
             {
               internalType: "uint256",
               name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "daos",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "daoID",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "description",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "categoryID",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "imageURI",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "isPublic",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "creationTimestamp",
               type: "uint256",
             },
           ],
@@ -157,6 +289,19 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "userCounter",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           stateMutability: "payable",
           type: "receive",
         },
@@ -166,7 +311,7 @@ const deployedContracts = {
         renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
         transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
       },
-      deployedOnBlock: 6,
+      deployedOnBlock: 13,
     },
   },
 } as const;
