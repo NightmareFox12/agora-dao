@@ -1,13 +1,13 @@
-"use client";
+"use server";
 
-import { useEffect } from "react";
 import { CreateDaoDialog } from "./_components/CreateDaoDialog";
 import { DaoCard } from "./_components/DaoCard";
 import { Building, Coins, Frown, Funnel, Gamepad2, Heart, Search, Users, Zap } from "lucide-react";
 import { NextPage } from "next";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Input } from "~~/components/ui/shadcn/input";
-import { useHeaderStore } from "~~/services/store/header.store.";
+
+// import { useHeaderStore } from "~~/services/store/header.store.";
 
 const daos = [
   {
@@ -63,18 +63,16 @@ const daos = [
 
 // const daos: any = [];
 
-const DaosPage: NextPage = () => {
-  const { setShowHeader } = useHeaderStore();
+const DaosPage: NextPage = async () => {
+  // const { setShowHeader } = useHeaderStore();
 
   //effects
-  useEffect(() => {
-    setShowHeader(false);
-  }, [setShowHeader]);
+  // useEffect(() => {
+  //   setShowHeader(false);
+  // }, [setShowHeader]);
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Create Dao Dialog */}
-      <CreateDaoDialog />
       {/* Header */}
       <header className="border-b bg-card">
         <div className="xl:container mx-auto px-6 py-1">
@@ -97,6 +95,9 @@ const DaosPage: NextPage = () => {
           </div>
         </div>
       </header>
+
+      {/* Create Dao Dialog */}
+      <CreateDaoDialog />
 
       {/* Empty State Message */}
       {daos.length === 0 ? (

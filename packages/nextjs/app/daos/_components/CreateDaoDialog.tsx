@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -23,9 +25,11 @@ import {
   FormMessage,
 } from "~~/components/ui/shadcn/form";
 import { Input } from "~~/components/ui/shadcn/input";
+import { useBreakpoint } from "~~/hooks/useBreakpoint";
 import { DaoSchema } from "~~/lib/schemes/dao.scheme";
 
 export const CreateDaoDialog: React.FC = () => {
+  const { isMd } = useBreakpoint();
   // Form
   const daoForm = useForm<z.infer<typeof DaoSchema>>({
     resolver: zodResolver(DaoSchema),
@@ -43,11 +47,8 @@ export const CreateDaoDialog: React.FC = () => {
     <Dialog>
       {/* Dialog button */}
       <DialogTrigger asChild>
-        <div className="fixed bottom-0 right-0 pr-2 mb-16">
-          <Button
-            className="dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/80"
-            size="lg"
-          >
+        <div className="flex justify-center p-3">
+          <Button size={isMd ? "lg" : "sm"}>
             <Plus className="w-4 h-4" />
             Create DAO
           </Button>
