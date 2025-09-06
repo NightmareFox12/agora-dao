@@ -63,6 +63,10 @@ const daos = [
 
 // const daos: any = [];
 
+//TODO: si conecta la wallet mandarlo a daos/ en caso contrario a landing page
+//TODO: terminar de crear el form de create dao
+//TODO: mejorar el smart contract
+
 const DaosPage: NextPage = async () => {
   // const { setShowHeader } = useHeaderStore();
 

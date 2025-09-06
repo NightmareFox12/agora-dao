@@ -12,6 +12,7 @@ import RotatingText from "~~/components/ui/RotatingText";
 import { Badge } from "~~/components/ui/shadcn/badge";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
+import { Skeleton } from "~~/components/ui/shadcn/skeleton";
 
 const LandingPage = async () => {
   return (
@@ -87,7 +88,19 @@ const LandingPage = async () => {
         </section>
 
         {/* Features Section */}
-        <FeatureSection />
+        <Suspense
+          fallback={
+            <section className="w-full">
+              <div className="container grid md:grid-cols-3 gap-8 mx-auto">
+                <Skeleton className="w-full h-52" />
+                <Skeleton className="w-full h-52" />
+                <Skeleton className="w-full h-52" />
+              </div>
+            </section>
+          }
+        >
+          <FeatureSection />
+        </Suspense>
 
         {/* How It Works Section */}
         <section id="how-it-works" className="py-20 px-4 relative z-10">
