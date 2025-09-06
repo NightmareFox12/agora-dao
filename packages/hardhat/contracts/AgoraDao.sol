@@ -11,19 +11,22 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @title AgoraDao
  * @author NightmareFox12
  */
-contract AgoraDao  {
+contract AgoraDao {
     // State Variables
-    uint256 public daoCounter;
-    uint256 public userCounter;
+    address internal fabric;
+    address internal creator;
+    uint256 public daoID;
 
     string[] internal daoCategories;
 
     //events
 
-    // constructor(address initialOwner) Ownable(initialOwner) {
-    //     daoCategories.push("SERVICE");
-    //     daoCategories.push("GOVERNANCE");
-    // }
+    constructor(address _fabric, address _creator) {
+        fabric = _fabric;
+        creator = _creator;
+        //     daoCategories.push("SERVICE");
+        //     daoCategories.push("GOVERNANCE");
+    }
 
     // --- write functions ---
     // function createDao(string memory _name, string memory _description, bool _isPublic) external {

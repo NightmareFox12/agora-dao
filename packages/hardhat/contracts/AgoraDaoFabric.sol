@@ -3,6 +3,8 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "./AgoraDao.sol";
+
 /**
  * A smart contract that allows changing a state variable of the contract and tracking the changes
  * It also allows the owner to withdraw the Ether in the contract
@@ -13,6 +15,7 @@ contract AgoraDaoFabric is Ownable {
     struct Dao {
         uint256 daoID;
         address creator;
+        address daoAddress;
         string name;
         string description;
         uint256 categoryID;
@@ -50,12 +53,15 @@ contract AgoraDaoFabric is Ownable {
         require(_categoryID < daoCategories.length, "Invalid category ID.");
         require(bytes(_imageURI).length > 0, "Image URI must not be empty.");
 
-        //TODO: me falta verificar que el nombre no exista
-        
+        //TODO: me falta verificar que el nombre no este repetido
+
         //create dao
+        AgoraDao createdDaoContract = new AgoraDao(address(this), msg.sender);
+
         Dao memory newDao = Dao(
             daoCounter,
             msg.sender,
+            address(createdDaoContract),
             _name,
             _description,
             _categoryID,
@@ -63,7 +69,7 @@ contract AgoraDaoFabric is Ownable {
             _isPublic,
             block.timestamp
         );
-
+        //store dao
         daos[msg.sender] = newDao;
 
         emit DaoCreated(daoCounter, msg.sender, _name, block.timestamp);
