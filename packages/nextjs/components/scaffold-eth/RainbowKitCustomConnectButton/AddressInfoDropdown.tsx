@@ -42,12 +42,6 @@ export const AddressInfoDropdown = ({
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [lockMenu, setLockMenu] = useState<boolean>(false);
 
-  // const closeDropdown = () => {
-  //   setSelectingNetwork(false);
-  // };
-
-  // useOutsideClick(dropdownRef, closeDropdown);
-
   useEffect(() => {
     if (lockMenu) {
       setTimeout(() => {

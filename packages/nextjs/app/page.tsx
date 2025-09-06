@@ -15,40 +15,33 @@ import { Card, CardDescription, CardHeader, CardTitle } from "~~/components/ui/s
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~~/components/ui/shadcn/tabs";
 
 const LandingPage = async () => {
+  await new Promise(r => setTimeout(r, 4000));
+
   return (
     <>
-      <section className="min-h-screen bg-background relative scroll-smooth dark:bg-foreground">
+      <section className="min-h-screen bg-background relative scroll-smooth">
         {/* Particles Background  */}
         <Suspense>
           <ParticlesBackground />
         </Suspense>
 
         {/* Header */}
-        <header className="border-b bg-card/50 backdrop-blur-sm top-0 z-50 relative dark:bg-secondary-foreground dark:border-muted-foreground dark:text-primary-foreground">
+        <header className="border-b bg-card/50 backdrop-blur-sm top-0 z-50 relative">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Vote className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold text-foreground dark:text-primary-foreground">AgoraDAO</span>
+              <span className="text-xl font-bold text-foreground">AgoraDAO</span>
             </div>
             <nav className="hidden md:flex items-center space-x-6">
-              <a
-                href="#features"
-                className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
-              >
+              <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors ">
                 Características
               </a>
-              <a
-                href="#how-it-works"
-                className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
-              >
+              <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors ">
                 Cómo Funciona
               </a>
-              <a
-                href="#rewards"
-                className="text-muted-foreground hover:text-foreground transition-colors dark:text-sidebar-ring"
-              >
+              <a href="#rewards" className="text-muted-foreground hover:text-foreground transition-colors ">
                 Recompensas
               </a>
             </nav>
@@ -59,10 +52,7 @@ const LandingPage = async () => {
         {/* Hero Section */}
         <section className="py-20 px-4 relative z-10">
           <div className="container mx-auto text-center max-w-4xl">
-            <Badge
-              variant="secondary"
-              className="mb-6 bg-primary/10 text-primary border-primary/20 dark:border-muted-foreground dark:text-primary-foreground dark:bg-primary-foreground/10"
-            >
+            <Badge variant="secondary" className="mb-6 bg-primary/10 text-primary border-primary/20 ">
               <Rocket />
               <DecryptedText
                 text="Decentralization in Action"
@@ -72,7 +62,7 @@ const LandingPage = async () => {
                 revealDirection="center"
               />
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance dark:text-primary-foreground">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 text-balance">
               <div className="flex justify-center">The platform for DAOs that work seriously</div>
             </h1>
             <RotatingText
@@ -84,7 +74,7 @@ const LandingPage = async () => {
               exit={{ y: "-120%" }}
               staggerDuration={0.025}
               splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-              elementLevelClassName="text-blue-600 dark:text-blue-500"
+              elementLevelClassName="text-blue-500"
               transition={{ type: "keyframes", damping: 30, stiffness: 400 }}
               rotationInterval={2000}
             />
@@ -106,9 +96,7 @@ const LandingPage = async () => {
         <section id="how-it-works" className="py-20 px-4 relative z-10">
           <div className="container mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 dark:text-primary-foreground">
-                How It Works
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">How It Works</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Three simple steps to begin your journey in AgoraDAO
               </p>
@@ -465,7 +453,7 @@ const LandingPage = async () => {
         </div>
       </footer> */}
       </section>
-      <ScaffoldFooter sunIconDark={true} />
+      <ScaffoldFooter />
     </>
   );
 };

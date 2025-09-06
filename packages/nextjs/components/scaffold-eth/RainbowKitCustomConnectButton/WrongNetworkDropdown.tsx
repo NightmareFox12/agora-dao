@@ -1,31 +1,35 @@
 import { NetworkOptions } from "./NetworkOptions";
+import { ChevronDown, LogOut } from "lucide-react";
 import { useDisconnect } from "wagmi";
+import { Button } from "~~/components/ui/shadcn/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~~/components/ui/shadcn/dropdown-menu";
 
 export const WrongNetworkDropdown = () => {
   const { disconnect } = useDisconnect();
 
   return (
-    <div className="dropdown dropdown-end mr-2">
-      <label tabIndex={0} className="btn btn-error btn-sm dropdown-toggle gap-1">
-        <span>Wrong network</span>
-        {/* <ChevronDownIcon className="h-6 w-4 ml-2 sm:ml-0" /> */}
-      </label>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu p-2 mt-1 shadow-center shadow-accent bg-base-200 rounded-box gap-1"
-      >
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="destructive">
+          <ChevronDown className="w-4 h-4 " />
+          Wrong Network
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-1 font-semibold bg-popover text-popover-foreground ">
         <NetworkOptions />
-        <li>
-          <button
-            className="menu-item text-error btn-sm rounded-xl! flex gap-3 py-3"
-            type="button"
-            onClick={() => disconnect()}
-          >
-            {/* <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> */}
-            <span>Disconnect</span>
-          </button>
-        </li>
-      </ul>
-    </div>
+        <DropdownMenuItem
+          onClick={() => disconnect()}
+          className="cursor-pointer text-destructive focus:text-destructive/80"
+        >
+          <LogOut className="w-4 h-4 text-destructive hover:text-destructive/80" />
+          Disconnect
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

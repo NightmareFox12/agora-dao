@@ -71,7 +71,7 @@ const Home: NextPage = () => {
 
         <article className="grow bg-base-300 w-full px-8 py-8">
           <div className="flex justify-center items-center gap-12 flex-col w-full md:flex-row">
-            <Card className="flex-1 w-full justify-center h-[250px] dark:bg-primary dark:text-white">
+            <Card className="flex-1 w-full justify-center h-[250px]">
               <CardHeader>
                 <CardTitle className="flex justify-center">
                   <Bug className="size-12" />
@@ -85,7 +85,7 @@ const Home: NextPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="flex-1 w-full justify-center h-[250px] dark:bg-primary dark:text-white">
+            <Card className="flex-1 w-full justify-center h-[250px]">
               <CardHeader>
                 <CardTitle className="flex justify-center">
                   <Search className="size-12" />

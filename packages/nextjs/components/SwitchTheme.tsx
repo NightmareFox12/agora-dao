@@ -7,11 +7,9 @@ import { useTheme } from "next-themes";
 
 type SwitchThemeProps = {
   className?: string;
-  moonIconDark?: boolean;
-  sunIconDark?: boolean;
 };
 
-export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDark, sunIconDark }) => {
+export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className }) => {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -33,12 +31,8 @@ export const SwitchTheme: React.FC<SwitchThemeProps> = ({ className, moonIconDar
 
   return (
     <div className={`flex space-x-2 h-8 items-center justify-center text-sm ${className}`}>
-      <Switch className="dark:bg-accent-foreground" checked={isDarkMode} onCheckedChange={handleToggle} />
-      {isDarkMode ? (
-        <Moon className={moonIconDark ? "text-black" : "text-white"} />
-      ) : (
-        <Sun className={sunIconDark ? "text-black" : "text-white"} />
-      )}
+      <Switch checked={isDarkMode} onCheckedChange={handleToggle} />
+      {isDarkMode ? <Moon /> : <Sun />}
     </div>
   );
 };

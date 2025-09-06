@@ -10,12 +10,7 @@ import { Faucet } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useGlobalState } from "~~/services/store/store";
 
-type ScaffoldFooterProps = {
-  moonIconDark?: boolean;
-  sunIconDark?: boolean;
-};
-
-export const ScaffoldFooter: React.FC<ScaffoldFooterProps> = ({ moonIconDark, sunIconDark }) => {
+export const ScaffoldFooter: React.FC = () => {
   const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
@@ -45,11 +40,7 @@ export const ScaffoldFooter: React.FC<ScaffoldFooterProps> = ({ moonIconDark, su
               </>
             )}
           </div>
-          <SwitchTheme
-            className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`}
-            moonIconDark={moonIconDark}
-            sunIconDark={sunIconDark}
-          />
+          <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
         </div>
       </div>
       {/* <div className="w-full">
