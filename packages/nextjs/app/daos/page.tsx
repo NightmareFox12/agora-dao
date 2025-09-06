@@ -72,33 +72,25 @@ const DaosPage: NextPage = () => {
   }, [setShowHeader]);
 
   return (
-    <main className="min-h-screen bg-background dark:bg-foreground">
+    <main className="min-h-screen bg-background">
       {/* Create Dao Dialog */}
       <CreateDaoDialog />
       {/* Header */}
-      <header className="border-b bg-card dark:bg-accent-foreground dark:border-muted-foreground">
+      <header className="border-b bg-card">
         <div className="xl:container mx-auto px-6 py-1">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-3xl text-center md:text-left font-bold text-balance dark:text-primary-foreground">
-                Available DAOs
-              </h1>
-              <p className="text-center md:text-left text-muted-foreground mt-2 dark:text-shadow-primary">
+              <h1 className="text-3xl text-center md:text-left font-bold text-balance">Available DAOs</h1>
+              <p className="text-center md:text-left text-muted-foreground mt-2 ">
                 Discover and join decentralized autonomous organizations
               </p>
             </div>
             <div className="flex gap-4 mb-2 justify-center md:mb-0 md:justify-start">
               <div className="relative w-full md:max-w-sm">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar DAOs..."
-                  className="pl-10 dark:bg-accent-foreground dark:border-muted-foreground"
-                />
+                <Input placeholder="Buscar DAOs..." className="pl-10" />
               </div>
-              <Button
-                className="dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/80"
-                size="icon"
-              >
+              <Button size="icon">
                 <Funnel className="h-4 w-4" />
               </Button>
             </div>
@@ -110,10 +102,8 @@ const DaosPage: NextPage = () => {
       {daos.length === 0 ? (
         <article className="h-96 mt-5 flex justify-center flex-col text-center py-12">
           <Frown className="h-20 w-20 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-2xl font-semibold mb-2 dark:text-primary-foreground">No DAOs are available</h3>
-          <p className="text-muted-foreground dark:text-muted/80">
-            Please check back later to see new organizations available.
-          </p>
+          <h3 className="text-2xl font-semibold mb-2">No DAOs are available</h3>
+          <p className="text-muted-foreground">Please check back later to see new organizations available.</p>
         </article>
       ) : (
         <article className="container mx-auto px-4 py-8">
@@ -139,46 +129,3 @@ const DaosPage: NextPage = () => {
 };
 
 export default DaosPage;
-
-// <Card
-//   key={dao.id}
-//   className="flex flex-col transition-all hover:shadow-lg dark:bg-accent-foreground dark:border-muted-foreground dark:hover:shadow-muted-foreground"
-// >
-//   <CardHeader>
-//     <div className="flex items-start justify-between">
-//       <div className="flex items-center gap-3">
-//         <div className="rounded-lg bg-primary/10 p-2">
-//           <IconComponent className="h-6 w-6 text-primary" />
-//         </div>
-//         <div>
-//           <CardTitle className="text-lg dark:text-primary-foreground">{dao.name}</CardTitle>
-//           <div className="flex items-center gap-2 mt-1">
-//             <Users className="h-3 w-3 text-muted-foreground" />
-//             <span className="text-sm text-muted-foreground">{dao.members.toLocaleString()} miembros</span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//     <Badge variant="secondary" className={`w-fit ${categoryColors[dao.category as keyof typeof categoryColors]}`}>
-//       {dao.category}
-//     </Badge>
-//   </CardHeader>
-
-//   <CardContent className="flex-1">
-//     <CardDescription className="text-sm leading-relaxed">{dao.description}</CardDescription>
-//   </CardContent>
-
-//   <CardFooter>
-//     <div className="w-full flex items-center justify-between gap-1 md:gap-1.5">
-//       <Button
-//         className="flex-1 dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/80"
-//         size="sm"
-//       >
-//         Unirse a la DAO
-//       </Button>
-//       <Button className="dark:bg-primary-foreground dark:text-primary dark:hover:bg-primary-foreground/80" size="sm">
-//         <Info className="h-4 w-4" />
-//       </Button>
-//     </div>
-//   </CardFooter>
-// </Card>;
