@@ -13,7 +13,6 @@ export const HeroSection: React.FC = () => {
   const { isConnected } = useAccount();
   const router = useRouter();
 
-  //effects
   useEffect(() => {
     if (isConnected) router.push("/daos");
   }, [isConnected, router]);

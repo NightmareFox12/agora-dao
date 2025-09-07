@@ -17,13 +17,19 @@ export const ImpactSection: React.FC = () => {
     functionName: "getTotalDaoCount",
   });
 
+  const { data: userCounter, isLoading: userCounterLoading } = useScaffoldReadContract({
+    contractName: "AgoraDaoFabric",
+    functionName: "userCounter",
+  });
+
   //components
   const NumbersTab = () => {
     return (
       <TabsContent value="numbers">
         <div className="grid grid-cols-2 gap-4">
+          {/* DAOs created */}
           {daoCounterLoading ? (
-            <Skeleton className=" rounded-lg bg-primary/20" />
+            <Skeleton className="h-44 rounded-lg bg-primary/20" />
           ) : (
             <Card className="bg-primary/5 border-primary/20">
               <CardHeader className="text-center">
@@ -46,40 +52,49 @@ export const ImpactSection: React.FC = () => {
             </Card>
           )}
 
-          {/* <Card className="bg-primary/5 border-primary/20">
-                  <CardHeader className="text-center">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-                      <Trophy className="w-6 h-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-2xl text-primary">
-                      <CountUp from={0} to={850} separator="," direction="up" duration={1} className="count-up-text" />+
-                    </CardTitle>
-                    <CardDescription>Recompensas Distribuidas</CardDescription>
-                  </CardHeader>
-                </Card> */}
+          {/* Users Registered */}
+          {userCounterLoading ? (
+            <Skeleton className="h-44 rounded-lg bg-primary/20" />
+          ) : (
+            <Card className="bg-accent/5 border-accent/20">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">
+                  <CountUp
+                    from={0}
+                    to={
+                      parseInt(userCounter?.toString() ?? "0") === 0 ? 0 : parseInt(userCounter?.toString() ?? "0") - 1
+                    }
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    className="count-up-text"
+                  />
+                  +
+                </CardTitle>
+                <CardDescription>Registered Users</CardDescription>
+              </CardHeader>
+            </Card>
+          )}
 
-          <Card className="bg-accent/5 border-accent/20">
-            <CardHeader className="text-center">
-              <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <Users className="w-6 h-6 text-accent" />
-              </div>
-              <CardTitle className="text-2xl ">
-                <CountUp from={0} to={850} separator="," direction="up" duration={1} className="count-up-text" />+
-              </CardTitle>
-              <CardDescription>Miembros Activos</CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="bg-accent/5 border-accent/20">
-            <CardHeader className="text-center">
-              <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <Shield className="w-6 h-6 text-accent" />
-              </div>
-              <CardTitle className="text-2xl">
-                <CountUp from={0} to={100} separator="," direction="up" duration={1} className="count-up-text" />%
-              </CardTitle>
-              <CardDescription>Transparencia</CardDescription>
-            </CardHeader>
-          </Card>
+          {daoCounterLoading && userCounterLoading ? (
+            <Skeleton className="h-44 rounded-lg bg-primary/20" />
+          ) : (
+            <Card className="bg-accent/5 border-accent/20">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <Shield className="w-6 h-6 text-primary" />
+                </div>
+                <CardTitle className="text-2xl">
+                  <CountUp from={0} to={100} separator="," direction="up" duration={1} className="count-up-text" />%
+                </CardTitle>
+                <CardDescription>Transparencia</CardDescription>
+              </CardHeader>
+            </Card>
+          )}
+
           <Card className="bg-primary/5 border-primary/20">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
@@ -150,8 +165,8 @@ export const ImpactSection: React.FC = () => {
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">Our Impact</h2>
-            <p className="text-lg text-muted-foreground mb-8">
+            <h2 className="text-center md:text-left text-3xl md:text-4xl font-bold text-foreground mb-6">Our Impact</h2>
+            <p className="text-center md:text-left text-lg text-muted-foreground mb-8">
               At AgoraDAO, every action counts. Our rewards system recognizes and rewards active community
               participation.
             </p>
@@ -176,6 +191,7 @@ export const ImpactSection: React.FC = () => {
             </div> */}
           </div>
 
+          {/* Tabs */}
           <Tabs defaultValue="numbers">
             <TabsList className="w-full flex justify-center">
               <TabsTrigger value="numbers">Numbers</TabsTrigger>
@@ -190,3 +206,17 @@ export const ImpactSection: React.FC = () => {
     </section>
   );
 };
+
+{
+  /* <Card className="bg-primary/5 border-primary/20">
+                  <CardHeader className="text-center">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Trophy className="w-6 h-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-2xl text-primary">
+                      <CountUp from={0} to={850} separator="," direction="up" duration={1} className="count-up-text" />+
+                    </CardTitle>
+                    <CardDescription>Recompensas Distribuidas</CardDescription>
+                  </CardHeader>
+                </Card> */
+}

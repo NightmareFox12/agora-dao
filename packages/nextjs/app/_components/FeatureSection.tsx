@@ -22,8 +22,8 @@ const mainFeatures: Feature[] = [
     icon: Zap,
   },
   {
-    title: "Sistema de Recompensas",
-    description: "Recibe tokens y NFTs exclusivos por tu participación activa en la gobernanza de la DAO",
+    title: "Rewards System",
+    description: "Receive exclusive tokens and NFTs for your active participation in DAO governance",
     icon: Trophy,
   },
 ];
