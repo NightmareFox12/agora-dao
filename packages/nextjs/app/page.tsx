@@ -47,6 +47,7 @@ const LandingPage = async () => {
 
         {/* Hero Section */}
         <HeroSection />
+
         {/* Features Section */}
         <Suspense
           fallback={

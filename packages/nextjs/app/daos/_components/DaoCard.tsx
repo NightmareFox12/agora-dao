@@ -51,7 +51,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({ daoID, name, description, cate
               <CardTitle className="text-lg ">{name}</CardTitle>
               <div className="flex items-center gap-2 mt-1">
                 <Users className="h-3 w-3 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">{members.toLocaleString()} miembros</span>
+                <span className="text-sm text-muted-foreground">{members} miembros</span>
               </div>
             </div>
           </div>
