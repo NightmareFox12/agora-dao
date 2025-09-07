@@ -111,8 +111,8 @@ contract AgoraDaoFabric is Ownable {
         return daoCategories;
     }
 
-    // function getAllDaos() external view returns (Dao[] memory) {
     //TODO: VERIFICAR POR CODIGO O ALGO PARA VER SI ES DISPONIBLE EL JOIN
+    // function getAllDaos() external view returns (Dao[] memory) {
     //     return allDaos;
     // }
 

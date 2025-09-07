@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleQuestionMarkIcon, Plus, Rocket, Trash, Upload } from "lucide-react";
+import { CircleQuestionMarkIcon, Loader, Plus, Rocket, Trash, Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import RotatingText from "~~/components/ui/RotatingText";
@@ -39,6 +39,7 @@ export const CreateDaoDialog: React.FC = () => {
   // Form
   const daoForm = useForm<z.infer<typeof DaoSchema>>({
     resolver: zodResolver(DaoSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       description: "",
@@ -56,6 +57,21 @@ export const CreateDaoDialog: React.FC = () => {
     contractName: "AgoraDaoFabric",
     functionName: "getAllDaoCategories",
   });
+
+  //effects
+  useEffect(() => {
+    if (!loadImage) return;
+    setProgress(0);
+    daoForm.setValue("logo", undefined);
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const next = prev + 2;
+        return next >= 100 ? 100 : next;
+      });
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [daoForm, loadImage]);
 
   //functions
   const isUploadFormImage = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -77,25 +93,19 @@ export const CreateDaoDialog: React.FC = () => {
     return file;
   };
 
-  const onSubmit = (data: z.infer<typeof DaoSchema>) => {
-    console.log(data);
+  const handleSubmit = (data: z.infer<typeof DaoSchema>) => {
+    try {
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  //effects
-  useEffect(() => {
-    if (!loadImage) return;
-    setProgress(0);
-    daoForm.setValue("logo", undefined);
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const next = prev + 2;
-        return next >= 100 ? 100 : next;
-      });
-    }, 200);
-
-    return () => clearInterval(interval);
-  }, [daoForm, loadImage]);
-
+  //TODO: crear la conexion con pinnata y toda la aprte de subida de la imagen y eliminacion tambien, por si el suario se sale (pensar esto bien)
+  //TODO: luego de la imagen conectar la creacion con el smart contract
+  //TODO: Poner filtros al buscador como por ejemplo daos creadas por ti
+  //TODO: inventarme la de la vaina de acceso para daos privadas
+  //TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
   return (
     <Dialog>
       {/* Dialog button */}
@@ -131,7 +141,12 @@ export const CreateDaoDialog: React.FC = () => {
           </DialogHeader>
 
           <Form {...daoForm}>
-            <form onSubmit={daoForm.handleSubmit(onSubmit)} className="space-y-5 px-1">
+            <form
+              onSubmit={daoForm.handleSubmit(handleSubmit)}
+              autoComplete="off"
+              autoCapitalize="sentences"
+              className="space-y-5 px-1"
+            >
               {/* Name */}
               <FormField
                 control={daoForm.control}
@@ -323,8 +338,14 @@ export const CreateDaoDialog: React.FC = () => {
                     <Trash className="w-4 h-4" />
                     Clear all
                   </Button>
-                  <Button type="submit">
-                    <Rocket className="w-4 h-4" /> Launch DAO
+                  <Button type="submit" disabled={daoCategoriesLoading || !daoForm.formState.isValid}>
+                    {daoCategoriesLoading ? (
+                      <Loader className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Rocket className="w-4 h-4" /> Launch DAO
+                      </>
+                    )}
                   </Button>
                 </div>
               </DialogFooter>
