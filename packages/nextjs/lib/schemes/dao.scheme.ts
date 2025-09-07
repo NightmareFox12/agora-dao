@@ -10,5 +10,6 @@ export const DaoSchema = z.object({
   categories: z.string().min(1, {
     message: "The category cannot be empty",
   }),
+  logo: z.instanceof(File).optional(),
   isPublic: z.boolean(),
 });

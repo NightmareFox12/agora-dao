@@ -1,12 +1,16 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
 import { Info, Users } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Badge } from "~~/components/ui/shadcn/badge";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
 
+//dinamycs
+const NoSSRBadge = dynamic(() => import("~~/components/ui/shadcn/badge").then(module => module.Badge), { ssr: false });
+
+//constans
 const darkCategoryColors = {
   DeFi: "bg-blue-900 text-blue-300",
   Gaming: "bg-purple-900 text-purple-300",
@@ -55,9 +59,9 @@ export const DaoCard: React.FC<DaoCardProps> = ({ daoID, name, description, cate
               </div>
             </div>
           </div>
-          <Badge>#{daoID}</Badge>
+          <NoSSRBadge>#{daoID}</NoSSRBadge>
         </div>
-        <Badge
+        <NoSSRBadge
           variant="secondary"
           className={`w-fit ${
             isDarkMode
@@ -66,7 +70,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({ daoID, name, description, cate
           }`}
         >
           {category}
-        </Badge>
+        </NoSSRBadge>
       </CardHeader>
 
       <CardContent className="flex-1">
