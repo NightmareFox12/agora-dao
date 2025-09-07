@@ -16,7 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~~/components/ui/shadcn/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~~/components/ui/shadcn/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~~/components/ui/shadcn/form";
 import { Input } from "~~/components/ui/shadcn/input";
 import { Label } from "~~/components/ui/shadcn/label";
 import { Progress } from "~~/components/ui/shadcn/progress";
@@ -24,6 +32,7 @@ import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~~/components/ui/shadcn/select";
 import { Skeleton } from "~~/components/ui/shadcn/skeleton";
 import { Switch } from "~~/components/ui/shadcn/switch";
+import { Textarea } from "~~/components/ui/shadcn/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~~/components/ui/shadcn/tooltip";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { useBreakpoint } from "~~/hooks/useBreakpoint";
@@ -93,19 +102,35 @@ export const CreateDaoDialog: React.FC = () => {
     return file;
   };
 
-  const handleSubmit = (data: z.infer<typeof DaoSchema>) => {
+  const handleSubmit = async (data: z.infer<typeof DaoSchema>) => {
     try {
       console.log(data);
+
+      if (data.logo) {
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("logo", data.logo);
+
+        const req = await fetch("/api/upload-image", {
+          method: "POST",
+          body: formData,
+        });
+
+        const res = await req.json();
+
+        console.log(res);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  //TODO: crear la conexion con pinnata y toda la aprte de subida de la imagen y eliminacion tambien, por si el suario se sale (pensar esto bien)
+  //TODO: pinnata eliminacion tambien, por si el suario se sale (pensar esto bien)
   //TODO: luego de la imagen conectar la creacion con el smart contract
   //TODO: Poner filtros al buscador como por ejemplo daos creadas por ti
   //TODO: inventarme la de la vaina de acceso para daos privadas
   //TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
+
   return (
     <Dialog>
       {/* Dialog button */}
@@ -145,13 +170,13 @@ export const CreateDaoDialog: React.FC = () => {
               onSubmit={daoForm.handleSubmit(handleSubmit)}
               autoComplete="off"
               autoCapitalize="sentences"
-              className="space-y-5 px-1"
+              className="space-y-4 px-1"
             >
               {/* Name */}
               <FormField
                 control={daoForm.control}
                 name="name"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
                       Name <span className="text-destructive font-bold text-bold">*</span>
@@ -159,8 +184,12 @@ export const CreateDaoDialog: React.FC = () => {
                     <FormControl>
                       <Input placeholder="shadcn" {...field} />
                     </FormControl>
-                    {/* <FormDescription>This is your public display name.</FormDescription> */}
-                    <FormMessage className="-my-1" />
+                    <div className="w-full flex justify-between px-1">
+                      {fieldState.error === undefined && <span />}
+                      <FormMessage className="-my-1" />
+
+                      <FormDescription className="-my-1 justify-end">{field.value.length}/50</FormDescription>
+                    </div>
                   </FormItem>
                 )}
               />
@@ -168,15 +197,24 @@ export const CreateDaoDialog: React.FC = () => {
               <FormField
                 control={daoForm.control}
                 name="description"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
                       Description <span className="text-destructive font-bold text-bold">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Textarea
+                        placeholder="e.g. Decentralized organization supporting social impact projects"
+                        className="resize-none h-28"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormMessage className="-my-1" />
+                    <div className="w-full flex justify-between px-1">
+                      {fieldState.error === undefined && <span />}
+                      <FormMessage className="-my-1" />
+
+                      <FormDescription className="-my-1 justify-end">{field.value.length}/300</FormDescription>
+                    </div>
                   </FormItem>
                 )}
               />
@@ -332,6 +370,8 @@ export const CreateDaoDialog: React.FC = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Submit buttons */}
               <DialogFooter>
                 <div className="w-full flex justify-center gap-6 mt-4">
                   <Button type="button" onClick={() => daoForm.reset()} variant="destructive">

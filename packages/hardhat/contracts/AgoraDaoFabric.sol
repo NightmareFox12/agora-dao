@@ -38,7 +38,8 @@ contract AgoraDaoFabric is Ownable {
     constructor(address initialOwner) Ownable(initialOwner) {
         daoCategories.push("SERVICE");
         daoCategories.push("GOVERNANCE");
-        daoCategories.push("SOCIAL");
+        daoCategories.push("SOCIAL IMPACT");
+        daoCategories.push("ENERGY");
     }
 
     // --- write functions ---
