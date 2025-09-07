@@ -14,7 +14,7 @@ export const ImpactSection: React.FC = () => {
   //smart contract
   const { data: daoCounter, isLoading: daoCounterLoading } = useScaffoldReadContract({
     contractName: "AgoraDaoFabric",
-    functionName: "daoCounter",
+    functionName: "getTotalDaoCount",
   });
 
   //components
@@ -41,7 +41,7 @@ export const ImpactSection: React.FC = () => {
                   />
                   +
                 </CardTitle>
-                <CardDescription>DAOs creadas</CardDescription>
+                <CardDescription>DAOs created</CardDescription>
               </CardHeader>
             </Card>
           )}
@@ -69,17 +69,6 @@ export const ImpactSection: React.FC = () => {
               <CardDescription>Miembros Activos</CardDescription>
             </CardHeader>
           </Card>
-
-          <Card className="bg-primary/5 border-primary/20">
-            <CardHeader className="text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <Vote className="w-6 h-6 text-primary" />
-              </div>
-              <CardTitle className="text-2xl text-primary">320+</CardTitle>
-              <CardDescription>Propuestas Votadas</CardDescription>
-            </CardHeader>
-          </Card>
-
           <Card className="bg-accent/5 border-accent/20">
             <CardHeader className="text-center">
               <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mx-auto mb-2">
@@ -89,6 +78,15 @@ export const ImpactSection: React.FC = () => {
                 <CountUp from={0} to={100} separator="," direction="up" duration={1} className="count-up-text" />%
               </CardTitle>
               <CardDescription>Transparencia</CardDescription>
+            </CardHeader>
+          </Card>
+          <Card className="bg-primary/5 border-primary/20">
+            <CardHeader className="text-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+                <Vote className="w-6 h-6 text-primary" />
+              </div>
+              <CardTitle className="text-2xl text-primary">320+</CardTitle>
+              <CardDescription>Propuestas Votadas</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -178,7 +176,7 @@ export const ImpactSection: React.FC = () => {
             </div> */}
           </div>
 
-          <Tabs defaultValue="account">
+          <Tabs defaultValue="numbers">
             <TabsList className="w-full flex justify-center">
               <TabsTrigger value="numbers">Numbers</TabsTrigger>
               <TabsTrigger value="charts">Charts</TabsTrigger>

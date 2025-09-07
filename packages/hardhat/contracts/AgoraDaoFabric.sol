@@ -25,11 +25,12 @@ contract AgoraDaoFabric is Ownable {
     }
 
     // State Variables
-    uint256 public daoCounter;
     uint256 public userCounter;
     string[] internal daoCategories;
+    Dao[] internal allDaos;
 
-    mapping(address => Dao) public daos;
+    mapping(address => Dao[]) public daosByUser;
+    mapping(address => bool) internal users;
 
     //events
     event DaoCreated(uint256 indexed daoID, address indexed creator, string indexed name, uint256 creationTimestamp);
@@ -59,7 +60,7 @@ contract AgoraDaoFabric is Ownable {
         AgoraDao createdDaoContract = new AgoraDao(address(this), msg.sender);
 
         Dao memory newDao = Dao(
-            daoCounter,
+            allDaos.length,
             msg.sender,
             address(createdDaoContract),
             _name,
@@ -69,12 +70,15 @@ contract AgoraDaoFabric is Ownable {
             _isPublic,
             block.timestamp
         );
+
         //store dao
-        daos[msg.sender] = newDao;
+        daosByUser[msg.sender].push(newDao);
+        allDaos.push(newDao);
 
-        emit DaoCreated(daoCounter, msg.sender, _name, block.timestamp);
+        //emit event
+        emit DaoCreated(allDaos.length, msg.sender, _name, block.timestamp);
 
-        daoCounter++;
+        addUserCounter(msg.sender);
     }
 
     function addDaoCategory(string memory newCategory) external onlyOwner {
@@ -90,9 +94,50 @@ contract AgoraDaoFabric is Ownable {
         daoCategories.push(newCategory);
     }
 
+    function addUserCounter(address _newUser) public {
+        if (!users[_newUser]) {
+            users[_newUser] = true;
+            userCounter++;
+        }
+    }
+
+    function withdraw() external onlyOwner {
+        payable(owner()).transfer(address(this).balance);
+    }
+
     // --- read functions ---
     function getAllDaoCategories() external view returns (string[] memory) {
         return daoCategories;
+    }
+
+    // function getAllDaos() external view returns (Dao[] memory) {
+    //TODO: VERIFICAR POR CODIGO O ALGO PARA VER SI ES DISPONIBLE EL JOIN
+    //     return allDaos;
+    // }
+
+    function getPublicDaos() external view returns (Dao[] memory) {
+        uint256 count;
+        for (uint256 i = 0; i < allDaos.length; i++) {
+            if (allDaos[i].isPublic) {
+                count++;
+            }
+        }
+
+        Dao[] memory publicDaos = new Dao[](count);
+        uint256 index;
+
+        for (uint256 i = 0; i < allDaos.length; i++) {
+            if (allDaos[i].isPublic) {
+                publicDaos[index] = allDaos[i];
+                index++;
+            }
+        }
+
+        return publicDaos;
+    }
+
+    function getTotalDaoCount() external view returns (uint256) {
+        return allDaos.length;
     }
 
     receive() external payable {}
