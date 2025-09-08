@@ -182,6 +182,7 @@ export type UseScaffoldWriteConfig<TContractName extends ContractName> = {
   chainId?: AllowedChainIds;
   disableSimulate?: boolean;
   writeContractParams?: UseWriteContractParameters;
+  contractAddress?: string;
 };
 
 export type UseScaffoldReadConfig<
@@ -305,6 +306,7 @@ export type UseScaffoldEventHistoryConfig<
   watch?: boolean;
   enabled?: boolean;
   blocksBatchSize?: number;
+  contractAddress?: string;
 };
 
 export type UseScaffoldEventHistoryData<

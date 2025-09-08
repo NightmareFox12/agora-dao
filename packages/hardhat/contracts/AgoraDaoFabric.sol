@@ -44,7 +44,7 @@ contract AgoraDaoFabric is Ownable {
         daoCategories.push("ENERGY");
     }
 
-        //TODO: hacer un mapping de daos para verificar desde el padre y asi saber que llama solo un hijo canonico
+    //TODO: hacer un mapping de daos para verificar desde el padre y asi saber que llama solo un hijo canonico
 
     // --- write functions ---
     function createDao(
@@ -55,13 +55,15 @@ contract AgoraDaoFabric is Ownable {
         bool _isPublic
     ) external {
         //validations
-        require(bytes(_name).length > 0, "Dao name must not be empty.");
-        require(bytes(_description).length > 0, "Dao description must not be empty.");
+        require(bytes(_name).length > 0, "Dao name must not be empty");
+        require(bytes(_name).length <= 30, "The name of the DAO is very long");
+        require(bytes(_description).length > 0, "DAO description must not be empty");
+        require(bytes(_description).length <= 300, "The description of the DAO is very long");
+
         require(_categoryID < daoCategories.length, "Invalid category ID.");
-        // require(bytes(_imageURI).length > 0, "Image URI must not be empty.");
 
         //TODO: me falta verificar que el nombre no este repetido
-        
+
         //create dao
         AgoraDao createdDaoContract = new AgoraDao(address(this), msg.sender);
 

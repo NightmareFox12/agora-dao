@@ -7,7 +7,7 @@ export const DaoSchema = z.object({
     .min(2, {
       message: "DAO name must be at least 2 characters.",
     })
-    .max(50, {
+    .max(30, {
       message: "Character limit exceeded",
     }),
 

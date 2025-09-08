@@ -93,6 +93,7 @@ export const useScaffoldEventHistory = <
   watch,
   enabled = true,
   blocksBatchSize = 500,
+  contractAddress,
 }: UseScaffoldEventHistoryConfig<TContractName, TEventName, TBlockData, TTransactionData, TReceiptData>) => {
   const selectedNetwork = useSelectedNetwork(chainId);
 
@@ -139,7 +140,7 @@ export const useScaffoldEventHistory = <
       "eventHistory",
       {
         contractName,
-        address: deployedContractData?.address,
+        address: contractAddress ?? deployedContractData?.address,
         eventName,
         fromBlock: fromBlockValue?.toString(),
         toBlock: toBlock?.toString(),

@@ -201,7 +201,7 @@ export const CreateDaoDialog: React.FC = () => {
                       {fieldState.error === undefined && <span />}
                       <FormMessage className="-my-1" />
 
-                      <FormDescription className="-my-1 justify-end">{field.value.length}/50</FormDescription>
+                      <FormDescription className="-my-1 justify-end">{field.value.length}/30</FormDescription>
                     </div>
                   </FormItem>
                 )}

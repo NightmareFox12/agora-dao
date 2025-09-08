@@ -2,12 +2,14 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Image, Info, Users } from "lucide-react";
+import { DaoDetailsDialog } from "./DaoDetailsDialog";
+import { Image, Users } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
 import { Skeleton } from "~~/components/ui/shadcn/skeleton";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth/useScaffoldReadContract";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth/useScaffoldWriteContract";
 
 //dinamycs
 const NoSSRBadge = dynamic(() => import("~~/components/ui/shadcn/badge").then(module => module.Badge), { ssr: false });
@@ -56,13 +58,29 @@ export const DaoCard: React.FC<DaoCardProps> = ({
   const isDarkMode = (resolvedTheme ?? "light") === "dark";
 
   //smart contract
+  const { writeContractAsync: writeAgoraDaoAsync } = useScaffoldWriteContract({
+    contractName: "AgoraDao",
+    contractAddress: daoAddress,
+  });
+
   const { data: userCounter, isLoading: userCounterLoading } = useScaffoldReadContract({
     contractName: "AgoraDao",
     functionName: "userCounter",
     contractAddress: daoAddress,
   });
 
-  console.log(creationDate);
+  //functions
+  const handleJoinDao = async () => {
+    try {
+      await writeAgoraDaoAsync({
+        functionName: "joinDao",
+        // args: [],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Card className="flex flex-col transition-all hover:shadow-lg">
       <CardHeader>
@@ -106,17 +124,24 @@ export const DaoCard: React.FC<DaoCardProps> = ({
       </CardHeader>
 
       <CardContent className="flex-1">
-        <CardDescription className="text-sm leading-relaxed">{description}</CardDescription>
+        <CardDescription className="text-sm leading-relaxed break-all">
+          {description.length > 100 ? description.slice(0, 100) + "..." : description}
+        </CardDescription>
       </CardContent>
 
       <CardFooter>
         <div className="w-full flex items-center justify-between gap-1 md:gap-1.5">
-          <Button className="flex-1 " size="sm">
+          <Button onClick={handleJoinDao} className="flex-1 " size="sm">
             Unirse a la DAO
           </Button>
-          <Button size="sm">
-            <Info className="h-4 w-4" />
-          </Button>
+          <DaoDetailsDialog
+            daoID={daoID}
+            daoAddress={daoAddress}
+            name={name}
+            description={description}
+            imageUri={imageUri}
+            creationDate={creationDate}
+          />
         </div>
       </CardFooter>
     </Card>
