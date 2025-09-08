@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DaoSchema = z.object({
+export const DaoFormSchema = z.object({
   name: z
     .string()
     .trim()

@@ -51,7 +51,8 @@ export const DaoDetailsDialog: React.FC<DaoDetailsDialogProps> = ({
     receiptData: true,
   });
 
-  console.log(userJoined);
+  console.log(userJoined); //devuelve un arr de events
+  //TODO: agregar tabla de eventos con un tab para (unidos,votaciones o mas cosas)
   return (
     <Dialog>
       <DialogTrigger asChild>

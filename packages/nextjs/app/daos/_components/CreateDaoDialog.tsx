@@ -36,7 +36,7 @@ import { Textarea } from "~~/components/ui/shadcn/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~~/components/ui/shadcn/tooltip";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useBreakpoint } from "~~/hooks/useBreakpoint";
-import { DaoSchema } from "~~/lib/schemes/dao.scheme";
+import { DaoFormSchema } from "~~/lib/schemes/dao.scheme";
 
 export const CreateDaoDialog: React.FC = () => {
   const { isMd } = useBreakpoint();
@@ -47,8 +47,8 @@ export const CreateDaoDialog: React.FC = () => {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   // Form
-  const daoForm = useForm<z.infer<typeof DaoSchema>>({
-    resolver: zodResolver(DaoSchema),
+  const daoForm = useForm<z.infer<typeof DaoFormSchema>>({
+    resolver: zodResolver(DaoFormSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -105,7 +105,7 @@ export const CreateDaoDialog: React.FC = () => {
     return file;
   };
 
-  const onSubmit = async (data: z.infer<typeof DaoSchema>) => {
+  const onSubmit = async (data: z.infer<typeof DaoFormSchema>) => {
     try {
       setSubmitLoading(true);
       console.log(data);
