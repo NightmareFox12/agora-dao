@@ -2,12 +2,10 @@
 
 import { CreateDaoDialog } from "./_components/CreateDaoDialog";
 import { DaoCard } from "./_components/DaoCard";
-import { Building, Coins, Frown, Funnel, Gamepad2, Heart, Search, Users, Zap } from "lucide-react";
+import { HeaderDaoList } from "./_components/HeaderDaoList";
+import { Building, Coins, Frown, Gamepad2, Heart, Users, Zap } from "lucide-react";
 import { NextPage } from "next";
-import { Button } from "~~/components/ui/shadcn/button";
-import { Input } from "~~/components/ui/shadcn/input";
-
-// import { useHeaderStore } from "~~/services/store/header.store.";
+import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 
 const daos = [
   {
@@ -64,39 +62,15 @@ const daos = [
 // const daos: any = [];
 
 const DaosPage: NextPage = async () => {
-  // const { setShowHeader } = useHeaderStore();
-
-  //effects
-  // useEffect(() => {
-  //   setShowHeader(false);
-  // }, [setShowHeader]);
-
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="xl:container mx-auto px-6 py-1">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="text-3xl text-center md:text-left font-bold text-balance">Available DAOs</h1>
-              <p className="text-center md:text-left text-muted-foreground mt-2 ">
-                Discover and join decentralized autonomous organizations
-              </p>
-            </div>
-            <div className="flex gap-4 mb-2 justify-center md:mb-0 md:justify-start">
-              <div className="relative w-full md:max-w-sm">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input placeholder="Buscar DAOs..." className="pl-10" />
-              </div>
-              <Button size="icon">
-                <Funnel className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <HeaderDaoList />
       {/* Create Dao Dialog */}
+      <div className="flex justify-center mt-3">
+        <RainbowKitCustomConnectButton />
+        <FaucetButton />
+      </div>
       <CreateDaoDialog />
 
       {/* Empty State Message */}

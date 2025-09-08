@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleQuestionMarkIcon, Loader, Plus, Rocket, Trash, Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import RotatingText from "~~/components/ui/RotatingText";
 import { Button } from "~~/components/ui/shadcn/button";
@@ -11,7 +12,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -34,7 +34,7 @@ import { Skeleton } from "~~/components/ui/shadcn/skeleton";
 import { Switch } from "~~/components/ui/shadcn/switch";
 import { Textarea } from "~~/components/ui/shadcn/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~~/components/ui/shadcn/tooltip";
-import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useBreakpoint } from "~~/hooks/useBreakpoint";
 import { DaoSchema } from "~~/lib/schemes/dao.scheme";
 
@@ -44,6 +44,7 @@ export const CreateDaoDialog: React.FC = () => {
   //states
   const [loadImage, setLoadImage] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   // Form
   const daoForm = useForm<z.infer<typeof DaoSchema>>({
@@ -52,7 +53,7 @@ export const CreateDaoDialog: React.FC = () => {
     defaultValues: {
       name: "",
       description: "",
-      categories: "",
+      categories: undefined,
       logo: undefined,
       isPublic: true,
     },
@@ -62,6 +63,8 @@ export const CreateDaoDialog: React.FC = () => {
   const logoFile = daoForm.watch("logo");
 
   //Smart contract
+  const { writeContractAsync: writeAgoraDaoFabricAsync } = useScaffoldWriteContract({ contractName: "AgoraDaoFabric" });
+
   const { data: daoCategories, isLoading: daoCategoriesLoading } = useScaffoldReadContract({
     contractName: "AgoraDaoFabric",
     functionName: "getAllDaoCategories",
@@ -95,17 +98,18 @@ export const CreateDaoDialog: React.FC = () => {
 
     if (file.size >= 1024 * 1024) {
       daoForm.setError("logo", { message: "The image is greater than 1MB" });
-      return null;
+      return undefined;
     }
 
     daoForm.clearErrors("logo");
     return file;
   };
 
-  const handleSubmit = async (data: z.infer<typeof DaoSchema>) => {
+  const onSubmit = async (data: z.infer<typeof DaoSchema>) => {
     try {
+      setSubmitLoading(true);
       console.log(data);
-
+      let res: { response: string; cid: string } | undefined;
       if (data.logo) {
         const formData = new FormData();
         formData.append("name", data.name);
@@ -116,16 +120,24 @@ export const CreateDaoDialog: React.FC = () => {
           body: formData,
         });
 
-        const res = await req.json();
-
+        res = await req.json();
         console.log(res);
+
+        if (!req.ok) return toast.error(res!.response);
       }
+
+      await writeAgoraDaoFabricAsync({
+        functionName: "createDao",
+        args: [data.name, data.description, BigInt(data.categories), res?.cid || "", data.isPublic],
+      });
     } catch (err) {
       console.log(err);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
-  //TODO: pinnata eliminacion tambien, por si el suario se sale (pensar esto bien)
+  //TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
   //TODO: luego de la imagen conectar la creacion con el smart contract
   //TODO: Poner filtros al buscador como por ejemplo daos creadas por ti
   //TODO: inventarme la de la vaina de acceso para daos privadas
@@ -167,7 +179,7 @@ export const CreateDaoDialog: React.FC = () => {
 
           <Form {...daoForm}>
             <form
-              onSubmit={daoForm.handleSubmit(handleSubmit)}
+              onSubmit={daoForm.handleSubmit(onSubmit)}
               autoComplete="off"
               autoCapitalize="sentences"
               className="space-y-4 px-1"
@@ -176,6 +188,7 @@ export const CreateDaoDialog: React.FC = () => {
               <FormField
                 control={daoForm.control}
                 name="name"
+                disabled={submitLoading}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
@@ -193,10 +206,12 @@ export const CreateDaoDialog: React.FC = () => {
                   </FormItem>
                 )}
               />
+
               {/* Description */}
               <FormField
                 control={daoForm.control}
                 name="description"
+                disabled={submitLoading}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>
@@ -226,12 +241,13 @@ export const CreateDaoDialog: React.FC = () => {
                 <FormField
                   control={daoForm.control}
                   name="categories"
+                  disabled={submitLoading}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
                         Categories <span className="text-destructive font-bold text-bold">*</span>
                       </FormLabel>
-                      <Select onValueChange={field.onChange}>
+                      <Select value={field.value} onValueChange={field.onChange} disabled={submitLoading}>
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Choose a category" />
@@ -240,7 +256,7 @@ export const CreateDaoDialog: React.FC = () => {
 
                         <SelectContent>
                           {daoCategories.map((x, y) => (
-                            <SelectItem key={y} value={x}>
+                            <SelectItem key={y} value={y.toString()}>
                               {x.toString().toLowerCase()}
                             </SelectItem>
                           ))}
@@ -256,6 +272,7 @@ export const CreateDaoDialog: React.FC = () => {
               <FormField
                 control={daoForm.control}
                 name="logo"
+                disabled={submitLoading}
                 render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
@@ -278,10 +295,12 @@ export const CreateDaoDialog: React.FC = () => {
                       <div className="relative h-60 bg-accent rounded-lg flex flex-col items-center justify-center overflow-hidden mx-2 border">
                         <input
                           type="file"
+                          onClick={e => (e.currentTarget.value = "")}
                           onChange={async e => {
                             const file = await isUploadFormImage(e);
-                            if (file !== null) field.onChange(file);
+                            if (file !== undefined) field.onChange(file);
                           }}
+                          disabled={submitLoading}
                           accept=".jpeg,.png,.jpg"
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
@@ -298,13 +317,14 @@ export const CreateDaoDialog: React.FC = () => {
                               />
                             }
 
-                            {/* Botón */}
+                            {/* Button */}
                             <div className="absolute top-2 right-2 z-30">
                               <Button
                                 type="button"
                                 size="sm"
                                 variant="destructive"
                                 onClick={() => daoForm.setValue("logo", undefined)}
+                                disabled={submitLoading}
                                 className="hover:bg-destructive/80 hover:scale-[0.90] transition-all delay-75"
                               >
                                 <Trash />
@@ -338,6 +358,7 @@ export const CreateDaoDialog: React.FC = () => {
               <FormField
                 control={daoForm.control}
                 name="isPublic"
+                disabled={submitLoading}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="w-full flex justify-between">
@@ -363,7 +384,11 @@ export const CreateDaoDialog: React.FC = () => {
                     <FormControl>
                       <div className="flex justify-center gap-2">
                         <Label htmlFor="airplane-mode">{field.value ? "Public DAO" : "Private DAO"}</Label>
-                        <Switch checked={field.value} onCheckedChange={value => field.onChange(value)} />
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={value => field.onChange(value)}
+                          disabled={submitLoading}
+                        />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -372,23 +397,25 @@ export const CreateDaoDialog: React.FC = () => {
               />
 
               {/* Submit buttons */}
-              <DialogFooter>
-                <div className="w-full flex justify-center gap-6 mt-4">
-                  <Button type="button" onClick={() => daoForm.reset()} variant="destructive">
-                    <Trash className="w-4 h-4" />
-                    Clear all
-                  </Button>
-                  <Button type="submit" disabled={daoCategoriesLoading || !daoForm.formState.isValid}>
-                    {daoCategoriesLoading ? (
+              <div className="w-full flex justify-center gap-6 mt-4">
+                <Button type="button" onClick={() => daoForm.reset()} disabled={submitLoading} variant="destructive">
+                  <Trash className="w-4 h-4" />
+                  Clear all
+                </Button>
+
+                <Button type="submit" disabled={daoCategoriesLoading || submitLoading || !daoForm.formState.isValid}>
+                  {daoCategoriesLoading || submitLoading ? (
+                    <>
                       <Loader className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <>
-                        <Rocket className="w-4 h-4" /> Launch DAO
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </DialogFooter>
+                      Creating DAO
+                    </>
+                  ) : (
+                    <>
+                      <Rocket className="w-4 h-4" /> Launch DAO
+                    </>
+                  )}
+                </Button>
+              </div>
             </form>
           </Form>
         </ScrollArea>

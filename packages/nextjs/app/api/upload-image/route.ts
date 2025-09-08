@@ -18,11 +18,12 @@ export const POST = async (request: NextRequest) => {
     const newFile = new File([logo], fileName);
     const upload = await pinata.upload.public.file(newFile);
 
-    console.log(upload);
-
-    return NextResponse.json({ response: "image upload success!" });
+    return NextResponse.json({ response: "image upload success!", cid: upload.cid });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ response: "An error has ocurred on the server" }, { status: 500 });
+    return NextResponse.json(
+      { response: "An error ocurred while uploading the image. Check your internet" },
+      { status: 500 },
+    );
   }
 };

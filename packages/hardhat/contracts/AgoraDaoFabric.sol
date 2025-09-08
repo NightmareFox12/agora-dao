@@ -54,7 +54,7 @@ contract AgoraDaoFabric is Ownable {
         require(bytes(_name).length > 0, "Dao name must not be empty.");
         require(bytes(_description).length > 0, "Dao description must not be empty.");
         require(_categoryID < daoCategories.length, "Invalid category ID.");
-        require(bytes(_imageURI).length > 0, "Image URI must not be empty.");
+        // require(bytes(_imageURI).length > 0, "Image URI must not be empty.");
 
         //TODO: me falta verificar que el nombre no este repetido
 

@@ -21,9 +21,7 @@ export const DaoSchema = z.object({
       message: "Character limit exceeded",
     }),
 
-  categories: z.string().min(1, {
-    message: "The category cannot be empty",
-  }),
+  categories: z.string(),
 
   logo: z
     .instanceof(File)
