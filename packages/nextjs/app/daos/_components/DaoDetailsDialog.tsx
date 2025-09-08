@@ -1,5 +1,8 @@
-import dynamic from "next/dynamic";
+import { useMemo } from "react";
+import { UserJoinedTable } from "./DaoDetailsEvents/userJoined";
+import { UserJoinedEvent } from "./DaoDetailsEvents/userJoined/userJoinedColumns";
 import { Image, Info } from "lucide-react";
+import { Badge } from "~~/components/ui/shadcn/badge";
 import { Button } from "~~/components/ui/shadcn/button";
 import {
   Dialog,
@@ -9,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~~/components/ui/shadcn/dialog";
+import { ScrollArea, ScrollBar } from "~~/components/ui/shadcn/scroll-area";
 import { useScaffoldEventHistory } from "~~/hooks/scaffold-eth/useScaffoldEventHistory";
 
 type DaoDetailsDialogProps = {
@@ -19,9 +23,6 @@ type DaoDetailsDialogProps = {
   imageUri: string;
   creationDate: bigint;
 };
-
-//dinamycs
-const NoSSRBadge = dynamic(() => import("~~/components/ui/shadcn/badge").then(module => module.Badge), { ssr: false });
 
 export const DaoDetailsDialog: React.FC<DaoDetailsDialogProps> = ({
   daoID,
@@ -51,8 +52,22 @@ export const DaoDetailsDialog: React.FC<DaoDetailsDialogProps> = ({
     receiptData: true,
   });
 
-  console.log(userJoined); //devuelve un arr de events
   //TODO: agregar tabla de eventos con un tab para (unidos,votaciones o mas cosas)
+
+  //memos
+  const userJoinedEvent = useMemo(() => {
+    if (!userJoined || userJoined.length === 0) return [];
+
+    const data: UserJoinedEvent[] = [];
+
+    userJoined.map(x => {
+      console.log(x);
+      data.push(x as unknown as UserJoinedEvent);
+    });
+
+    return data;
+  }, [userJoined]);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -65,10 +80,10 @@ export const DaoDetailsDialog: React.FC<DaoDetailsDialogProps> = ({
           <DialogTitle>{name} Details</DialogTitle>
           <DialogDescription className="break-all">{description}</DialogDescription>
         </DialogHeader>
-        <article>
+        <article className="flex flex-col">
           <div className="flex justify-between my-2">
             <span className="text-sm text-muted-foreground">Created on: {parsedDate}</span>
-            <NoSSRBadge>ID #{daoID}</NoSSRBadge>
+            <Badge>ID #{daoID}</Badge>
           </div>
 
           <div className="flex justify-center items-center flex-col">
@@ -82,7 +97,10 @@ export const DaoDetailsDialog: React.FC<DaoDetailsDialogProps> = ({
             <span className="text-sm text-muted-foreground">Logo</span>
           </div>
 
-          {/* meter una tabla con los ultimos unidos, leyendo un buen event  */}
+          <ScrollArea className="max-w-md">
+            <UserJoinedTable data={userJoinedEvent} />
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </article>
       </DialogContent>
     </Dialog>
