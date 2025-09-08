@@ -18,7 +18,7 @@ contract AgoraDaoFabric is Ownable {
         address daoAddress;
         string name;
         string description;
-        uint256 categoryID;
+        string category;
         string imageURI;
         bool isPublic;
         uint256 creationTimestamp;
@@ -29,11 +29,13 @@ contract AgoraDaoFabric is Ownable {
     string[] internal daoCategories;
     Dao[] internal allDaos;
 
+    //mappings
     mapping(address => Dao[]) public daosByUser;
     mapping(address => bool) internal users;
+    mapping(address => bool) internal isAgoraDao;
 
     //events
-    event DaoCreated(uint256 indexed daoID, address indexed creator, string indexed name, uint256 creationTimestamp);
+    event DaoCreated(uint256 indexed daoID, address indexed creator, string indexed name);
 
     constructor(address initialOwner) Ownable(initialOwner) {
         daoCategories.push("SERVICE");
@@ -41,6 +43,8 @@ contract AgoraDaoFabric is Ownable {
         daoCategories.push("SOCIAL IMPACT");
         daoCategories.push("ENERGY");
     }
+
+        //TODO: hacer un mapping de daos para verificar desde el padre y asi saber que llama solo un hijo canonico
 
     // --- write functions ---
     function createDao(
@@ -57,7 +61,7 @@ contract AgoraDaoFabric is Ownable {
         // require(bytes(_imageURI).length > 0, "Image URI must not be empty.");
 
         //TODO: me falta verificar que el nombre no este repetido
-
+        
         //create dao
         AgoraDao createdDaoContract = new AgoraDao(address(this), msg.sender);
 
@@ -67,7 +71,7 @@ contract AgoraDaoFabric is Ownable {
             address(createdDaoContract),
             _name,
             _description,
-            _categoryID,
+            daoCategories[_categoryID],
             _imageURI,
             _isPublic,
             block.timestamp
@@ -76,9 +80,10 @@ contract AgoraDaoFabric is Ownable {
         //store dao
         daosByUser[msg.sender].push(newDao);
         allDaos.push(newDao);
+        isAgoraDao[address(createdDaoContract)] = true;
 
         //emit event
-        emit DaoCreated(allDaos.length, msg.sender, _name, block.timestamp);
+        emit DaoCreated(allDaos.length, msg.sender, _name);
 
         addUserCounter(msg.sender);
     }

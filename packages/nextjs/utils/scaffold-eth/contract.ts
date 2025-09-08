@@ -191,6 +191,7 @@ export type UseScaffoldReadConfig<
   contractName: TContractName;
   chainId?: AllowedChainIds;
   watch?: boolean;
+  contractAddress?: string;
 } & IsContractDeclarationMissing<
   Partial<UseReadContractParameters>,
   {

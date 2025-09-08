@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     AgoraDao: {
-      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      address: "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
       abi: [
         {
           inputs: [
@@ -26,8 +26,66 @@ const deployedContracts = {
           type: "constructor",
         },
         {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "userID",
+              type: "uint256",
+            },
+          ],
+          name: "UserJoined",
+          type: "event",
+        },
+        {
           inputs: [],
           name: "daoID",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "isUser",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "joinDao",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "userCounter",
           outputs: [
             {
               internalType: "uint256",
@@ -44,10 +102,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 7,
+      deployedOnBlock: 21,
     },
     AgoraDaoFabric: {
-      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      address: "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
       abi: [
         {
           inputs: [
@@ -102,12 +160,6 @@ const deployedContracts = {
               internalType: "string",
               name: "name",
               type: "string",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "creationTimestamp",
-              type: "uint256",
             },
           ],
           name: "DaoCreated",
@@ -232,9 +284,9 @@ const deployedContracts = {
               type: "string",
             },
             {
-              internalType: "uint256",
-              name: "categoryID",
-              type: "uint256",
+              internalType: "string",
+              name: "category",
+              type: "string",
             },
             {
               internalType: "string",
@@ -300,9 +352,9 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
-                  internalType: "uint256",
-                  name: "categoryID",
-                  type: "uint256",
+                  internalType: "string",
+                  name: "category",
+                  type: "string",
                 },
                 {
                   internalType: "string",
@@ -404,7 +456,7 @@ const deployedContracts = {
         renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
         transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
       },
-      deployedOnBlock: 5,
+      deployedOnBlock: 19,
     },
   },
 } as const;
