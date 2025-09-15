@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader, Pen, Trash, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { date, z } from 'zod';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
 import toast from 'react-hot-toast';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
@@ -12,8 +12,9 @@ import { TaskFormSchema } from '~~/libs/schemas/task.schema';
 import { StarkInput } from '~~/components/scaffold-stark';
 import { DayPicker } from 'react-day-picker';
 import { useAccount } from '~~/hooks/useAccount';
-import { formatEther } from 'ethers';
+import { formatEther, parseEther } from 'ethers';
 import useScaffoldStrkBalance from '~~/hooks/scaffold-stark/useScaffoldStrkBalance';
+import { useScaffoldMultiWriteContract } from '~~/hooks/scaffold-stark/useScaffoldMultiWriteContract';
 
 type CreateTaskDialogProps = {
   daoAddress: string;
@@ -34,6 +35,16 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
   //states
   const [showDeadLine, setShowDeadline] = useState<boolean>(true);
+
+  const [createTaskArgs, setCreateTaskArgs] = useState({
+    title: '',
+    description: '',
+    category: 0n,
+    difficulty: 0n,
+    reward: 0n,
+    deadline: 0n,
+  });
+
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   //refs
@@ -69,10 +80,33 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       address,
     });
 
-  const { sendAsync } = useScaffoldWriteContract({
-    contractName: 'AgoraDaoFabric',
-    functionName: 'create_dao',
-    args: ['', '', 0n, '', false],
+  // const { sendAsync } = useScaffoldWriteContract({
+  //   contractName: 'AgoraDaoFabric',
+  //   functionName: 'create_dao',
+  //   args: ['', '', 0n, '', false],
+  // });
+
+  const { sendAsync } = useScaffoldMultiWriteContract({
+    calls: [
+      {
+        contractName: 'Strk',
+        functionName: 'approve',
+        args: [daoAddress, parseEther(amountWatch?.toString() ?? '0')],
+      },
+      {
+        contractName: 'AgoraDao',
+        functionName: 'create_task',
+        args: [
+          createTaskArgs.title,
+          createTaskArgs.description,
+          createTaskArgs.category,
+          createTaskArgs.difficulty,
+          createTaskArgs.reward,
+          createTaskArgs.deadline,
+        ],
+        contractAddress: daoAddress,
+      },
+    ],
   });
 
   const { data: taskCategories, isLoading: taskCategoriesLoading } =
@@ -95,19 +129,23 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       console.log(data);
       setSubmitLoading(true);
 
-      // await sendAsync({
-      //   args: [
-      //     data.title,
-      //     data.description,
-      //     BigInt(data.category ?? 0),
-      //     res?.cid ?? '',
-      //     data.isPublic,
-      //   ],
-      // });
+      const formatDeadLine = showDeadLine
+        ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
+        : 0n;
+
+      setCreateTaskArgs({
+        title: data.title,
+        description: data.description,
+        category: BigInt(data.category),
+        difficulty: BigInt(data.difficulty),
+        reward: parseEther(data.reward),
+        deadline: formatDeadLine,
+      });
+      await sendAsync();
       taskForm.reset();
 
       dialogRef.current?.close();
-      toast.success('DAO created successfully', { duration: 5000 });
+      toast.success('Task created successfully!', { duration: 5000 });
     } catch (err) {
       console.log(err);
     } finally {
@@ -167,6 +205,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </legend>
             <input
               {...taskForm.register('title')}
+              name='title'
               className='input w-full bg-base-300'
               placeholder='e.g. Governance Stark'
             />
@@ -191,6 +230,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </legend>
             <textarea
               {...taskForm.register('description')}
+              name='description'
               placeholder='e.g. A decentralized organization that enables transparent decision-making, in which users actively participate in the financing and management of community-driven projects.'
               className='textarea resize-none h-28 w-full bg-base-300'
             />
@@ -219,6 +259,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               <select
                 value={categoriesWatch}
                 {...taskForm.register('category')}
+                name='category'
                 className='select w-full bg-base-300'
               >
                 <option disabled={true}>Pick a category</option>
@@ -248,6 +289,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               <select
                 value={difficultyWatch}
                 {...taskForm.register('difficulty')}
+                name='difficulty'
                 className='select w-full bg-base-300'
               >
                 <option disabled={true}>Pick a Difficulty</option>
@@ -257,9 +299,9 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
                   </option>
                 ))}
               </select>
-              {taskForm.formState.errors.category && (
+              {taskForm.formState.errors.difficulty && (
                 <span className='label text-error my-0'>
-                  {taskForm.formState.errors.category.message}
+                  {taskForm.formState.errors.difficulty.message}
                 </span>
               )}
             </fieldset>
@@ -274,7 +316,11 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             <StarkInput
               value={amountWatch}
               {...taskForm.register('reward')}
-              onChange={(value) => taskForm.setValue('reward', value)}
+              name='reward'
+              onChange={(value) => {
+                console.log();
+                taskForm.setValue('reward', value);
+              }}
               placeholder='Enter the reward amount'
             />
 
