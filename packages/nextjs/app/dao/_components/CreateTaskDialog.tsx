@@ -4,8 +4,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader, Pen, Trash, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { date, z } from 'zod';
-import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
+import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { TaskFormSchema } from '~~/libs/schemas/task.schema';
@@ -59,7 +58,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       description: '',
       category: 'default',
       difficulty: 'default',
-      reward: '0',
+      reward: undefined,
       deadline: threeDaysLater,
     },
   });
@@ -77,6 +76,26 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     useScaffoldStrkBalance({
       address,
     });
+
+  const buildArgs = () => {
+    const values = taskForm.getValues();
+
+    const formatDeadLine = showDeadLine
+      ? BigInt(Math.floor(values.deadline!.getTime() / 1000))
+      : 0n;
+
+    return [
+      values.title,
+      values.description,
+      BigInt(values.category === 'default' ? 0n : values.difficulty),
+      BigInt(values.difficulty === 'default' ? 0n : values.difficulty),
+      parseEther(
+        isNaN(parseFloat(values.reward)) ? '0' : (values.reward ?? 0n)
+      ),
+      formatDeadLine,
+    ] as const;
+  };
+
   const { sendAsync } = useScaffoldMultiWriteContract({
     calls: [
       {
@@ -94,14 +113,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       {
         contractName: 'AgoraDao',
         functionName: 'create_task',
-        args: [
-          createTaskArgsRef.current.title,
-          createTaskArgsRef.current.description,
-          createTaskArgsRef.current.category,
-          createTaskArgsRef.current.difficulty,
-          createTaskArgsRef.current.reward,
-          createTaskArgsRef.current.deadline,
-        ],
+        args: buildArgs(),
         contractAddress: daoAddress,
       },
     ],
@@ -124,8 +136,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   //functions
   const onSubmit = async (data: z.infer<typeof TaskFormSchema>) => {
     try {
-      console.log(data);
       setSubmitLoading(true);
+      // console.log(data);
 
       const formatDeadLine = showDeadLine
         ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
@@ -139,6 +151,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         reward: parseEther(data.reward),
         deadline: formatDeadLine,
       };
+
+      buildArgs();
+
+      console.log(createTaskArgsRef.current);
       await sendAsync();
       taskForm.reset();
 
