@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x536437283283a7e4e3d085af1922b73ef9a236ffee6239eacf9ff3eee8b2045",
+        "0x4a15c804d142225ab466dd9b9b11594f87ddbd0660c1f929e1b70fadc6ac9df",
       abi: [
         {
           type: "impl",
@@ -258,30 +258,16 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x6813acb48fce1123adad2b55e9a8013f63530422f4887644d0fb507ddc3fd32",
+        "0x447861e12dbdbf97d5a8f1fa95c86726c7dc92d1543f5e316cab251acf7f522",
     },
     AgoraDao: {
       address:
-        "0x119970239c419744a163ebaa808914ea1a4535438196df747d10fe32860e5b8",
+        "0x7c0b2627d97f936a36b03c3ffadd633824a4b2529477eeb74a731e23d1099ec",
       abi: [
         {
           type: "impl",
           name: "AgoraDaoImpl",
           interface_name: "contracts::agora_dao::IAgoraDao",
-        },
-        {
-          type: "enum",
-          name: "core::bool",
-          variants: [
-            {
-              name: "False",
-              type: "()",
-            },
-            {
-              name: "True",
-              type: "()",
-            },
-          ],
         },
         {
           type: "struct",
@@ -302,6 +288,20 @@ const deployedContracts = {
           ],
         },
         {
+          type: "enum",
+          name: "core::bool",
+          variants: [
+            {
+              name: "False",
+              type: "()",
+            },
+            {
+              name: "True",
+              type: "()",
+            },
+          ],
+        },
+        {
           type: "interface",
           name: "contracts::agora_dao::IAgoraDao",
           items: [
@@ -309,6 +309,38 @@ const deployedContracts = {
               type: "function",
               name: "join_dao",
               inputs: [],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_task",
+              inputs: [
+                {
+                  name: "title",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "description",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "category_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "difficulty_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "amount",
+                  type: "core::integer::u128",
+                },
+                {
+                  name: "deadline",
+                  type: "core::integer::u64",
+                },
+              ],
               outputs: [],
               state_mutability: "external",
             },
@@ -662,7 +694,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0xd6e7831acaaf5be533f011cbad4212528528a3177dafbe224112dd084ff408",
+        "0x2f0e41faea5bf985252d79446f0ece3a7866e4d6d44827cf584f13f30e70e77",
     },
   },
 } as const;
