@@ -44,7 +44,7 @@ pub mod AgoraDao {
     use super::constants::FELT_STRK_CONTRACT;
 
     //imports
-    use super::events::UserJoined;
+    use super::events::{TaskCreated, UserJoined};
     use super::functions::{add_task_category, add_task_difficulty};
     use super::roles::{ADMIN_ROLE, USER_ROLE};
     use super::structs::Task;
@@ -69,10 +69,12 @@ pub mod AgoraDao {
     struct Storage {
         pub fabric: ContractAddress,
         pub user_counter: u16,
+        pub task_counter: u16,
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
         //Mappings
         pub users: Map<u16, ContractAddress>,
+        pub tasks: Map<u16, Task>,
         pub task_categories: Map<u16, ByteArray>,
         pub task_difficulties: Map<u16, ByteArray>,
         #[substorage(v0)]
@@ -85,6 +87,7 @@ pub mod AgoraDao {
     #[derive(Drop, starknet::Event)]
     enum Event {
         UserJoined: UserJoined,
+        TaskCreated: TaskCreated,
         #[flat]
         AccessControlEvent: AccessControlComponent::Event,
         #[flat]
@@ -159,9 +162,42 @@ pub mod AgoraDao {
             //TODO: crear una super funcion para verificar el rol/roles
             let caller = get_caller_address();
 
+            //transfer
             let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();
             let strk_dispatcher = IERC20Dispatcher { contract_address: strk_contract_address };
             strk_dispatcher.transfer_from(caller, get_contract_address(), amount);
+
+            //save task
+            let task_id = self.task_counter.read();
+            self
+                .tasks
+                .write(
+                    task_id,
+                    Task {
+                        task_id: task_id,
+                        creator: caller,
+                        title: title.clone(),
+                        description: description,
+                        category: self.task_categories.read(category_ID),
+                        difficulty: self.task_difficulties.read(difficulty_ID),
+                        reward: amount,
+                        deadline: deadline,
+                    },
+                );
+            //emit event
+            self
+                .emit(
+                    TaskCreated {
+                        creator: caller,
+                        task_ID: task_id,
+                        title: title,
+                        category: self.task_categories.read(category_ID),
+                        reward: amount,
+                        deadline: deadline,
+                    },
+                );
+
+            self.task_counter.write(task_id + 1);
         }
 
         fn user_counter(self: @ContractState) -> u16 {

@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x44bcb532d7726ec0473335fedd3a6c5364c964d62ac9b0122bef4ee9c445073",
+        "0x36247fce3c4596f72b2d98a506034dfe6adfca8ac4b9cef3a361455409b20ce",
       abi: [
         {
           type: "impl",
@@ -262,7 +262,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x201d35c43b2ea4a6946fd3eb4b094f79ceeb750c8936bc6952255ebe2e584d8",
+        "0x52d74499dc8828d162b76286fa1d6574db7554794da2f966e5f168246ac762c",
       abi: [
         {
           type: "impl",
@@ -560,6 +560,43 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "contracts::agora_dao::events::TaskCreated",
+          kind: "struct",
+          members: [
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "task_ID",
+              type: "core::integer::u16",
+              kind: "key",
+            },
+            {
+              name: "title",
+              type: "core::byte_array::ByteArray",
+              kind: "data",
+            },
+            {
+              name: "category",
+              type: "core::byte_array::ByteArray",
+              kind: "data",
+            },
+            {
+              name: "reward",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+            {
+              name: "deadline",
+              type: "core::integer::u64",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
           kind: "struct",
           members: [
@@ -695,6 +732,11 @@ const deployedContracts = {
               kind: "nested",
             },
             {
+              name: "TaskCreated",
+              type: "contracts::agora_dao::events::TaskCreated",
+              kind: "nested",
+            },
+            {
               name: "AccessControlEvent",
               type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::Event",
               kind: "flat",
@@ -708,7 +750,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x9a5ab62e889d62f231e752986e5a25ce996cbc413848f89fb18ecb34455f75",
+        "0x451973f1c0ef03310a1be1ec6b2295db08367d94433ab3091aa0c488efb0631",
     },
   },
 } as const;
