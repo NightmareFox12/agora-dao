@@ -71,12 +71,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     deadline: deadlineWatch,
   } = taskForm.watch();
 
-  //Smart contract
-  const { value: userBalance, isLoading: userBalanceLoading } =
-    useScaffoldStrkBalance({
-      address,
-    });
-
+  //functions
   const buildArgs = () => {
     const values = taskForm.getValues();
 
@@ -84,17 +79,57 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       ? BigInt(Math.floor(values.deadline!.getTime() / 1000))
       : 0n;
 
+    const safeBigInt = (val: string) =>
+      val && val !== 'default' ? BigInt(val) : 0n;
+
     return [
       values.title,
       values.description,
-      BigInt(values.category === 'default' ? 0n : values.difficulty),
-      BigInt(values.difficulty === 'default' ? 0n : values.difficulty),
+      safeBigInt(values.category),
+      safeBigInt(values.difficulty),
       parseEther(
         isNaN(parseFloat(values.reward)) ? '0' : (values.reward ?? 0n)
       ),
       formatDeadLine,
     ] as const;
   };
+  const onSubmit = async (data: z.infer<typeof TaskFormSchema>) => {
+    try {
+      setSubmitLoading(true);
+      // console.log(data);
+
+      const formatDeadLine = showDeadLine
+        ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
+        : 0n;
+
+      createTaskArgsRef.current = {
+        title: data.title,
+        description: data.description,
+        category: BigInt(data.category),
+        difficulty: BigInt(data.difficulty),
+        reward: parseEther(data.reward),
+        deadline: formatDeadLine,
+      };
+
+      buildArgs();
+
+      await sendAsync();
+      taskForm.reset();
+
+      // dialogRef.current?.close();
+      toast.success('Task created successfully!', { duration: 5000 });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  //Smart contract
+  const { value: userBalance, isLoading: userBalanceLoading } =
+    useScaffoldStrkBalance({
+      address,
+    });
 
   const { sendAsync } = useScaffoldMultiWriteContract({
     calls: [
@@ -132,39 +167,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       functionName: 'get_task_difficulties',
       contractAddress: daoAddress,
     });
-
-  //functions
-  const onSubmit = async (data: z.infer<typeof TaskFormSchema>) => {
-    try {
-      setSubmitLoading(true);
-      // console.log(data);
-
-      const formatDeadLine = showDeadLine
-        ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
-        : 0n;
-
-      createTaskArgsRef.current = {
-        title: data.title,
-        description: data.description,
-        category: BigInt(data.category),
-        difficulty: BigInt(data.difficulty),
-        reward: parseEther(data.reward),
-        deadline: formatDeadLine,
-      };
-
-      buildArgs();
-
-      await sendAsync();
-      taskForm.reset();
-
-      // dialogRef.current?.close();
-      toast.success('Task created successfully!', { duration: 5000 });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setSubmitLoading(false);
-    }
-  };
 
   //effects
   useEffect(() => {
