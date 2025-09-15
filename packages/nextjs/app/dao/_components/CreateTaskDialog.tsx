@@ -1,0 +1,418 @@
+'use client';
+
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader, Pen, Trash, X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
+import toast from 'react-hot-toast';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
+import { TaskFormSchema } from '~~/libs/schemas/task.schema';
+import { StarkInput } from '~~/components/scaffold-stark';
+import { DayPicker } from 'react-day-picker';
+import { useAccount } from '~~/hooks/useAccount';
+import { formatEther } from 'ethers';
+import useScaffoldStrkBalance from '~~/hooks/scaffold-stark/useScaffoldStrkBalance';
+
+type CreateTaskDialogProps = {
+  daoAddress: string;
+  setShowCreateTaskDialog: Dispatch<SetStateAction<boolean>>;
+};
+
+export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
+  daoAddress,
+  setShowCreateTaskDialog,
+}) => {
+  const { address } = useAccount();
+
+  const threeDaysLater = new Date();
+  threeDaysLater.setDate(threeDaysLater.getDate() + 3);
+
+  const oneDayLater = new Date();
+  oneDayLater.setDate(oneDayLater.getDate() + 1);
+
+  //states
+  const [showDeadLine, setShowDeadline] = useState<boolean>(true);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+
+  //refs
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  // Form
+  const taskForm = useForm<z.infer<typeof TaskFormSchema>>({
+    resolver: zodResolver(TaskFormSchema),
+    mode: 'onChange',
+    defaultValues: {
+      title: '',
+      description: '',
+      category: undefined,
+      difficulty: undefined,
+      reward: undefined,
+      deadline: threeDaysLater,
+    },
+  });
+
+  //Subscriptions
+  const {
+    title: nameWatch,
+    description: descriptionWatch,
+    category: categoriesWatch,
+    difficulty: difficultyWatch,
+    reward: amountWatch,
+    deadline: deadlineWatch,
+  } = taskForm.watch();
+
+  //Smart contract
+  const { value: userBalance, isLoading: userBalanceLoading } =
+    useScaffoldStrkBalance({
+      address,
+    });
+
+  const { sendAsync } = useScaffoldWriteContract({
+    contractName: 'AgoraDaoFabric',
+    functionName: 'create_dao',
+    args: ['', '', 0n, '', false],
+  });
+
+  const { data: taskCategories, isLoading: taskCategoriesLoading } =
+    useScaffoldReadContract({
+      contractName: 'AgoraDao',
+      functionName: 'get_task_categories',
+      contractAddress: daoAddress,
+    });
+
+  const { data: taskDifficulties, isLoading: taskDifficultiesLoading } =
+    useScaffoldReadContract({
+      contractName: 'AgoraDao',
+      functionName: 'get_task_difficulties',
+      contractAddress: daoAddress,
+    });
+
+  //functions
+  const onSubmit = async (data: z.infer<typeof TaskFormSchema>) => {
+    try {
+      console.log(data);
+      setSubmitLoading(true);
+
+      // await sendAsync({
+      //   args: [
+      //     data.title,
+      //     data.description,
+      //     BigInt(data.category ?? 0),
+      //     res?.cid ?? '',
+      //     data.isPublic,
+      //   ],
+      // });
+      taskForm.reset();
+
+      dialogRef.current?.close();
+      toast.success('DAO created successfully', { duration: 5000 });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const num = parseFloat(amountWatch ?? 0);
+
+    if (!isNaN(num) && num < 0)
+      taskForm.setError('reward', {
+        message: 'Amount must be a positive number',
+      });
+    else if (!isNaN(num) && num > 0) {
+      const userBa = formatEther(userBalance?.toString() ?? '0');
+
+      if (num > parseFloat(userBa)) {
+        taskForm.setError('reward', {
+          message: 'Insufficient balance',
+        });
+      }
+    } else {
+      taskForm.clearErrors('reward');
+    }
+  }, [amountWatch, taskForm, , userBalance]);
+
+  return (
+    <dialog ref={dialogRef} open={true} id='create_dao_modal' className='modal'>
+      <div className='modal-box sm:w-6/12 sm:!max-w-3xl md:w-6/12 md:!max-w-5xl max-h-[80dvh] !overflow-y-visible'>
+        <button
+          disabled={submitLoading}
+          onClick={() => {
+            dialogRef.current?.close();
+            setShowCreateTaskDialog(false);
+          }}
+          className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+        >
+          <X className='w-4 h-4' />
+        </button>
+        <h3 className='font-bold text-lg'>📄 Create a Task</h3>
+        <p className='text-sm text-base-content/60'>
+          Fill in all the required fields to register this task in the DAO. Once
+          you are ready, click &quot;Create Task&quot; to continue.
+        </p>
+
+        <form
+          onSubmit={taskForm.handleSubmit(onSubmit)}
+          autoCapitalize='sentences'
+          className='space-y-1 px-1'
+        >
+          {/* title */}
+          <fieldset className='fieldset'>
+            <legend className='fieldset-legend text-[13px]'>
+              Title
+              <span className='-ml-1 text-error font-bold text-bold'>*</span>
+            </legend>
+            <input
+              {...taskForm.register('title')}
+              className='input w-full bg-base-300'
+              placeholder='e.g. Governance Stark'
+            />
+            <div className='flex justify-between'>
+              {taskForm.formState.errors.title ? (
+                <p className='label text-error my-0'>
+                  {taskForm.formState.errors.title.message}
+                </p>
+              ) : (
+                <span />
+              )}
+
+              <p className='label my-0'>{nameWatch?.length ?? 0}/50</p>
+            </div>
+          </fieldset>
+
+          {/* description */}
+          <fieldset className='fieldset'>
+            <legend className='fieldset-legend text-[13px]'>
+              Description
+              <span className='-ml-1 text-error font-bold text-bold'>*</span>
+            </legend>
+            <textarea
+              {...taskForm.register('description')}
+              placeholder='e.g. A decentralized organization that enables transparent decision-making, in which users actively participate in the financing and management of community-driven projects.'
+              className='textarea resize-none h-28 w-full bg-base-300'
+            />
+            <div className='flex justify-between'>
+              {taskForm.formState.errors.description ? (
+                <p className='label text-error my-0'>
+                  {taskForm.formState.errors.description.message}
+                </p>
+              ) : (
+                <span />
+              )}
+
+              <p className='label my-0'>{descriptionWatch?.length ?? 0}/500</p>
+            </div>
+          </fieldset>
+
+          {/* categories */}
+          {taskCategoriesLoading || taskCategories === undefined ? (
+            <div className='h-10 w-full skeleton bg-primary' />
+          ) : (
+            <fieldset className='fieldset'>
+              <legend className='fieldset-legend'>
+                Category
+                <span className='-ml-1 text-error font-bold text-bold'>*</span>
+              </legend>
+              <select
+                value={categoriesWatch}
+                {...taskForm.register('category')}
+                className='select w-full bg-base-300'
+              >
+                <option disabled={true}>Pick a category</option>
+                {taskCategories.map((x, y) => (
+                  <option key={y} value={y.toString()}>
+                    {x.toString()}
+                  </option>
+                ))}
+              </select>
+              {taskForm.formState.errors.category && (
+                <span className='label text-error my-0'>
+                  {taskForm.formState.errors.category.message}
+                </span>
+              )}
+            </fieldset>
+          )}
+
+          {/* difficulty level */}
+          {taskDifficultiesLoading || taskDifficulties === undefined ? (
+            <div className='h-10 w-full skeleton bg-primary' />
+          ) : (
+            <fieldset className='fieldset'>
+              <legend className='fieldset-legend'>
+                Difficulty
+                <span className='-ml-1 text-error font-bold text-bold'>*</span>
+              </legend>
+              <select
+                value={difficultyWatch}
+                {...taskForm.register('difficulty')}
+                className='select w-full bg-base-300'
+              >
+                <option disabled={true}>Pick a Difficulty</option>
+                {taskDifficulties.map((x, y) => (
+                  <option key={y} value={y.toString()}>
+                    {x.toString()}
+                  </option>
+                ))}
+              </select>
+              {taskForm.formState.errors.category && (
+                <span className='label text-error my-0'>
+                  {taskForm.formState.errors.category.message}
+                </span>
+              )}
+            </fieldset>
+          )}
+
+          {/* Reward */}
+          <fieldset className='fieldset'>
+            <legend className='fieldset-legend text-[13px]'>
+              Reward
+              <span className=' text-error font-bold text-bold'>*</span>
+            </legend>
+            <StarkInput
+              value={amountWatch}
+              {...taskForm.register('reward')}
+              onChange={(value) => taskForm.setValue('reward', value)}
+              placeholder='Enter the reward amount'
+            />
+
+            <div className='flex justify-between'>
+              {taskForm.formState.errors.reward ? (
+                <p className='label text-error my-0'>
+                  {taskForm.formState.errors.reward.message}
+                </p>
+              ) : (
+                <span />
+              )}
+            </div>
+          </fieldset>
+
+          {/* DeadLine */}
+          <fieldset className='fieldset'>
+            <legend className='fieldset-legend text-[13px]'>Due Date</legend>
+            <div className='flex items-center gap-1'>
+              <input
+                type='checkbox'
+                checked={showDeadLine}
+                onChange={(e) => setShowDeadline(e.target.checked)}
+                className='checkbox'
+              />
+
+              <>
+                <button
+                  popoverTarget='rdp-popover'
+                  type='button'
+                  disabled={submitLoading || !showDeadLine}
+                  className='input input-border bg-base-300 w-full'
+                  style={{ anchorName: '--rdp' } as React.CSSProperties}
+                >
+                  {deadlineWatch
+                    ? deadlineWatch.toLocaleDateString()
+                    : 'Pick a date'}
+                </button>
+                <div
+                  popover='auto'
+                  id='rdp-popover'
+                  className='dropdown'
+                  style={
+                    {
+                      positionAnchor: '--rdp',
+                      positionArea: 'top',
+                    } as React.CSSProperties
+                  }
+                >
+                  <DayPicker
+                    className='react-day-picker'
+                    mode='single'
+                    selected={deadlineWatch}
+                    onSelect={(date) => taskForm.setValue('deadline', date)}
+                    startMonth={new Date()}
+                    hidden={{
+                      before: oneDayLater,
+                    }}
+                  />
+                </div>
+              </>
+            </div>
+            <div className='flex justify-between'>
+              {taskForm.formState.errors.title ? (
+                <p className='label text-error my-0'>
+                  {taskForm.formState.errors.title.message}
+                </p>
+              ) : (
+                <p className='label my-0'>Optional</p>
+              )}
+            </div>
+          </fieldset>
+
+          {/* Questions */}
+          <details className='collapse collapse-arrow bg-base-300 border'>
+            <summary className='collapse-title font-semibold'>
+              What about the reward?
+            </summary>
+            <div className='collapse-content text-sm'>
+              Upon confirmation of this task, the reward will be deposited into
+              the DAO smart contract. Your money will not be spent or withdrawn
+              by anyone. It will remain associated exclusively with this task
+              and will only be released when:
+              <br />
+              <br />
+              - The task is completed and approved
+              <br />- The deadline expires without execution (you will be able
+              to recover your funds)
+            </div>
+          </details>
+
+          {/* Action Buttons */}
+          <div className='modal-action justify-center'>
+            <div>
+              <button
+                type='button'
+                onClick={() => taskForm.reset()}
+                disabled={submitLoading}
+                className='btn btn-error mr-6'
+              >
+                <Trash className='w-4 h-4' />
+                Clear all
+              </button>
+
+              <button
+                type='submit'
+                disabled={
+                  taskCategoriesLoading ||
+                  taskDifficultiesLoading ||
+                  taskForm.formState.isSubmitting ||
+                  userBalanceLoading ||
+                  submitLoading ||
+                  !taskForm.formState.isValid
+                }
+                className='btn btn-accent'
+              >
+                {submitLoading ? (
+                  <>
+                    <Loader className='w-4 h-4 animate-spin' />
+                    Creating DAO
+                  </>
+                ) : (
+                  <>
+                    <Pen className='w-4 h-4' /> Create Task
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  );
+};
+
+//TODO: me falta terminar de arreglar lo de la fecha y luego crear algo para poder aceptar tareas con fechas/sin fechas.
+
+//TODO: luego de subir mi primer tarea hacer lo de los roles para que no todos puedan subir tareas
+
+//TODO: en config establecer lo de los roles con graficas y data
+
+//TODO: poder quitar rol si eres admin
