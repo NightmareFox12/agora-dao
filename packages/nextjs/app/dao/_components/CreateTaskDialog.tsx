@@ -36,7 +36,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   //states
   const [showDeadLine, setShowDeadline] = useState<boolean>(true);
 
-  const [createTaskArgs, setCreateTaskArgs] = useState({
+  const createTaskArgsRef = useRef({
     title: '',
     description: '',
     category: 0n,
@@ -57,9 +57,9 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     defaultValues: {
       title: '',
       description: '',
-      category: undefined,
-      difficulty: undefined,
-      reward: undefined,
+      category: 'default',
+      difficulty: 'default',
+      reward: '0',
       deadline: threeDaysLater,
     },
   });
@@ -68,8 +68,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   const {
     title: nameWatch,
     description: descriptionWatch,
-    category: categoriesWatch,
-    difficulty: difficultyWatch,
     reward: amountWatch,
     deadline: deadlineWatch,
   } = taskForm.watch();
@@ -79,30 +77,30 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     useScaffoldStrkBalance({
       address,
     });
-
-  // const { sendAsync } = useScaffoldWriteContract({
-  //   contractName: 'AgoraDaoFabric',
-  //   functionName: 'create_dao',
-  //   args: ['', '', 0n, '', false],
-  // });
-
   const { sendAsync } = useScaffoldMultiWriteContract({
     calls: [
       {
         contractName: 'Strk',
         functionName: 'approve',
-        args: [daoAddress, parseEther(amountWatch?.toString() ?? '0')],
+        args: [
+          daoAddress,
+          parseEther(
+            isNaN(parseFloat(amountWatch))
+              ? '0'
+              : (amountWatch?.toString() ?? '0')
+          ),
+        ],
       },
       {
         contractName: 'AgoraDao',
         functionName: 'create_task',
         args: [
-          createTaskArgs.title,
-          createTaskArgs.description,
-          createTaskArgs.category,
-          createTaskArgs.difficulty,
-          createTaskArgs.reward,
-          createTaskArgs.deadline,
+          createTaskArgsRef.current.title,
+          createTaskArgsRef.current.description,
+          createTaskArgsRef.current.category,
+          createTaskArgsRef.current.difficulty,
+          createTaskArgsRef.current.reward,
+          createTaskArgsRef.current.deadline,
         ],
         contractAddress: daoAddress,
       },
@@ -133,18 +131,18 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
         : 0n;
 
-      setCreateTaskArgs({
+      createTaskArgsRef.current = {
         title: data.title,
         description: data.description,
         category: BigInt(data.category),
         difficulty: BigInt(data.difficulty),
         reward: parseEther(data.reward),
         deadline: formatDeadLine,
-      });
+      };
       await sendAsync();
       taskForm.reset();
 
-      dialogRef.current?.close();
+      // dialogRef.current?.close();
       toast.success('Task created successfully!', { duration: 5000 });
     } catch (err) {
       console.log(err);
@@ -153,23 +151,33 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
     }
   };
 
+  //effects
   useEffect(() => {
     const num = parseFloat(amountWatch ?? 0);
 
-    if (!isNaN(num) && num < 0)
+    if (isNaN(num)) {
+      taskForm.setError('reward', {
+        message: 'Amount is not empty',
+      });
+
+      return;
+    }
+
+    if (!isNaN(num) && num < 0) {
       taskForm.setError('reward', {
         message: 'Amount must be a positive number',
       });
-    else if (!isNaN(num) && num > 0) {
+      return;
+    }
+
+    if (!isNaN(num) && num > 0) {
       const userBa = formatEther(userBalance?.toString() ?? '0');
 
       if (num > parseFloat(userBa)) {
         taskForm.setError('reward', {
           message: 'Insufficient balance',
         });
-      }
-    } else {
-      taskForm.clearErrors('reward');
+      } else taskForm.clearErrors('reward');
     }
   }, [amountWatch, taskForm, , userBalance]);
 
@@ -205,7 +213,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </legend>
             <input
               {...taskForm.register('title')}
-              name='title'
               className='input w-full bg-base-300'
               placeholder='e.g. Governance Stark'
             />
@@ -230,7 +237,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </legend>
             <textarea
               {...taskForm.register('description')}
-              name='description'
               placeholder='e.g. A decentralized organization that enables transparent decision-making, in which users actively participate in the financing and management of community-driven projects.'
               className='textarea resize-none h-28 w-full bg-base-300'
             />
@@ -257,12 +263,12 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
                 <span className='-ml-1 text-error font-bold text-bold'>*</span>
               </legend>
               <select
-                value={categoriesWatch}
                 {...taskForm.register('category')}
-                name='category'
                 className='select w-full bg-base-300'
               >
-                <option disabled={true}>Pick a category</option>
+                <option value='default' disabled={true}>
+                  Pick a category
+                </option>
                 {taskCategories.map((x, y) => (
                   <option key={y} value={y.toString()}>
                     {x.toString()}
@@ -287,12 +293,12 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
                 <span className='-ml-1 text-error font-bold text-bold'>*</span>
               </legend>
               <select
-                value={difficultyWatch}
                 {...taskForm.register('difficulty')}
-                name='difficulty'
                 className='select w-full bg-base-300'
               >
-                <option disabled={true}>Pick a Difficulty</option>
+                <option value='default' disabled={true}>
+                  Pick a Difficulty
+                </option>
                 {taskDifficulties.map((x, y) => (
                   <option key={y} value={y.toString()}>
                     {x.toString()}
@@ -314,13 +320,9 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               <span className=' text-error font-bold text-bold'>*</span>
             </legend>
             <StarkInput
-              value={amountWatch}
               {...taskForm.register('reward')}
-              name='reward'
-              onChange={(value) => {
-                console.log();
-                taskForm.setValue('reward', value);
-              }}
+              value={amountWatch}
+              onChange={(value) => taskForm.setValue('reward', value)}
               placeholder='Enter the reward amount'
             />
 
@@ -383,9 +385,9 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               </>
             </div>
             <div className='flex justify-between'>
-              {taskForm.formState.errors.title ? (
+              {taskForm.formState.errors.deadline ? (
                 <p className='label text-error my-0'>
-                  {taskForm.formState.errors.title.message}
+                  {taskForm.formState.errors.deadline.message}
                 </p>
               ) : (
                 <p className='label my-0'>Optional</p>
