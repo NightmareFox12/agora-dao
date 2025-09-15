@@ -159,7 +159,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       taskForm.setError('reward', {
         message: 'Amount is not empty',
       });
-
       return;
     }
 
@@ -177,7 +176,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
         taskForm.setError('reward', {
           message: 'Insufficient balance',
         });
-      } else taskForm.clearErrors('reward');
+      } else {
+        taskForm.clearErrors('reward');
+        taskForm.trigger('reward');
+      }
     }
   }, [amountWatch, taskForm, , userBalance]);
 

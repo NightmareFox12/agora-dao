@@ -46,7 +46,7 @@ mod AgoraDaoFabric {
     use super::validations::create_dao_validation;
 
     //constants
-    const CLASS_HASH: felt252 = 0xd6e7831acaaf5be533f011cbad4212528528a3177dafbe224112dd084ff408;
+    const CLASS_HASH: felt252 = 0x2f0e41faea5bf985252d79446f0ece3a7866e4d6d44827cf584f13f30e70e77;
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
@@ -99,12 +99,7 @@ mod AgoraDaoFabric {
             let caller = get_caller_address();
 
             //validations
-            create_dao_validation(
-                ref self,
-                name.clone(),
-                description.clone(),
-                category_ID,
-            );
+            create_dao_validation(ref self, name.clone(), description.clone(), category_ID);
 
             //create dao
             let salt: felt252 = get_block_timestamp().into();

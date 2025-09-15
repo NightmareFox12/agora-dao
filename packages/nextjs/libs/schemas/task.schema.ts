@@ -5,7 +5,7 @@ export const TaskFormSchema = z.object({
     .string()
     .trim()
     .min(5, {
-      message: 'DAO name must be at least 5 characters.',
+      message: 'Title must be at least 5 characters.',
     })
     .max(50, {
       message: 'Character limit exceeded',
@@ -21,8 +21,14 @@ export const TaskFormSchema = z.object({
       message: 'Character limit exceeded',
     }),
 
-  category: z.string(),
-  difficulty: z.string(),
+  category: z.string().refine((val) => val !== 'default', {
+    message: 'Please pick a category',
+  }),
+  // .transform((val) => BigInt(val)),
+
+  difficulty: z.string().refine((val) => val !== 'default', {
+    message: 'Please pick a category',
+  }),
   reward: z.string(),
   deadline: z.date().optional(),
 });
