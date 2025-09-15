@@ -7,7 +7,7 @@ pub fn create_task_validation(
     description: ByteArray,
     category_ID: u16,
     difficulty_ID: u16,
-    amount: u128,
+    amount: u256,
     deadline: u64,
 ) {
     assert!(title.len() > 0, "task title must not be empty");
@@ -17,9 +17,10 @@ pub fn create_task_validation(
     assert!(category_ID < self.task_category_counter.read(), "Invalid category ID.");
     assert!(difficulty_ID < self.task_difficulty_counter.read(), "Invalid difficulty ID.");
 
-    if (deadline != 0) {
-        //TODO: buscar la forma en el front de enviar el date compatible para aca
-        //TODO: terminar de completar la struct de la task porque se me olvidaron los status de la task
-        //TODO: agregar la verificacion de roles para las tasks
+    if (deadline != 0) {//TODO: buscar la forma en el front de enviar el date compatible para aca
+    //TODO: terminar de completar la struct de la task porque se me olvidaron los status de la task
+    //TODO: agregar la verificacion de roles para las tasks
     }
+
+    assert!(amount > 0, "Amount must be greater than 0");
 }

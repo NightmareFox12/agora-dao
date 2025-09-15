@@ -1,3 +1,4 @@
+mod constants;
 mod events;
 mod functions;
 mod roles;
@@ -14,7 +15,7 @@ pub trait IAgoraDao<TContractState> {
         description: ByteArray,
         category_ID: u16,
         difficulty_ID: u16,
-        amount: u128,
+        amount: u256,
         deadline: u64,
     );
 
@@ -32,19 +33,23 @@ pub mod AgoraDao {
     //OpenZeppelin imports
     use openzeppelin_access::accesscontrol::AccessControlComponent;
     use openzeppelin_introspection::src5::SRC5Component;
+    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    //Starknet imports
     use starknet::event::EventEmitter;
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
         StoragePointerWriteAccess,
     };
-    use starknet::{ContractAddress, get_caller_address};
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
+    use super::constants::FELT_STRK_CONTRACT;
 
     //imports
     use super::events::UserJoined;
     use super::functions::{add_task_category, add_task_difficulty};
     use super::roles::{ADMIN_ROLE, USER_ROLE};
-    use super::validations::create_task_validation;
     use super::structs::Task;
+    use super::validations::create_task_validation;
+
 
     //components
     component!(path: AccessControlComponent, storage: accesscontrol, event: AccessControlEvent);
@@ -139,7 +144,7 @@ pub mod AgoraDao {
             description: ByteArray,
             category_ID: u16,
             difficulty_ID: u16,
-            amount: u128,
+            amount: u256,
             deadline: u64,
         ) {
             create_task_validation(
@@ -153,6 +158,10 @@ pub mod AgoraDao {
             );
             //TODO: crear una super funcion para verificar el rol/roles
             let caller = get_caller_address();
+
+            let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();
+            let strk_dispatcher = IERC20Dispatcher { contract_address: strk_contract_address };
+            strk_dispatcher.transfer_from(caller, get_contract_address(), amount);
         }
 
         fn user_counter(self: @ContractState) -> u16 {

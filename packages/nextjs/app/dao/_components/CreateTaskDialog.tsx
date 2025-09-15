@@ -154,7 +154,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
       buildArgs();
 
-      console.log(createTaskArgsRef.current);
       await sendAsync();
       taskForm.reset();
 

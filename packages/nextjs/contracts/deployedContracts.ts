@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x76f0cc261c7c1c07ad1740b135fea1acd55cf452fd4e590b9509ff3a9815922",
+        "0x4a5a6165e1c61a7be5887c37c1c929dad61f6f14dee4e606c3382a6ba0663e8",
       abi: [
         {
           type: "impl",
@@ -262,7 +262,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x3891fe456f00c8b466abfab7535470876e1d41f8f64b68133fa095cad92ade",
+        "0x10fd9f7bee34d53f91f1bbd0d52818c060165eb8fb7b936e7a8fce07d660c78",
       abi: [
         {
           type: "impl",
@@ -284,6 +284,20 @@ const deployedContracts = {
             {
               name: "pending_word_len",
               type: "core::integer::u32",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "core::integer::u256",
+          members: [
+            {
+              name: "low",
+              type: "core::integer::u128",
+            },
+            {
+              name: "high",
+              type: "core::integer::u128",
             },
           ],
         },
@@ -334,7 +348,7 @@ const deployedContracts = {
                 },
                 {
                   name: "amount",
-                  type: "core::integer::u128",
+                  type: "core::integer::u256",
                 },
                 {
                   name: "deadline",
@@ -694,7 +708,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x2f0e41faea5bf985252d79446f0ece3a7866e4d6d44827cf584f13f30e70e77",
+        "0x9a5ab62e889d62f231e752986e5a25ce996cbc413848f89fb18ecb34455f75",
     },
   },
 } as const;
