@@ -40,6 +40,7 @@ pub mod AgoraDao {
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
         StoragePointerWriteAccess,
     };
+    use starknet::syscalls::call_contract_syscall;
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use super::constants::FELT_STRK_CONTRACT;
 
@@ -136,9 +137,16 @@ pub mod AgoraDao {
             let user_id = self.user_counter.read();
 
             self.users.write(user_id, caller);
-            self.emit(UserJoined { user: caller, user_ID: user_id });
+
+            //save user into fabric
+            if let Ok(_r) =
+                call_contract_syscall(self.fabric.read(), 'add_user', [caller.into()].span()) {
+            }
+
             self.accesscontrol._grant_role(USER_ROLE, caller);
             self.user_counter.write(user_id + 1);
+            //emit event
+            self.emit(UserJoined { user: caller, user_ID: user_id });
         }
 
         fn create_task(

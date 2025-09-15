@@ -7,7 +7,7 @@ use starknet::storage::{
 };
 use super::AgoraDaoFabric::ContractState;
 
-pub fn add_user_counter(ref self: ContractState, caller: ContractAddress) {
+pub fn _add_user(ref self: ContractState, caller: ContractAddress) {
     if (!self.users.read(caller)) {
         self.users.write(caller, true);
         self.user_counter.write(self.user_counter.read() + 1);
@@ -15,7 +15,7 @@ pub fn add_user_counter(ref self: ContractState, caller: ContractAddress) {
 }
 
 
-pub fn add_category(ref self: ContractState, category: ByteArray) {
+pub fn _add_category(ref self: ContractState, category: ByteArray) {
     let mut category_counter = self.category_counter.read();
 
     self.ownable.assert_only_owner();

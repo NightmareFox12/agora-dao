@@ -483,3 +483,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 //TODO: en config establecer lo de los roles con graficas y data
 
 //TODO: poder quitar rol si eres admin
+
+//TODO: agregar leer tasks
+
+//TODO: aceptar task y emit event

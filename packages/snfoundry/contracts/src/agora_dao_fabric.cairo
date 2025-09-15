@@ -2,6 +2,7 @@ mod events;
 mod functions;
 mod structs;
 mod validations;
+use starknet::ContractAddress;
 
 //Types for interface
 use super::agora_dao_fabric::structs::Dao;
@@ -17,6 +18,8 @@ trait IAgoraDaoFabric<TContractState> {
         image_URI: ByteArray,
         is_public: bool,
     );
+
+    fn add_user(ref self: TContractState, user: ContractAddress);
 
     // --- read states ---
     fn user_counter(self: @TContractState) -> u16;
@@ -41,9 +44,10 @@ mod AgoraDaoFabric {
     use super::events::DaoCreated;
 
     //imports
-    use super::functions::{add_category, add_user_counter};
+    use super::functions::{_add_category, _add_user};
     use super::structs::Dao;
     use super::validations::create_dao_validation;
+
 
     //constants
     const CLASS_HASH: felt252 = 0x451973f1c0ef03310a1be1ec6b2295db08367d94433ab3091aa0c488efb0631;
@@ -55,6 +59,7 @@ mod AgoraDaoFabric {
         pub user_counter: u16,
         pub dao_counter: u16,
         pub category_counter: u16,
+        pub vote_counter: u16,
         //Mappings
         pub users: Map<ContractAddress, bool>,
         pub daos: Map<u16, Dao>,
@@ -68,12 +73,12 @@ mod AgoraDaoFabric {
     fn constructor(ref self: ContractState) {
         self.ownable.initializer(get_caller_address());
 
-        add_category(ref self, "DEFI");
-        add_category(ref self, "GAMING");
-        add_category(ref self, "SOCIAL IMPACT");
-        add_category(ref self, "SERVICE");
-        add_category(ref self, "ENERGY");
-        add_category(ref self, "GOVERNANCE");
+        _add_category(ref self, "DEFI");
+        _add_category(ref self, "GAMING");
+        _add_category(ref self, "SOCIAL IMPACT");
+        _add_category(ref self, "SERVICE");
+        _add_category(ref self, "ENERGY");
+        _add_category(ref self, "GOVERNANCE");
     }
 
     #[event]
@@ -130,11 +135,31 @@ mod AgoraDaoFabric {
 
             self.emit(DaoCreated { dao_ID: self.dao_counter.read(), name: name });
 
-            add_user_counter(ref self, caller);
+            //save user
+            _add_user(ref self, caller);
 
             self.daos.write(self.dao_counter.read(), newDao);
             self.dao_counter.write(self.dao_counter.read() + 1);
         }
+
+        fn add_user(ref self: ContractState, user: ContractAddress) {
+            let caller = get_caller_address();
+
+            let mut is_dao: bool = false;
+            let mut i: u16 = 0;
+
+            while i != self.dao_counter.read() {
+                if self.daos.read(i).dao_address == caller {
+                    is_dao = true;
+                    break;
+                }
+                i += 1;
+            }
+
+            assert!(is_dao, "Caller is not a DAO");
+            _add_user(ref self, user);
+        }
+
 
         // --- read functions ---
         fn user_counter(self: @ContractState) -> u16 {
