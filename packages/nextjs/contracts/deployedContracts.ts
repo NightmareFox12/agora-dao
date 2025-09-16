@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x7d4c56b82669820097f8a7b8c6f70391d97069d92268290026655c8086eaac4",
+        "0x388492d8dd0ce1148339ac37c744c177ca3cb41cacdc78c14affaa7cb5bbede",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x431dfea8b6657022aee67c73a981176aa5eabb2d20fe4d5250109fda6c71fae",
+        "0x7d53d0eb3f88d1e2d5559ee5c3621f82cd7f82f38c7b19b72e1df039711dbfb",
     },
     AgoraDao: {
       address:
-        "0x47bc75bec57ce2505f5a6ff8c6e05d4ba57fa5158d65522a1774d8d9155a917",
+        "0x46d6759f46a96d63974a31c68eb89a459648a43548e70a1147b2b8acf07e02d",
       abi: [
         {
           type: "impl",
@@ -395,6 +395,22 @@ const deployedContracts = {
             {
               type: "function",
               name: "is_user",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_member",
               inputs: [
                 {
                   name: "caller",
@@ -778,7 +794,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x65cb4fa62a7bd15c47208a18e0c3aa8c5efc61e5cdddd1a001d7e42d4fd738a",
+        "0x260b8a3cdb6b088e860294f329767cb08b4f93d58ca33f79ebe0c68075706de",
     },
   },
   sepolia: {
@@ -1172,6 +1188,22 @@ const deployedContracts = {
             {
               type: "function",
               name: "is_user",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_member",
               inputs: [
                 {
                   name: "caller",

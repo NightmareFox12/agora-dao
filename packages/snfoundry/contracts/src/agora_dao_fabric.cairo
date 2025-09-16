@@ -50,7 +50,7 @@ mod AgoraDaoFabric {
 
 
     //constants
-    const CLASS_HASH: felt252 = 0x65cb4fa62a7bd15c47208a18e0c3aa8c5efc61e5cdddd1a001d7e42d4fd738a;
+    const CLASS_HASH: felt252 = 0x260b8a3cdb6b088e860294f329767cb08b4f93d58ca33f79ebe0c68075706de;
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 

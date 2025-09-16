@@ -487,3 +487,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 //TODO: agregar leer tasks
 
 //TODO: aceptar task y emit event
+
+  //TODO: leer los smart contract
+

@@ -26,6 +26,7 @@ pub trait IAgoraDao<TContractState> {
 
     // --- read functions ---
     fn is_user(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_member(self: @TContractState, caller: ContractAddress) -> bool;
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
 }
@@ -145,15 +146,13 @@ pub mod AgoraDao {
             let sel = selector!("add_user");
             let calldata = [caller.into()].span();
             if let Ok(_r) =
-                call_contract_syscall(self.fabric.read(), selector!("add_user"),
-                [caller.into()].span()) {
-            }
+                call_contract_syscall(
+                    self.fabric.read(), selector!("add_user"), [caller.into()].span(),
+                ) {}
 
             match call_contract_syscall(self.fabric.read(), sel, calldata) {
                 Ok(_) => {},
-                Err(e) => {
-                    panic!("fabric.add_user failed: {:?}", e);
-                },
+                Err(e) => { panic!("fabric.add_user failed: {:?}", e); },
             }
 
             let res = call_contract_syscall(self.fabric.read(), sel, calldata);
@@ -238,6 +237,19 @@ pub mod AgoraDao {
         }
 
         // --- Read functions ---
+        fn is_member(self: @ContractState, caller: ContractAddress) -> bool {
+            let mut i: u16 = 0;
+            let user_counter: u16 = self.user_counter.read();
+
+            while i != user_counter {
+                if self.users.read(i) == caller {
+                    return true;
+                }
+                i += 1;
+            }
+            false
+        }
+
         fn is_user(self: @ContractState, caller: ContractAddress) -> bool {
             self.has_role(USER_ROLE, caller)
         }

@@ -41,5 +41,3 @@ export const TaskClientController: React.FC = () => {
     </>
   );
 };
-
-//TODO: verificar en cada funcion que se llame que sea un usuario
