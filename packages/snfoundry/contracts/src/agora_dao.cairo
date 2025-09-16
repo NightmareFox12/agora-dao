@@ -142,25 +142,25 @@ pub mod AgoraDao {
             self.users.write(user_id, caller);
 
             //save user into fabric
-            // let sel = selector!("add_user");
-            // let calldata = [caller.into()].span();
-            // if let Ok(_r) =
-            //     call_contract_syscall(self.fabric.read(), selector!("add_user"),
-            //     [caller.into()].span()) {
-            // }
+            let sel = selector!("add_user");
+            let calldata = [caller.into()].span();
+            if let Ok(_r) =
+                call_contract_syscall(self.fabric.read(), selector!("add_user"),
+                [caller.into()].span()) {
+            }
 
-            // match call_contract_syscall(self.fabric.read(), sel, calldata) {
-            //     Ok(_) => {},
-            //     Err(e) => {
-            //         panic!("fabric.add_user failed: {:?}", e);
-            //     },
-            // }
+            match call_contract_syscall(self.fabric.read(), sel, calldata) {
+                Ok(_) => {},
+                Err(e) => {
+                    panic!("fabric.add_user failed: {:?}", e);
+                },
+            }
 
-            // let res = call_contract_syscall(self.fabric.read(), sel, calldata);
+            let res = call_contract_syscall(self.fabric.read(), sel, calldata);
 
-            // if res.is_err() {
-            //     panic!("fabric.add_user failed: {:?}", res.unwrap_err());
-            // }
+            if res.is_err() {
+                panic!("fabric.add_user failed: {:?}", res.unwrap_err());
+            }
 
             self.accesscontrol._grant_role(USER_ROLE, caller);
             self.user_counter.write(user_id + 1);
@@ -241,8 +241,6 @@ pub mod AgoraDao {
         fn is_user(self: @ContractState, caller: ContractAddress) -> bool {
             self.has_role(USER_ROLE, caller)
         }
-
-        //TODO: verificar que is_user funcione
 
         fn get_task_categories(self: @ContractState) -> Array<ByteArray> {
             let mut res: Array<ByteArray> = ArrayTrait::new();

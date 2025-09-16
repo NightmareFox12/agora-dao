@@ -81,14 +81,14 @@ export const DaoCard: React.FC<DaoCardProps> = ({
   //functions
   const handleJoinDao = async () => {
     try {
-      if (creatorAddress !== userAddress) {
-        const tx = await sendAsync();
-
-        console.log(tx);
-      }
-
       localStorage.setItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS, daoAddress);
-      // router.replace('/dao');
+
+      if (creatorAddress !== userAddress && !isUser) {
+        await sendAsync();
+
+        router.replace('/dao');
+        return;
+      } else router.replace('/dao');
     } catch (err) {
       console.log(err);
     }
