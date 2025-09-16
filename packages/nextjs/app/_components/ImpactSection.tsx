@@ -1,19 +1,9 @@
 'use client';
 
 import React from 'react';
-import {
-  ChartAreaIcon,
-  ListOrdered,
-  Nut,
-  Shield,
-  TrendingUp,
-  Trophy,
-  Users,
-  Vote,
-} from 'lucide-react';
+import { ListOrdered, Shield, Trophy, Users, Vote } from 'lucide-react';
 import CountUp from '~~/components/ui/CountUp';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
-// import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 export const ImpactSection: React.FC = () => {
   //Smart contract
@@ -21,12 +11,14 @@ export const ImpactSection: React.FC = () => {
     useScaffoldReadContract({
       contractName: 'AgoraDaoFabric',
       functionName: 'dao_counter',
+      refetchInterval: 60000,
     });
 
   const { data: userCounter, isLoading: userCounterLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDaoFabric',
       functionName: 'user_counter',
+      refetchInterval: 60000,
     });
 
   //components
@@ -36,32 +28,8 @@ export const ImpactSection: React.FC = () => {
         <div className='grid grid-cols-2 gap-4'>
           {/* DAOs created */}
           {daoCounterLoading ? (
-            // <Skeleton className='h-44 rounded-lg bg-primary/20' />
             <div className='skeleton h-44' />
           ) : (
-            // <Card className='bg-primary/5 border-primary/20'>
-            //   <CardHeader className='text-center'>
-            //     <div className='w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2'>
-            //       <Trophy className='w-6 h-6 text-primary' />
-            //     </div>
-            //     <CardTitle className='text-2xl text-primary'>
-            //       <CountUp
-            //         from={0}
-            //         to={
-            //           parseInt(daoCounter?.toString() ?? '0') === 0
-            //             ? 0
-            //             : parseInt(daoCounter?.toString() ?? '0') - 1
-            //         }
-            //         separator=','
-            //         direction='up'
-            //         duration={1}
-            //         className='count-up-text'
-            //       />
-            //       +
-            //     </CardTitle>
-            //     <CardDescription>DAOs created</CardDescription>
-            //   </CardHeader>
-            // </Card>
             <div className='card bg-base-100/30 shadow-sm'>
               <div className='bg-base-200 p-4 rounded-full flex items-center justify-center mx-auto mt-5'>
                 <Trophy className='w-6 h-6' />
@@ -71,9 +39,9 @@ export const ImpactSection: React.FC = () => {
                   <CountUp
                     from={0}
                     to={
-                      parseInt(daoCounter?.toString() ?? '0') === 0
+                      daoCounter === undefined
                         ? 0
-                        : parseInt(daoCounter?.toString() ?? '0') - 1
+                        : parseInt(daoCounter.toString() ?? '0')
                     }
                     separator=','
                     direction='up'
@@ -100,9 +68,9 @@ export const ImpactSection: React.FC = () => {
                   <CountUp
                     from={0}
                     to={
-                      parseInt(userCounter?.toString() ?? '0') === 0
+                      userCounter === undefined
                         ? 0
-                        : parseInt(userCounter?.toString() ?? '0') - 1
+                        : parseInt(userCounter.toString() ?? '0')
                     }
                     separator=','
                     direction='up'
@@ -116,48 +84,29 @@ export const ImpactSection: React.FC = () => {
             </div>
           )}
 
-          {daoCounterLoading && userCounterLoading ? (
+          {/* {daoCounterLoading && userCounterLoading ? (
             <div className='skeleton h-44' />
-          ) : (
-            // <Card className='bg-accent/5 border-accent/20'>
-            //   <CardHeader className='text-center'>
-            //     <div className='w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2'>
-            //       <Shield className='w-6 h-6 text-primary' />
-            //     </div>
-            //     <CardTitle className='text-2xl'>
-            //       <CountUp
-            //         from={0}
-            //         to={100}
-            //         separator=','
-            //         direction='up'
-            //         duration={1}
-            //         className='count-up-text'
-            //       />
-            //       %
-            //     </CardTitle>
-            //     <CardDescription>Transparencia</CardDescription>
-            //   </CardHeader>
-            // </Card>
-            <div className='card bg-base-200/20 shadow-sm'>
-              <div className='bg-base-200 p-4 rounded-full flex items-center justify-center mx-auto mt-5'>
-                <Shield className='w-6 h-6' />
-              </div>
-              <div className='card-body pt-3 gap-0'>
-                <h2 className='card-title justify-center text-2xl'>
-                  <CountUp
-                    from={0}
-                    to={100}
-                    separator=','
-                    direction='up'
-                    duration={1}
-                    className='count-up-text'
-                  />
-                  %
-                </h2>
-                <p className='text-center my-0'>Transparent</p>
-              </div>
+          ) : ( */}
+          <div className='card bg-base-200/20 shadow-sm'>
+            <div className='bg-base-200 p-4 rounded-full flex items-center justify-center mx-auto mt-5'>
+              <Shield className='w-6 h-6' />
             </div>
-          )}
+            <div className='card-body pt-3 gap-0'>
+              <h2 className='card-title justify-center text-2xl'>
+                <CountUp
+                  from={0}
+                  to={100}
+                  separator=','
+                  direction='up'
+                  duration={1}
+                  className='count-up-text'
+                />
+                %
+              </h2>
+              <p className='text-center my-0'>Transparent</p>
+            </div>
+          </div>
+          {/* )} */}
 
           <div className='card bg-base-100/30 shadow-sm'>
             <div className='bg-base-200 p-4 rounded-full flex items-center justify-center mx-auto mt-5'>

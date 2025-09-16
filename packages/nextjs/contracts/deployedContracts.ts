@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x6ed1825aef8eb2d29a866f91ecfde35284b459e67a881ba005cbe484922482b",
+        "0x1167f5eb379dca9c168e7f4d56420ba26803d16b055b181fa3980f72f425bc6",
       abi: [
         {
           type: "impl",
@@ -115,6 +115,18 @@ const deployedContracts = {
                 {
                   name: "is_public",
                   type: "core::bool",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "add_user",
+              inputs: [
+                {
+                  name: "user",
+                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               outputs: [],
@@ -258,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x2b3c48c462a58ea64614d7f7dc3fa2e9200e452becb0e47bad0d73e3d1903d0",
+        "0x72768cf550275111c817b00ea66f9f205b1d1b8f20b555ba7db9a15c436f44f",
     },
     AgoraDao: {
       address:
-        "0x7fa3564421995f13313f6df675cb1be8e61ecd516833426d71b4a600b5151c2",
+        "0x3586244b61b7f76d2ce42d64ab566efa2b5c7ab9320ea1eea1119032ad03994",
       abi: [
         {
           type: "impl",
@@ -371,8 +383,24 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "is_user",
+              name: "fabric",
               inputs: [],
+              outputs: [
+                {
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_user",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::bool",
@@ -750,7 +778,784 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x451973f1c0ef03310a1be1ec6b2295db08367d94433ab3091aa0c488efb0631",
+        "0x65cb4fa62a7bd15c47208a18e0c3aa8c5efc61e5cdddd1a001d7e42d4fd738a",
+    },
+  },
+  sepolia: {
+    AgoraDaoFabric: {
+      address:
+        "0x3d0860b2a0736ded4f0fa259bffa5bac7a77268de6f221bce48d873dd44dc43",
+      abi: [
+        {
+          type: "impl",
+          name: "AgoraDaoFabric",
+          interface_name: "contracts::agora_dao_fabric::IAgoraDaoFabric",
+        },
+        {
+          type: "struct",
+          name: "core::byte_array::ByteArray",
+          members: [
+            {
+              name: "data",
+              type: "core::array::Array::<core::bytes_31::bytes31>",
+            },
+            {
+              name: "pending_word",
+              type: "core::felt252",
+            },
+            {
+              name: "pending_word_len",
+              type: "core::integer::u32",
+            },
+          ],
+        },
+        {
+          type: "enum",
+          name: "core::bool",
+          variants: [
+            {
+              name: "False",
+              type: "()",
+            },
+            {
+              name: "True",
+              type: "()",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "contracts::agora_dao_fabric::structs::Dao",
+          members: [
+            {
+              name: "dao_ID",
+              type: "core::integer::u16",
+            },
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "dao_address",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "name",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "description",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "category",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "image_URI",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "is_public",
+              type: "core::bool",
+            },
+            {
+              name: "creation_timestamp",
+              type: "core::integer::u64",
+            },
+          ],
+        },
+        {
+          type: "interface",
+          name: "contracts::agora_dao_fabric::IAgoraDaoFabric",
+          items: [
+            {
+              type: "function",
+              name: "create_dao",
+              inputs: [
+                {
+                  name: "name",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "description",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "category_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "image_URI",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "is_public",
+                  type: "core::bool",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "add_user",
+              inputs: [
+                {
+                  name: "user",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "user_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "dao_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_categories",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_public_daos",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<contracts::agora_dao_fabric::structs::Dao>",
+                },
+              ],
+              state_mutability: "view",
+            },
+          ],
+        },
+        {
+          type: "constructor",
+          name: "constructor",
+          inputs: [],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao_fabric::events::DaoCreated",
+          kind: "struct",
+          members: [
+            {
+              name: "dao_ID",
+              type: "core::integer::u16",
+              kind: "key",
+            },
+            {
+              name: "name",
+              type: "core::byte_array::ByteArray",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+          kind: "struct",
+          members: [
+            {
+              name: "previous_owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "new_owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+          kind: "struct",
+          members: [
+            {
+              name: "previous_owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "new_owner",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "OwnershipTransferred",
+              type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferred",
+              kind: "nested",
+            },
+            {
+              name: "OwnershipTransferStarted",
+              type: "openzeppelin_access::ownable::ownable::OwnableComponent::OwnershipTransferStarted",
+              kind: "nested",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao_fabric::AgoraDaoFabric::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "DaoCreated",
+              type: "contracts::agora_dao_fabric::events::DaoCreated",
+              kind: "nested",
+            },
+            {
+              name: "OwnableEvent",
+              type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
+              kind: "flat",
+            },
+          ],
+        },
+      ],
+      classHash:
+        "0x1fe8bbbb2690ca04dd84c565d5a1404df34b8203592bf3a8d09e0475d2ab61c",
+    },
+    AgoraDao: {
+      address:
+        "0xd8a4987cabc4629374c0e125506e1e75468dac1710b3ca4f3dd5ecf34eeed",
+      abi: [
+        {
+          type: "impl",
+          name: "AgoraDaoImpl",
+          interface_name: "contracts::agora_dao::IAgoraDao",
+        },
+        {
+          type: "struct",
+          name: "core::byte_array::ByteArray",
+          members: [
+            {
+              name: "data",
+              type: "core::array::Array::<core::bytes_31::bytes31>",
+            },
+            {
+              name: "pending_word",
+              type: "core::felt252",
+            },
+            {
+              name: "pending_word_len",
+              type: "core::integer::u32",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "core::integer::u256",
+          members: [
+            {
+              name: "low",
+              type: "core::integer::u128",
+            },
+            {
+              name: "high",
+              type: "core::integer::u128",
+            },
+          ],
+        },
+        {
+          type: "enum",
+          name: "core::bool",
+          variants: [
+            {
+              name: "False",
+              type: "()",
+            },
+            {
+              name: "True",
+              type: "()",
+            },
+          ],
+        },
+        {
+          type: "interface",
+          name: "contracts::agora_dao::IAgoraDao",
+          items: [
+            {
+              type: "function",
+              name: "join_dao",
+              inputs: [],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_task",
+              inputs: [
+                {
+                  name: "title",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "description",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "category_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "difficulty_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "amount",
+                  type: "core::integer::u256",
+                },
+                {
+                  name: "deadline",
+                  type: "core::integer::u64",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "user_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "fabric",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_user",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_task_categories",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_task_difficulties",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+          ],
+        },
+        {
+          type: "impl",
+          name: "AccessControlImpl",
+          interface_name:
+            "openzeppelin_access::accesscontrol::interface::IAccessControl",
+        },
+        {
+          type: "interface",
+          name: "openzeppelin_access::accesscontrol::interface::IAccessControl",
+          items: [
+            {
+              type: "function",
+              name: "has_role",
+              inputs: [
+                {
+                  name: "role",
+                  type: "core::felt252",
+                },
+                {
+                  name: "account",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_role_admin",
+              inputs: [
+                {
+                  name: "role",
+                  type: "core::felt252",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::felt252",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "grant_role",
+              inputs: [
+                {
+                  name: "role",
+                  type: "core::felt252",
+                },
+                {
+                  name: "account",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "revoke_role",
+              inputs: [
+                {
+                  name: "role",
+                  type: "core::felt252",
+                },
+                {
+                  name: "account",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "renounce_role",
+              inputs: [
+                {
+                  name: "role",
+                  type: "core::felt252",
+                },
+                {
+                  name: "account",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+          ],
+        },
+        {
+          type: "impl",
+          name: "SRC5Impl",
+          interface_name: "openzeppelin_introspection::interface::ISRC5",
+        },
+        {
+          type: "interface",
+          name: "openzeppelin_introspection::interface::ISRC5",
+          items: [
+            {
+              type: "function",
+              name: "supports_interface",
+              inputs: [
+                {
+                  name: "interface_id",
+                  type: "core::felt252",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+          ],
+        },
+        {
+          type: "constructor",
+          name: "constructor",
+          inputs: [
+            {
+              name: "fabric",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao::events::UserJoined",
+          kind: "struct",
+          members: [
+            {
+              name: "user",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "user_ID",
+              type: "core::integer::u16",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao::events::TaskCreated",
+          kind: "struct",
+          members: [
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "task_ID",
+              type: "core::integer::u16",
+              kind: "key",
+            },
+            {
+              name: "title",
+              type: "core::byte_array::ByteArray",
+              kind: "data",
+            },
+            {
+              name: "category",
+              type: "core::byte_array::ByteArray",
+              kind: "data",
+            },
+            {
+              name: "reward",
+              type: "core::integer::u256",
+              kind: "data",
+            },
+            {
+              name: "deadline",
+              type: "core::integer::u64",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
+          kind: "struct",
+          members: [
+            {
+              name: "role",
+              type: "core::felt252",
+              kind: "data",
+            },
+            {
+              name: "account",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "sender",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGrantedWithDelay",
+          kind: "struct",
+          members: [
+            {
+              name: "role",
+              type: "core::felt252",
+              kind: "data",
+            },
+            {
+              name: "account",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "sender",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "delay",
+              type: "core::integer::u64",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleRevoked",
+          kind: "struct",
+          members: [
+            {
+              name: "role",
+              type: "core::felt252",
+              kind: "data",
+            },
+            {
+              name: "account",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+            {
+              name: "sender",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleAdminChanged",
+          kind: "struct",
+          members: [
+            {
+              name: "role",
+              type: "core::felt252",
+              kind: "data",
+            },
+            {
+              name: "previous_admin_role",
+              type: "core::felt252",
+              kind: "data",
+            },
+            {
+              name: "new_admin_role",
+              type: "core::felt252",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "RoleGranted",
+              type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
+              kind: "nested",
+            },
+            {
+              name: "RoleGrantedWithDelay",
+              type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGrantedWithDelay",
+              kind: "nested",
+            },
+            {
+              name: "RoleRevoked",
+              type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleRevoked",
+              kind: "nested",
+            },
+            {
+              name: "RoleAdminChanged",
+              type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleAdminChanged",
+              kind: "nested",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "openzeppelin_introspection::src5::SRC5Component::Event",
+          kind: "enum",
+          variants: [],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao::AgoraDao::Event",
+          kind: "enum",
+          variants: [
+            {
+              name: "UserJoined",
+              type: "contracts::agora_dao::events::UserJoined",
+              kind: "nested",
+            },
+            {
+              name: "TaskCreated",
+              type: "contracts::agora_dao::events::TaskCreated",
+              kind: "nested",
+            },
+            {
+              name: "AccessControlEvent",
+              type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::Event",
+              kind: "flat",
+            },
+            {
+              name: "SRC5Event",
+              type: "openzeppelin_introspection::src5::SRC5Component::Event",
+              kind: "flat",
+            },
+          ],
+        },
+      ],
+      classHash:
+        "0x7f74a3284023a551c70464fbad8a809a0dcc56f581af3bf6b8e5441535a4cd5",
     },
   },
 } as const;

@@ -4,6 +4,7 @@ mod functions;
 mod roles;
 mod structs;
 mod validations;
+use starknet::ContractAddress;
 
 #[starknet::interface]
 pub trait IAgoraDao<TContractState> {
@@ -21,9 +22,10 @@ pub trait IAgoraDao<TContractState> {
 
     // --- read states ---
     fn user_counter(self: @TContractState) -> u16;
+    fn fabric(self: @TContractState) -> ContractAddress;
 
     // --- read functions ---
-    fn is_user(self: @TContractState) -> bool;
+    fn is_user(self: @TContractState, caller: ContractAddress) -> bool;
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
 }
@@ -122,6 +124,7 @@ pub mod AgoraDao {
 
     #[abi(embed_v0)]
     impl AgoraDaoImpl of super::IAgoraDao<ContractState> {
+        // --- Write functions ---
         fn join_dao(ref self: ContractState) {
             let caller = get_caller_address();
 
@@ -139,12 +142,29 @@ pub mod AgoraDao {
             self.users.write(user_id, caller);
 
             //save user into fabric
-            if let Ok(_r) =
-                call_contract_syscall(self.fabric.read(), 'add_user', [caller.into()].span()) {
-            }
+            // let sel = selector!("add_user");
+            // let calldata = [caller.into()].span();
+            // if let Ok(_r) =
+            //     call_contract_syscall(self.fabric.read(), selector!("add_user"),
+            //     [caller.into()].span()) {
+            // }
+
+            // match call_contract_syscall(self.fabric.read(), sel, calldata) {
+            //     Ok(_) => {},
+            //     Err(e) => {
+            //         panic!("fabric.add_user failed: {:?}", e);
+            //     },
+            // }
+
+            // let res = call_contract_syscall(self.fabric.read(), sel, calldata);
+
+            // if res.is_err() {
+            //     panic!("fabric.add_user failed: {:?}", res.unwrap_err());
+            // }
 
             self.accesscontrol._grant_role(USER_ROLE, caller);
             self.user_counter.write(user_id + 1);
+
             //emit event
             self.emit(UserJoined { user: caller, user_ID: user_id });
         }
@@ -208,13 +228,21 @@ pub mod AgoraDao {
             self.task_counter.write(task_id + 1);
         }
 
+        // --- Read states ---
+        fn fabric(self: @ContractState) -> ContractAddress {
+            self.fabric.read()
+        }
+
         fn user_counter(self: @ContractState) -> u16 {
             self.user_counter.read()
         }
 
-        fn is_user(self: @ContractState) -> bool {
-            self.has_role(USER_ROLE, get_caller_address())
+        // --- Read functions ---
+        fn is_user(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(USER_ROLE, caller)
         }
+
+        //TODO: verificar que is_user funcione
 
         fn get_task_categories(self: @ContractState) -> Array<ByteArray> {
             let mut res: Array<ByteArray> = ArrayTrait::new();

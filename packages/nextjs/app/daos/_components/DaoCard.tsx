@@ -74,6 +74,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({
   const { data: isUser, isLoading: isUserLoading } = useScaffoldReadContract({
     contractName: 'AgoraDao',
     functionName: 'is_user',
+    args: [userAddress],
     contractAddress: daoAddress,
   });
 
@@ -81,10 +82,13 @@ export const DaoCard: React.FC<DaoCardProps> = ({
   const handleJoinDao = async () => {
     try {
       if (creatorAddress !== userAddress) {
-        await sendAsync();
+        const tx = await sendAsync();
+
+        console.log(tx);
       }
+
       localStorage.setItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS, daoAddress);
-      router.replace('/dao');
+      // router.replace('/dao');
     } catch (err) {
       console.log(err);
     }

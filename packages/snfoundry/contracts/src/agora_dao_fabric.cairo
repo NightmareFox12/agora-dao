@@ -50,7 +50,7 @@ mod AgoraDaoFabric {
 
 
     //constants
-    const CLASS_HASH: felt252 = 0x451973f1c0ef03310a1be1ec6b2295db08367d94433ab3091aa0c488efb0631;
+    const CLASS_HASH: felt252 = 0x65cb4fa62a7bd15c47208a18e0c3aa8c5efc61e5cdddd1a001d7e42d4fd738a;
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
@@ -93,6 +93,7 @@ mod AgoraDaoFabric {
 
     #[abi(embed_v0)]
     impl AgoraDaoFabric of super::IAgoraDaoFabric<ContractState> {
+        // --- WRITE FUNCTIONS ---
         fn create_dao(
             ref self: ContractState,
             name: ByteArray,
@@ -147,8 +148,9 @@ mod AgoraDaoFabric {
 
             let mut is_dao: bool = false;
             let mut i: u16 = 0;
+            let dao_counter: u16 = self.dao_counter.read();
 
-            while i != self.dao_counter.read() {
+            while i != dao_counter {
                 if self.daos.read(i).dao_address == caller {
                     is_dao = true;
                     break;
@@ -160,8 +162,6 @@ mod AgoraDaoFabric {
             _add_user(ref self, user);
         }
 
-
-        // --- read functions ---
         fn user_counter(self: @ContractState) -> u16 {
             self.user_counter.read()
         }
@@ -170,6 +170,7 @@ mod AgoraDaoFabric {
             self.dao_counter.read()
         }
 
+        // --- READ FUNCTIONS ---
         fn get_all_categories(self: @ContractState) -> Array<ByteArray> {
             let mut res: Array<ByteArray> = ArrayTrait::new();
             let mut i: u16 = 0;
