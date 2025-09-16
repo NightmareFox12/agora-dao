@@ -93,10 +93,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       formatDeadLine,
     ] as const;
   };
+
   const onSubmit = async (data: z.infer<typeof TaskFormSchema>) => {
     try {
       setSubmitLoading(true);
-      // console.log(data);
 
       const formatDeadLine = showDeadLine
         ? BigInt(Math.floor(data.deadline!.getTime() / 1000))
@@ -116,9 +116,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       await sendAsync();
       taskForm.reset();
 
-      // dialogRef.current?.close();
-      toast.success('Task created successfully!', { duration: 5000 });
-    } catch (err) {
+      toast.dismiss();
+      toast.success('Task created successfully!', { duration: 3000 });
+      setShowCreateTaskDialog(false);
+    } catch (err: any) {
       console.log(err);
     } finally {
       setSubmitLoading(false);
@@ -233,7 +234,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             <input
               {...taskForm.register('title')}
               className='input w-full bg-base-300'
-              placeholder='e.g. Governance Stark'
+              placeholder='e.g. I am looking for a designer for my educational NFT idea.'
             />
             <div className='flex justify-between'>
               {taskForm.formState.errors.title ? (
@@ -256,8 +257,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             </legend>
             <textarea
               {...taskForm.register('description')}
-              placeholder='e.g. A decentralized organization that enables transparent decision-making, in which users actively participate in the financing and management of community-driven projects.'
-              className='textarea resize-none h-28 w-full bg-base-300'
+              placeholder='e.g. I am developing a collection of NFTs with an educational focus, designed to teach basic concepts of blockchain and decentralization in a visual and accessible way. I am looking for a designer with creative sensibility and experience in digital illustration who wants to collaborate on the creation of the first prototypes. The idea is to combine art with pedagogy, so if you are interested in the intersection between design and education, this task is for you. Previous experience with NFTs is not necessary, but a desire to experiment and build something meaningful is.'
+              className='textarea resize-none h-40 w-full bg-base-300'
             />
             <div className='flex justify-between'>
               {taskForm.formState.errors.description ? (
@@ -268,7 +269,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
                 <span />
               )}
 
-              <p className='label my-0'>{descriptionWatch?.length ?? 0}/500</p>
+              <p className='label my-0'>{descriptionWatch?.length ?? 0}/1000</p>
             </div>
           </fieldset>
 
@@ -488,5 +489,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
 //TODO: aceptar task y emit event
 
-  //TODO: leer los smart contract
+//TODO: leer los smart contract
 
+//TODO: pensar en lo del contacto. LA IA me dice que puedo crear un campo para que agreguen el correo o crear en la tarea un apartado para reaccionar y enviar mensajes al creador asi mantener todo descentralizado

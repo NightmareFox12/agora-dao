@@ -1,3 +1,4 @@
+use starknet::get_block_timestamp;
 use starknet::storage::StoragePointerReadAccess;
 use super::AgoraDao::ContractState;
 
@@ -12,15 +13,12 @@ pub fn create_task_validation(
 ) {
     assert!(title.len() > 0, "task title must not be empty");
     assert!(title.len() <= 50, "The title of the task is very long");
-    assert!(description.len() > 0, "Dao description must not be empty");
-    assert!(description.len() <= 500, "The description of the DAO is very long");
-    assert!(category_ID < self.task_category_counter.read(), "Invalid category ID.");
-    assert!(difficulty_ID < self.task_difficulty_counter.read(), "Invalid difficulty ID.");
-
-    if (deadline != 0) {//TODO: buscar la forma en el front de enviar el date compatible para aca
-    //TODO: terminar de completar la struct de la task porque se me olvidaron los status de la task
-    //TODO: agregar la verificacion de roles para las tasks
-    }
+    assert!(description.len() > 0, "title description must not be empty");
+    assert!(description.len() <= 1000, "The description of the task is very long");
+    assert!(category_ID < self.task_category_counter.read(), "Invalid category ID");
+    assert!(difficulty_ID < self.task_difficulty_counter.read(), "Invalid difficulty ID");
 
     assert!(amount > 0, "Amount must be greater than 0");
+
+    assert!(deadline == 0 || deadline > get_block_timestamp(), "Deadline must be in the future");
 }

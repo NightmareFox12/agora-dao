@@ -7,6 +7,7 @@ use starknet::ContractAddress;
 //Types for interface
 use super::agora_dao_fabric::structs::Dao;
 
+
 #[starknet::interface]
 trait IAgoraDaoFabric<TContractState> {
     // --- write functions ---
@@ -50,7 +51,7 @@ mod AgoraDaoFabric {
 
 
     //constants
-    const CLASS_HASH: felt252 = 0x260b8a3cdb6b088e860294f329767cb08b4f93d58ca33f79ebe0c68075706de;
+    const CLASS_HASH: felt252 = 0x30c7ed53e26a590a707a4bbc0e94bb3d3f8aacb0ee9d36e9c2ed552e576646d;
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 

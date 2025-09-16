@@ -1,14 +1,17 @@
 mod constants;
+mod enums;
 mod events;
 mod functions;
 mod roles;
 mod structs;
 mod validations;
-use starknet::ContractAddress;
 
+//interface depends
+use starknet::ContractAddress;
+use structs::Task;
 #[starknet::interface]
 pub trait IAgoraDao<TContractState> {
-    // --- write functions ---
+    // --- WRITE FUNCTIONS ---
     fn join_dao(ref self: TContractState);
     fn create_task(
         ref self: TContractState,
@@ -20,15 +23,16 @@ pub trait IAgoraDao<TContractState> {
         deadline: u64,
     );
 
-    // --- read states ---
+    // --- READ STATES ---
     fn user_counter(self: @TContractState) -> u16;
     fn fabric(self: @TContractState) -> ContractAddress;
 
-    // --- read functions ---
+    // --- READ FUNCTIONS ---
     fn is_user(self: @TContractState, caller: ContractAddress) -> bool;
     fn is_member(self: @TContractState, caller: ContractAddress) -> bool;
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
+    fn get_available_tasks(self: @TContractState) -> Array<Task>;
 }
 
 #[starknet::contract]
@@ -46,6 +50,7 @@ pub mod AgoraDao {
     use starknet::syscalls::call_contract_syscall;
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
     use super::constants::FELT_STRK_CONTRACT;
+    use super::enums::TaskStatus;
 
     //imports
     use super::events::{TaskCreated, UserJoined};
@@ -53,7 +58,6 @@ pub mod AgoraDao {
     use super::roles::{ADMIN_ROLE, USER_ROLE};
     use super::structs::Task;
     use super::validations::create_task_validation;
-
 
     //components
     component!(path: AccessControlComponent, storage: accesscontrol, event: AccessControlEvent);
@@ -125,7 +129,7 @@ pub mod AgoraDao {
 
     #[abi(embed_v0)]
     impl AgoraDaoImpl of super::IAgoraDao<ContractState> {
-        // --- Write functions ---
+        // --- WRITE FUNCTIONS ---
         fn join_dao(ref self: ContractState) {
             let caller = get_caller_address();
 
@@ -209,6 +213,7 @@ pub mod AgoraDao {
                         difficulty: self.task_difficulties.read(difficulty_ID),
                         reward: amount,
                         deadline: deadline,
+                        status: TaskStatus::OPEN,
                     },
                 );
             //emit event
@@ -227,7 +232,7 @@ pub mod AgoraDao {
             self.task_counter.write(task_id + 1);
         }
 
-        // --- Read states ---
+        // --- READ STATES ---
         fn fabric(self: @ContractState) -> ContractAddress {
             self.fabric.read()
         }
@@ -236,7 +241,7 @@ pub mod AgoraDao {
             self.user_counter.read()
         }
 
-        // --- Read functions ---
+        // --- READ FUNCTIONS ---
         fn is_member(self: @ContractState, caller: ContractAddress) -> bool {
             let mut i: u16 = 0;
             let user_counter: u16 = self.user_counter.read();
@@ -271,6 +276,20 @@ pub mod AgoraDao {
 
             while i != self.task_difficulty_counter.read() {
                 res.append(self.task_difficulties.read(i));
+                i += 1;
+            }
+            res
+        }
+
+        fn get_available_tasks(self: @ContractState) -> Array<Task> {
+            let mut res: Array<Task> = ArrayTrait::new();
+            let mut i: u16 = 0;
+            let task_counter: u16 = self.task_counter.read();
+
+            while i != task_counter {
+                if self.tasks.read(i).status == TaskStatus::OPEN {
+                    res.append(self.tasks.read(i));
+                }
                 i += 1;
             }
             res

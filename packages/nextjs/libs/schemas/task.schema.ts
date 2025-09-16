@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const noAccentsRegex = /^[a-zA-Z0-9\s.,:;!?'"()\-_/]*$/;
+
 export const TaskFormSchema = z.object({
   title: z
     .string()
@@ -9,6 +11,9 @@ export const TaskFormSchema = z.object({
     })
     .max(50, {
       message: 'Character limit exceeded',
+    })
+    .refine((val) => noAccentsRegex.test(val), {
+      message: 'Title must not contain accents or special characters.',
     }),
 
   description: z
@@ -17,8 +22,11 @@ export const TaskFormSchema = z.object({
     .min(30, {
       message: 'Description must be at least 30 characters.',
     })
-    .max(500, {
+    .max(1000, {
       message: 'Character limit exceeded',
+    })
+    .refine((val) => noAccentsRegex.test(val), {
+      message: 'Description must not contain accents or special characters.',
     }),
 
   category: z.string().refine((val) => val !== 'default', {

@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x388492d8dd0ce1148339ac37c744c177ca3cb41cacdc78c14affaa7cb5bbede",
+        "0x7350443b58d9cf0d05d6e73a7574881ff93158cf3cc63ad4fb12e8b02995a",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x7d53d0eb3f88d1e2d5559ee5c3621f82cd7f82f38c7b19b72e1df039711dbfb",
+        "0x59ee4a340a89dab16fef3369c4213836993e90cb51f09f8f70d4532322cd65d",
     },
     AgoraDao: {
       address:
-        "0x46d6759f46a96d63974a31c68eb89a459648a43548e70a1147b2b8acf07e02d",
+        "0x367155325769bd7dcdc425143fa67500427d8c129c675faa94e28356c36b63f",
       abi: [
         {
           type: "impl",
@@ -324,6 +324,70 @@ const deployedContracts = {
             {
               name: "True",
               type: "()",
+            },
+          ],
+        },
+        {
+          type: "enum",
+          name: "contracts::agora_dao::enums::TaskStatus",
+          variants: [
+            {
+              name: "OPEN",
+              type: "()",
+            },
+            {
+              name: "IN_PROGRESS",
+              type: "()",
+            },
+            {
+              name: "CANCELLED",
+              type: "()",
+            },
+            {
+              name: "COMPLETED",
+              type: "()",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "contracts::agora_dao::structs::Task",
+          members: [
+            {
+              name: "task_id",
+              type: "core::integer::u16",
+            },
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "title",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "description",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "category",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "difficulty",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "reward",
+              type: "core::integer::u256",
+            },
+            {
+              name: "deadline",
+              type: "core::integer::u64",
+            },
+            {
+              name: "status",
+              type: "contracts::agora_dao::enums::TaskStatus",
             },
           ],
         },
@@ -442,6 +506,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_available_tasks",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<contracts::agora_dao::structs::Task>",
                 },
               ],
               state_mutability: "view",
@@ -794,7 +869,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x260b8a3cdb6b088e860294f329767cb08b4f93d58ca33f79ebe0c68075706de",
+        "0x30c7ed53e26a590a707a4bbc0e94bb3d3f8aacb0ee9d36e9c2ed552e576646d",
     },
   },
   sepolia: {
@@ -1121,6 +1196,70 @@ const deployedContracts = {
           ],
         },
         {
+          type: "enum",
+          name: "contracts::agora_dao::enums::TaskStatus",
+          variants: [
+            {
+              name: "OPEN",
+              type: "()",
+            },
+            {
+              name: "IN_PROGRESS",
+              type: "()",
+            },
+            {
+              name: "CANCELLED",
+              type: "()",
+            },
+            {
+              name: "COMPLETED",
+              type: "()",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "contracts::agora_dao::structs::Task",
+          members: [
+            {
+              name: "task_id",
+              type: "core::integer::u16",
+            },
+            {
+              name: "creator",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "title",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "description",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "category",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "difficulty",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "reward",
+              type: "core::integer::u256",
+            },
+            {
+              name: "deadline",
+              type: "core::integer::u64",
+            },
+            {
+              name: "status",
+              type: "contracts::agora_dao::enums::TaskStatus",
+            },
+          ],
+        },
+        {
           type: "interface",
           name: "contracts::agora_dao::IAgoraDao",
           items: [
@@ -1235,6 +1374,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_available_tasks",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<contracts::agora_dao::structs::Task>",
                 },
               ],
               state_mutability: "view",

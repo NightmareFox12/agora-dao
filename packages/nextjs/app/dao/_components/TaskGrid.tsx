@@ -3,6 +3,8 @@
 import { CalendarDays, Coins, Info, User } from 'lucide-react';
 import React from 'react';
 import { Address } from '~~/components/scaffold-stark';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
+import { useTaskState } from '~~/services/store/task';
 
 interface Task {
   id: string;
@@ -118,9 +120,29 @@ const statusColors = {
 };
 
 export const TaskGrid: React.FC = () => {
-  //Smart Contract
+  const { daoAddress } = useTaskState();
 
-  // const 
+  //Smart Contract
+  const { data: tasks } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_available_tasks',
+    contractAddress: daoAddress,
+  });
+
+
+  /*
+  category: "DOCUMENTATION"
+creator: 376475558541706534617805357327539442513854110774346318494410214781103070389n
+deadline: 1758261995n (or 0n if is empty)
+description: "enkenkenenkenkenenkenkenenkenkenenkenkenenkenkenenkenkenenkenkenenkenkenenkenken"
+difficulty: "TRIVIAL"
+reward: 30000000000000000000n
+status: CairoCustomEnum {variant: {…}}
+task_id: 0n
+title: "enkenken"
+  */
+
+  console.log(tasks)
   return (
     <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
       {mockTasks.map((task) => (
@@ -132,13 +154,14 @@ export const TaskGrid: React.FC = () => {
             <h2 className='card-title'>{task.title}</h2>
             <div className='badge badge-warning'>{task.status}</div>
             <p className='my-1'>{task.description}</p>
-            <Address address='0x123456789'/>
+            <Address address='0x123456789' />
             <p className='my-0'>{task.dueDate}</p>
             <p className='my-0 font-bold'>{task.reward}</p>
             <div className='card-actions justify-center'>
               <button className='btn btn-info'>
-                <Info className='w-4 h-4'/>
-                Info</button>
+                <Info className='w-4 h-4' />
+                Info
+              </button>
             </div>
           </div>
         </div>

@@ -1,4 +1,6 @@
 use starknet::ContractAddress;
+use super::enums::TaskStatus;
+
 
 #[derive(Drop, Serde, Clone, starknet::Store)]
 pub struct Task {
@@ -10,6 +12,5 @@ pub struct Task {
     pub difficulty: ByteArray,
     pub reward: u256,
     pub deadline: u64,
-    // pub status: u8,
-
+    pub status: TaskStatus,
 }

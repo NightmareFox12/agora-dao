@@ -134,7 +134,7 @@ export const CreateDaoDialog: React.FC = () => {
       dialogRef.current?.close();
       toast.success('DAO created successfully', { duration: 5000 });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setSubmitLoading(false);
     }
@@ -237,7 +237,7 @@ export const CreateDaoDialog: React.FC = () => {
                 )}
 
                 <p className='label my-0'>
-                  {descriptionWatch?.length ?? 0}/300
+                  {descriptionWatch?.length ?? 0}/400
                 </p>
               </div>
             </fieldset>

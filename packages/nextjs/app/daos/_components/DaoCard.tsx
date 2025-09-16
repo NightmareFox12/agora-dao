@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, LogIn, Users } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
@@ -8,6 +8,7 @@ import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldRead
 import { DaoDetailsDialog } from './DaoDetailsDialog';
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '~~/utils/storage_keys';
+import toast from 'react-hot-toast';
 
 //constans
 const darkCategoryColors = {
@@ -54,6 +55,9 @@ export const DaoCard: React.FC<DaoCardProps> = ({
   const { resolvedTheme } = useTheme();
   const router = useRouter();
 
+  //states
+  const [joinHash, setJoinHash] = useState<string | undefined>(undefined);
+
   //consts
   const isDarkMode = (resolvedTheme ?? 'light') === 'dark';
 
@@ -71,9 +75,9 @@ export const DaoCard: React.FC<DaoCardProps> = ({
       contractAddress: daoAddress,
     });
 
-  const { data: isUser, isLoading: isUserLoading } = useScaffoldReadContract({
+  const { data: isMember, isLoading: isUserLoading } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'is_user',
+    functionName: 'is_member',
     args: [userAddress],
     contractAddress: daoAddress,
   });
@@ -83,12 +87,11 @@ export const DaoCard: React.FC<DaoCardProps> = ({
     try {
       localStorage.setItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS, daoAddress);
 
-      if (creatorAddress !== userAddress && !isUser) {
-        await sendAsync();
+      if (creatorAddress !== userAddress && !isMember) {
+        const tx = await sendAsync();
 
-        router.replace('/dao');
-        return;
-      } else router.replace('/dao');
+        setJoinHash(tx);
+      } else setJoinHash('0x000');
     } catch (err) {
       console.log(err);
     }
@@ -153,6 +156,12 @@ export const DaoCard: React.FC<DaoCardProps> = ({
     );
   };
 
+  useEffect(() => {
+    if (joinHash === undefined) return;
+    toast.dismissAll()
+    router.replace('/dao');
+  }, [joinHash, router]);
+
   return (
     <div
       className={`${creatorAddress === userAddress ? 'bg-accent/50 border border-gradient' : 'bg-base-100'} card w-full shadow-sm`}
@@ -167,10 +176,10 @@ export const DaoCard: React.FC<DaoCardProps> = ({
         <div className='card-actions'>
           <button
             onClick={handleJoinDao}
-            disabled={isUserLoading || isUser === undefined}
+            disabled={isUserLoading || isMember === undefined}
             className={`${creatorAddress === userAddress ? 'btn-soft btn-neutral' : ''} btn flex-1 btn-accent`}
           >
-            {isUser || userAddress === creatorAddress ? (
+            {isMember || userAddress === creatorAddress ? (
               <>
                 <LogIn className='h-4 w-4' />
                 Log In
