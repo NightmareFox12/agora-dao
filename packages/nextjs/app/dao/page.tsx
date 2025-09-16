@@ -1,7 +1,7 @@
 'use server';
 
 import { NextPage } from 'next';
-import { TaskGrid } from './_components/TaskGrid';
+import { AvailableTaskGrid } from './_components/AvailableTaskGrid';
 import { FolderOpen } from 'lucide-react';
 import { TaskClientController } from './_components/TaskClientController';
 
@@ -18,7 +18,7 @@ const TaskPage: NextPage = async () => {
             Available
           </label>
           <div className='tab-content bg-base-100 border-base-300 p-6'>
-            <TaskGrid />
+            <AvailableTaskGrid />
           </div>
 
           <label className='tab'>

@@ -7,7 +7,6 @@ use starknet::ContractAddress;
 //Types for interface
 use super::agora_dao_fabric::structs::Dao;
 
-
 #[starknet::interface]
 trait IAgoraDaoFabric<TContractState> {
     // --- write functions ---
