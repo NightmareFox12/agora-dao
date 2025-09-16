@@ -55,7 +55,9 @@ pub mod AgoraDao {
     //imports
     use super::events::{TaskCreated, UserJoined};
     use super::functions::{add_task_category, add_task_difficulty};
-    use super::roles::{ADMIN_ROLE, USER_ROLE};
+    use super::roles::{
+        ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, TASK_CREATOR_ROLE, USER_ROLE,
+    };
     use super::structs::Task;
     use super::validations::create_task_validation;
 

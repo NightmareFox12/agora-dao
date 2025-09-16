@@ -477,7 +477,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 };
 
-//TODO: me falta terminar de arreglar lo de la fecha y luego crear algo para poder aceptar tareas con fechas/sin fechas.
+//TODO: agregar un modal de primera vez para decirle que vaya a editar los permisos
 
 //TODO: luego de subir mi primer tarea hacer lo de los roles para que no todos puedan subir tareas
 
@@ -485,10 +485,10 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
 //TODO: poder quitar rol si eres admin
 
-//TODO: agregar leer tasks
-
 //TODO: aceptar task y emit event
 
-//TODO: leer los smart contract
-
 //TODO: pensar en lo del contacto. LA IA me dice que puedo crear un campo para que agreguen el correo o crear en la tarea un apartado para reaccionar y enviar mensajes al creador asi mantener todo descentralizado
+
+//TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
+//TODO: inventarme la de la vaina de acceso para daos privadas
+//TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)

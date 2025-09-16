@@ -1,9 +1,5 @@
 'use client';
 
-//TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
-//TODO: inventarme la de la vaina de acceso para daos privadas
-//TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
-
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -365,7 +361,7 @@ export const CreateDaoDialog: React.FC = () => {
             </fieldset>
 
             {/* Is Public */}
-            <fieldset className='fieldset'>
+            {/* <fieldset className='fieldset'>
               <legend className='fieldset-legend w-full'>
                 <article className='w-full flex justify-between items-center'>
                   <div className='flex gap-2'>
@@ -395,8 +391,7 @@ export const CreateDaoDialog: React.FC = () => {
                   className='toggle'
                 />
               </div>
-              {/* <span className='label text-error my-0'>Optional</span> */}
-            </fieldset>
+            </fieldset> */}
 
             {/* Action Buttons */}
             <div className='modal-action justify-center'>

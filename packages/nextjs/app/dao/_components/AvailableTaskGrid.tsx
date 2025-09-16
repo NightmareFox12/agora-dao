@@ -64,6 +64,7 @@ export const AvailableTaskGrid: React.FC = () => {
           const task = x as unknown as ITask;
 
           const status = task.status.activeVariant();
+
           const parsedDate = new Date(Number(task.deadline) * 1000)
             .toISOString()
             .slice(0, 10)
@@ -75,7 +76,7 @@ export const AvailableTaskGrid: React.FC = () => {
               className='card bg-base-200 shadow-sm border border-gradient'
             >
               <div className='card-body'>
-                <h2 className='card-title break-all line-clamp-3'>
+                <h2 className='card-title break-all'>
                   {task.title}
                 </h2>
                 <div className='badge badge-warning'>{status}</div>
@@ -83,7 +84,7 @@ export const AvailableTaskGrid: React.FC = () => {
                   {task.description}
                 </p>
                 <Address address='0x123456789' />
-                <p className='my-0'>{parsedDate}</p>
+                {task.deadline !== 0n && <p className='my-0'>{parsedDate}</p>}
                 <p className='my-0 font-bold'>
                   {formatEther(task.reward)} STRK
                 </p>

@@ -48,7 +48,6 @@ mod AgoraDaoFabric {
     use super::structs::Dao;
     use super::validations::create_dao_validation;
 
-
     //constants
     const CLASS_HASH: felt252 = 0x30c7ed53e26a590a707a4bbc0e94bb3d3f8aacb0ee9d36e9c2ed552e576646d;
 
