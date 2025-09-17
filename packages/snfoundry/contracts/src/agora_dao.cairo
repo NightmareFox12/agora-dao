@@ -38,13 +38,13 @@ pub trait IAgoraDao<TContractState> {
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
     fn get_available_tasks(self: @TContractState) -> Array<Task>;
+    fn get_all_admin_role(self: @TContractState, caller: ContractAddress) -> Array<ContractAddress>;
 }
 
 #[starknet::contract]
 pub mod AgoraDao {
     //OpenZeppelin imports
-    use super::IAgoraDao;
-use openzeppelin_access::accesscontrol::AccessControlComponent;
+    use openzeppelin_access::accesscontrol::AccessControlComponent;
     use openzeppelin_introspection::src5::SRC5Component;
     use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     //Starknet imports
@@ -65,7 +65,7 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
         ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, TASK_CREATOR_ROLE, USER_ROLE,
     };
     use super::structs::Task;
-    use super::validations::create_task_validation;
+    use super::validations::_create_task_validation;
 
     //components
     component!(path: AccessControlComponent, storage: accesscontrol, event: AccessControlEvent);
@@ -88,7 +88,7 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
         pub task_counter: u16,
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
-        //role counters
+        //Role counters
         pub admin_role_counter: u16,
         pub auditor_role_counter: u16,
         pub task_creator__role_counter: u16,
@@ -99,6 +99,9 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
         pub tasks: Map<u16, Task>,
         pub task_categories: Map<u16, ByteArray>,
         pub task_difficulties: Map<u16, ByteArray>,
+        //Role Mappings
+        pub admin_roles: Map<u16, ContractAddress>,
+        pub user_roles: Map<u16, ContractAddress>,
         #[substorage(v0)]
         pub accesscontrol: AccessControlComponent::Storage,
         #[substorage(v0)]
@@ -122,8 +125,12 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
 
         // AccessControl-related initialization
         self.accesscontrol.initializer();
+
+        //grant role
         self.accesscontrol._grant_role(ADMIN_ROLE, creator);
-        self.admin_role_counter.write(self.admin_role_counter.read() + 1);
+        let admin_role_counter = self.admin_role_counter.read();
+        self.admin_roles.write(admin_role_counter, creator);
+        self.admin_role_counter.write(admin_role_counter + 1);
 
         add_task_category(ref self, "DOCUMENTATION");
         add_task_category(ref self, "DESIGN");
@@ -140,8 +147,6 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
         add_task_difficulty(ref self, "CRITICAL");
     }
 
-    // #[external(v0)]
-
     #[abi(embed_v0)]
     impl AgoraDaoImpl of super::IAgoraDao<ContractState> {
         // --- WRITE FUNCTIONS ---
@@ -157,9 +162,10 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
                 "Creator cannot join",
             );
 
+            //add user into counter
             let user_id = self.user_counter.read();
-
             self.users.write(user_id, caller);
+            self.user_counter.write(user_id + 1);
 
             //save user into fabric
             let sel = selector!("add_user");
@@ -182,8 +188,9 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
 
             //grant user role
             self.accesscontrol._grant_role(USER_ROLE, caller);
-            self.user_counter.write(user_id + 1);
-            self.user_role_counter.write(self.user_role_counter.read() + 1);
+            let user_role_counter = self.user_role_counter.read();
+            self.user_roles.write(user_role_counter, caller);
+            self.user_role_counter.write(user_role_counter + 1);
 
             //emit event
             self.emit(UserJoined { user: caller, user_ID: user_id });
@@ -198,7 +205,7 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
             amount: u256,
             deadline: u64,
         ) {
-            create_task_validation(
+            _create_task_validation(
                 ref self,
                 title.clone(),
                 description.clone(),
@@ -207,8 +214,19 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
                 amount,
                 deadline,
             );
-            //TODO: crear una super funcion para verificar el rol/roles
+
             let caller = get_caller_address();
+
+            //TODO: crear una super funcion para verificar el rol/roles
+            //TODO: lo que se me ocurrio a futuro es poner condicionales para darle permisos a los
+            //roles. por ejemplo: que el admin pueda elegir si los usuarios pueden crear tareas
+            //(true/false)
+            assert!(
+                self.accesscontrol.has_role(ADMIN_ROLE, caller)
+                    || self.accesscontrol.has_role(AUDITOR_ROLE, caller)
+                    || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
+                "role no cumplided",
+            )
 
             //transfer
             let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();
@@ -327,6 +345,22 @@ use openzeppelin_access::accesscontrol::AccessControlComponent;
                 if self.tasks.read(i).status == TaskStatus::OPEN {
                     res.append(self.tasks.read(i));
                 }
+                i += 1;
+            }
+            res
+        }
+
+        fn get_all_admin_role(
+            self: @ContractState, caller: ContractAddress,
+        ) -> Array<ContractAddress> {
+            assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+
+            let mut res: Array<ContractAddress> = ArrayTrait::new();
+            let mut i: u16 = 0;
+            let admin_role_counter: u16 = self.admin_role_counter.read();
+
+            while i != admin_role_counter {
+                res.append(self.admin_roles.read(i));
                 i += 1;
             }
             res

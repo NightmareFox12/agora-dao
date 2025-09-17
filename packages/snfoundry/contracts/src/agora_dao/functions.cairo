@@ -1,6 +1,3 @@
-use AccessControlComponent::InternalTrait;
-use openzeppelin_access::accesscontrol::AccessControlComponent;
-use starknet::get_contract_address;
 use starknet::storage::{
     StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
     StoragePointerWriteAccess,
@@ -8,13 +5,9 @@ use starknet::storage::{
 use super::AgoraDao::ContractState;
 
 pub fn add_task_category(ref self: ContractState, category: ByteArray) {
-    use super::roles::ADMIN_ROLE;
-    let mut category_counter = self.task_category_counter.read();
-
-    self.accesscontrol._grant_role(ADMIN_ROLE, get_contract_address());
-
     assert!(category.len() > 0, "category name must not be empty");
 
+    let mut category_counter = self.task_category_counter.read();
     let mut i: u16 = 0;
 
     while i != category_counter {
@@ -27,13 +20,9 @@ pub fn add_task_category(ref self: ContractState, category: ByteArray) {
 }
 
 pub fn add_task_difficulty(ref self: ContractState, difficulty: ByteArray) {
-    use super::roles::ADMIN_ROLE;
-    let mut difficulty_counter = self.task_difficulty_counter.read();
-
-    self.accesscontrol._grant_role(ADMIN_ROLE, get_contract_address());
-
     assert!(difficulty.len() > 0, "difficulty name must not be empty");
 
+    let mut difficulty_counter = self.task_difficulty_counter.read();
     let mut i: u16 = 0;
 
     while i != difficulty_counter {

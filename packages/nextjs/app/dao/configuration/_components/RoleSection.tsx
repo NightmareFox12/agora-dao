@@ -1,17 +1,27 @@
 'use client';
 
-import { Users } from 'lucide-react';
+import { ArrowLeft, Users } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 import { TableRole } from './TableRole';
 
+interface IShowData {
+  showTable: boolean;
+  role: 'admin' | 'auditor' | 'user';
+  data: []
+}
+
 export const RoleSection: React.FC = () => {
   const { address } = useAccount();
   const { daoAddress } = useDaoState();
 
-  const [showTable, setShowTable] = useState<boolean>(false);
+  const [showData, setShowData] = useState<IShowData>({
+    showTable: false,
+    role: 'admin',
+    data: [],
+  });
 
   //Smart Contract
   const { data: isUser } = useScaffoldReadContract({
@@ -64,7 +74,6 @@ export const RoleSection: React.FC = () => {
       watch: false,
     });
 
-
   if (isUser !== undefined && isUser) {
     return (
       <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -76,10 +85,28 @@ export const RoleSection: React.FC = () => {
       </section>
     );
   }
+
   return (
     <>
-      {showTable ? (
-        <TableRole />
+      {showData.showTable ? (
+        <section>
+          <button
+            onClick={() =>
+              setShowData((prev) => {
+                return {
+                  ...prev,
+                  showTable: false,
+                };
+              })
+            }
+            className='btn btn-accent btn-circle btn-sm'
+          >
+            <ArrowLeft className='w-4 h-4' />
+          </button>
+
+          <p className='font-semibold'>{showData.role}</p>
+          <TableRole role={showData.role} data={showData.data} />
+        </section>
       ) : (
         <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
           {/* Admin card */}
@@ -87,7 +114,13 @@ export const RoleSection: React.FC = () => {
             <div className='h-56 w-full skeleton bg-base-200' />
           ) : (
             <div
-              onClick={() => setShowTable(true)}
+              onClick={() =>
+                setShowData({
+                  showTable: true,
+                  role: 'admin',
+                  data: [],
+                })
+              }
               className='card bg-base-200 w-full border border-gradient shadow-sm cursor-pointer hover:scale-[1.03] transition-all delay-75'
             >
               <div className='card-body'>

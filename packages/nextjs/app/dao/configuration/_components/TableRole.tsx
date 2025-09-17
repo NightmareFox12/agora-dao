@@ -1,9 +1,14 @@
-import React from "react";
+import React from 'react';
 
-export const TableRole: React.FC = () => {
+type TableRoleProps = {
+  role: string;
+  data: [];
+};
+
+export const TableRole: React.FC<TableRoleProps> = ({ role, data }) => {
   return (
     <div className='overflow-x-auto'>
-      <table className='table'>
+      <table className='table bg-primary'>
         {/* head */}
         <thead>
           <tr>

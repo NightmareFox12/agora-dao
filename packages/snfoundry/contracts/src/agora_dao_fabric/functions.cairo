@@ -14,7 +14,6 @@ pub fn _add_user(ref self: ContractState, caller: ContractAddress) {
     }
 }
 
-
 pub fn _add_category(ref self: ContractState, category: ByteArray) {
     let mut category_counter = self.category_counter.read();
 
