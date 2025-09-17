@@ -43,7 +43,8 @@ pub trait IAgoraDao<TContractState> {
 #[starknet::contract]
 pub mod AgoraDao {
     //OpenZeppelin imports
-    use openzeppelin_access::accesscontrol::AccessControlComponent;
+    use super::IAgoraDao;
+use openzeppelin_access::accesscontrol::AccessControlComponent;
     use openzeppelin_introspection::src5::SRC5Component;
     use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
     //Starknet imports
@@ -122,6 +123,7 @@ pub mod AgoraDao {
         // AccessControl-related initialization
         self.accesscontrol.initializer();
         self.accesscontrol._grant_role(ADMIN_ROLE, creator);
+        self.admin_role_counter.write(self.admin_role_counter.read() + 1);
 
         add_task_category(ref self, "DOCUMENTATION");
         add_task_category(ref self, "DESIGN");

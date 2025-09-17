@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x7548f45f95eccd7973e2f347c337e6f6227d17a428e95748ca4fe74560a6c7",
+        "0x288883526bd4cb5d0fa1a5fae54c0e5d69663034e05500448be7383c65899fb",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x4fb6a274597257f5922fb2e3af35bbe2c98163ca2e1bfad0bda1e466bec7e57",
+        "0x769706acf8508695dd365f12213ac87ebb5fab237cc8a618f673b61f287742",
     },
     AgoraDao: {
       address:
-        "0x67d979e8a6e92d239630f741a862551d508d554eeee1038a5bb08838629bc7d",
+        "0x396da77bc44e8e18b4605e920529017fbcdcc0037102ec4c392faf894a1165",
       abi: [
         {
           type: "impl",
@@ -480,7 +480,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "task_creator__role_counter",
+              name: "task_creator_role_counter",
               inputs: [],
               outputs: [
                 {
@@ -924,7 +924,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x76d7e364ceaad660f173195b6630bccaefc96e97c0cd79ebe769a5a8f8952a5",
+        "0x5a10d6eda5147dbd26a2c1ae00381a0c6675725975c015218dd142a1061970c",
     },
   },
   sepolia: {
@@ -1403,7 +1403,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "task_creator__role_counter",
+              name: "task_creator_role_counter",
               inputs: [],
               outputs: [
                 {

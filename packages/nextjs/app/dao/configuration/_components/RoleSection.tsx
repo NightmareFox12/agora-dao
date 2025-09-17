@@ -3,12 +3,21 @@
 import { Users } from 'lucide-react';
 import React from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
+import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 
 export const RoleSection: React.FC = () => {
+  const { address } = useAccount();
   const { daoAddress } = useDaoState();
 
   //Smart Contract
+  const { data: isUser, isLoading: isUserLoading } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_user',
+    args: [address],
+    contractAddress: daoAddress,
+  });
+
   const { data: adminRoleCounter, isLoading: adminRoleCounterLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDao',
@@ -45,6 +54,18 @@ export const RoleSection: React.FC = () => {
       functionName: 'user_role_counter',
       contractAddress: daoAddress,
     });
+
+  if (isUserLoading || (isUser !== undefined && isUser)) {
+    return (
+      <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
+        {Array(5)
+          .fill(0)
+          .map((_, y) => (
+            <div key={y} className='h-56 w-full skeleton bg-base-200' />
+          ))}
+      </section>
+    );
+  }
 
   return (
     <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
