@@ -26,6 +26,7 @@ pub trait IAgoraDao<TContractState> {
     // --- READ STATES ---
     fn user_counter(self: @TContractState) -> u16;
     fn fabric(self: @TContractState) -> ContractAddress;
+    fn user_role_counter(self: @TContractState) -> u16;
 
     // --- READ FUNCTIONS ---
     fn is_user(self: @TContractState, caller: ContractAddress) -> bool;
@@ -82,6 +83,12 @@ pub mod AgoraDao {
         pub task_counter: u16,
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
+        //role counters
+        pub admin_role_counter: u16,
+        pub auditor_role_counter: u16,
+        pub task_creator__role_counter: u16,
+        pub proposal_creator_role_counter: u16,
+        pub user_role_counter: u16,
         //Mappings
         pub users: Map<u16, ContractAddress>,
         pub tasks: Map<u16, Task>,
@@ -167,8 +174,10 @@ pub mod AgoraDao {
                 panic!("fabric.add_user failed: {:?}", res.unwrap_err());
             }
 
+            //grant user role
             self.accesscontrol._grant_role(USER_ROLE, caller);
             self.user_counter.write(user_id + 1);
+            self.user_role_counter.write(self.user_role_counter.read() + 1);
 
             //emit event
             self.emit(UserJoined { user: caller, user_ID: user_id });
@@ -241,6 +250,10 @@ pub mod AgoraDao {
 
         fn user_counter(self: @ContractState) -> u16 {
             self.user_counter.read()
+        }
+
+        fn user_role_counter(self: @ContractState) -> u16 {
+            self.user_role_counter.read()
         }
 
         // --- READ FUNCTIONS ---

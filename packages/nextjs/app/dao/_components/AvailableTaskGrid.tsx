@@ -4,9 +4,9 @@ import { CalendarDays, Coins, Info, User } from 'lucide-react';
 import React from 'react';
 import { Address } from '~~/components/scaffold-stark';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
-import { useTaskState } from '~~/services/store/task';
 import { CairoCustomEnum } from 'starknet';
 import { formatEther } from 'ethers';
+import { useDaoState } from '~~/services/store/dao';
 
 interface ITask {
   task_id: bigint;
@@ -35,7 +35,7 @@ const statusColors = {
 };
 
 export const AvailableTaskGrid: React.FC = () => {
-  const { daoAddress } = useTaskState();
+  const { daoAddress } = useDaoState();
 
   //Smart Contract
   const { data: availableTasks, isLoading: availableTasksLoading } =

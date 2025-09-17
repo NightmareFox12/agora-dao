@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
-type Task = {
+type Dao = {
   daoAddress: string;
   setDaoAddress: (daoAddress: string) => void;
 };
 
-export const useTaskState = create<Task>((set) => ({
+export const useDaoState = create<Dao>((set) => ({
   daoAddress: '',
   setDaoAddress: (daoAddress: string) => set(() => ({ daoAddress })),
 }));

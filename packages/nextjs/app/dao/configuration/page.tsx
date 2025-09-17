@@ -2,12 +2,33 @@
 
 import { NextPage } from 'next';
 import { ModalAdmin } from './_components/AdminModal';
+import { Users } from 'lucide-react';
+import { CardRole } from './_components/CardRole';
+
+const roles = [
+  {
+    title: 'Auditor',
+    description: 'yeah',
+  },
+  {
+    title: 'Task creator',
+    description: 'yeah',
+  },
+  {
+    title: 'Propossal creator',
+    description: 'yeah',
+  },
+  {
+    title: 'User Role',
+    description: 'Can accept tasks and participate in voting.',
+  },
+];
 
 const ConfigurationPage: NextPage = async () => {
   return (
     <section>
       <ModalAdmin />
-      <div className='tabs tabs-lift'>
+      <div className='tabs tabs-lift justify-center'>
         <label className='tab'>
           <input type='radio' name='my_tabs_4' />
           Live
@@ -21,59 +42,11 @@ const ConfigurationPage: NextPage = async () => {
           Roles
         </label>
         <div className='tab-content bg-base-300 border-base-300 p-6'>
-          <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-            {/* card */}
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Card Title</h2>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
-                </p>
-                <div className='card-actions justify-end'>
-                  <button className='btn btn-primary'>Buy Now</button>
-                </div>
-              </div>
-            </div>
-
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Card Title</h2>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
-                </p>
-                <div className='card-actions justify-end'>
-                  <button className='btn btn-primary'>Buy Now</button>
-                </div>
-              </div>
-            </div>
-
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Card Title</h2>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
-                </p>
-                <div className='card-actions justify-end'>
-                  <button className='btn btn-primary'>Buy Now</button>
-                </div>
-              </div>
-            </div>
-
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Card Title</h2>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
-                </p>
-                <div className='card-actions justify-end'>
-                  <button className='btn btn-primary'>Buy Now</button>
-                </div>
-              </div>
-            </div>
+          <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
+            {/* card role */}
+            {roles.map((x, y) => (
+              <CardRole key={y} title={x.title} description={x.description} />
+            ))}
           </section>
         </div>
         <label className='tab'>

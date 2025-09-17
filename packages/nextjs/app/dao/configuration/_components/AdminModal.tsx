@@ -2,15 +2,19 @@
 
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
+import { useDaoState } from '~~/services/store/dao';
 
 export const ModalAdmin: React.FC = () => {
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { daoAddress } = useDaoState();
 
   //Smart contract
   const { data: is_user, isLoading: is_user_loading } = useScaffoldReadContract(
     {
       contractName: 'AgoraDao',
       functionName: 'is_user',
+      args: [address],
+      contractAddress: daoAddress,
     }
   );
 

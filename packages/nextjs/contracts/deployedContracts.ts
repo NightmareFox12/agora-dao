@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x11ec2a054069d97d0c9f46c95f08344487c55fc409fb8da60333afda9ed36ba",
+        "0x18bb85b7db90dd6b1aa769d6f5f5bf147abfacbc3a39fa3eea4be401092ff37",
       abi: [
         {
           type: "impl",
@@ -274,7 +274,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0xb26459d5153161c39b14b313cb3e890e0a37cd1d2aa4d311ef01dfc8a124bf",
+        "0x219cd466ea130641e1b880383d2e6d48a8cf70e304f04f19762484492ffd522",
       abi: [
         {
           type: "impl",
@@ -452,6 +452,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "user_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
                 },
               ],
               state_mutability: "view",
@@ -869,7 +880,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x30c7ed53e26a590a707a4bbc0e94bb3d3f8aacb0ee9d36e9c2ed552e576646d",
+        "0x731dbc18a872d140077c6b6231f126da5cdd2fa136fc547c2b7a4611452cd91",
     },
   },
   sepolia: {
@@ -1320,6 +1331,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "user_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
                 },
               ],
               state_mutability: "view",

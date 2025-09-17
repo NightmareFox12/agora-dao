@@ -6,12 +6,12 @@ import { TaskFAB } from './TaskFAB';
 import { CreateTaskDialog } from './CreateTaskDialog';
 import { LOCAL_STORAGE_KEYS } from '~~/utils/storage_keys';
 import { useRouter } from 'next/navigation';
-import { useTaskState } from '~~/services/store/task';
+import { useDaoState } from '~~/services/store/dao';
 
 export const TaskClientController: React.FC = () => {
   const router = useRouter();
   const { setShowHeader } = useHeaderState();
-  const { daoAddress, setDaoAddress } = useTaskState();
+  const { daoAddress, setDaoAddress } = useDaoState();
 
   //States
   const [showCreateTaskDialog, setShowCreateTaskDialog] =
