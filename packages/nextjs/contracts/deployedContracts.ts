@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x18bb85b7db90dd6b1aa769d6f5f5bf147abfacbc3a39fa3eea4be401092ff37",
+        "0x7548f45f95eccd7973e2f347c337e6f6227d17a428e95748ca4fe74560a6c7",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x59ee4a340a89dab16fef3369c4213836993e90cb51f09f8f70d4532322cd65d",
+        "0x4fb6a274597257f5922fb2e3af35bbe2c98163ca2e1bfad0bda1e466bec7e57",
     },
     AgoraDao: {
       address:
-        "0x219cd466ea130641e1b880383d2e6d48a8cf70e304f04f19762484492ffd522",
+        "0x67d979e8a6e92d239630f741a862551d508d554eeee1038a5bb08838629bc7d",
       abi: [
         {
           type: "impl",
@@ -452,6 +452,50 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "admin_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "auditor_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "task_creator__role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "proposal_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
                 },
               ],
               state_mutability: "view",
@@ -880,7 +924,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x731dbc18a872d140077c6b6231f126da5cdd2fa136fc547c2b7a4611452cd91",
+        "0x76d7e364ceaad660f173195b6630bccaefc96e97c0cd79ebe769a5a8f8952a5",
     },
   },
   sepolia: {
@@ -1331,6 +1375,50 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "admin_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "auditor_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "task_creator__role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "proposal_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
                 },
               ],
               state_mutability: "view",

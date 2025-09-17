@@ -26,6 +26,10 @@ pub trait IAgoraDao<TContractState> {
     // --- READ STATES ---
     fn user_counter(self: @TContractState) -> u16;
     fn fabric(self: @TContractState) -> ContractAddress;
+    fn admin_role_counter(self: @TContractState) -> u16;
+    fn auditor_role_counter(self: @TContractState) -> u16;
+    fn task_creator_role_counter(self: @TContractState) -> u16;
+    fn proposal_creator_role_counter(self: @TContractState) -> u16;
     fn user_role_counter(self: @TContractState) -> u16;
 
     // --- READ FUNCTIONS ---
@@ -250,6 +254,22 @@ pub mod AgoraDao {
 
         fn user_counter(self: @ContractState) -> u16 {
             self.user_counter.read()
+        }
+
+        fn admin_role_counter(self: @ContractState) -> u16 {
+            self.admin_role_counter.read()
+        }
+
+        fn auditor_role_counter(self: @ContractState) -> u16 {
+            self.auditor_role_counter.read()
+        }
+
+        fn task_creator_role_counter(self: @ContractState) -> u16 {
+            self.task_creator__role_counter.read()
+        }
+
+        fn proposal_creator_role_counter(self: @ContractState) -> u16 {
+            self.proposal_creator_role_counter.read()
         }
 
         fn user_role_counter(self: @ContractState) -> u16 {
