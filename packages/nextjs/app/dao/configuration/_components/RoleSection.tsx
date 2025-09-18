@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft, Users } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';

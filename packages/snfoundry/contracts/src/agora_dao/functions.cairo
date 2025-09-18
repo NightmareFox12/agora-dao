@@ -4,7 +4,7 @@ use starknet::storage::{
 };
 use super::AgoraDao::ContractState;
 
-pub fn add_task_category(ref self: ContractState, category: ByteArray) {
+pub fn _add_task_category(ref self: ContractState, category: ByteArray) {
     assert!(category.len() > 0, "category name must not be empty");
 
     let mut category_counter = self.task_category_counter.read();
@@ -19,7 +19,7 @@ pub fn add_task_category(ref self: ContractState, category: ByteArray) {
     self.task_category_counter.write(category_counter + 1);
 }
 
-pub fn add_task_difficulty(ref self: ContractState, difficulty: ByteArray) {
+pub fn _add_task_difficulty(ref self: ContractState, difficulty: ByteArray) {
     assert!(difficulty.len() > 0, "difficulty name must not be empty");
 
     let mut difficulty_counter = self.task_difficulty_counter.read();

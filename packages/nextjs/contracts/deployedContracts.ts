@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x6108f86a86cdfceb24f661ffc61803f3ed532a88e50fc1ce4d8bc1747af778e",
+        "0x792f9672e10e231692f07809acb6249c0b743090619c796e01a3ef7c37dd681",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x25cccdf9115bb33378451834e97e2dc18bc698e9087ed7e7e66503f1c0e8b0c",
+        "0x189e1d09368089db4d73b19e29b5421d7e37bb12de8b0eae7a52c68903f12f3",
     },
     AgoraDao: {
       address:
-        "0x4939949c7a04baa2f752a64ae41fccb7c1c63ca69d32c3b1ef33125ac325062",
+        "0x49d010511490cdf1a8bee7cd5f9d9708a67087dd135b13e3c200269bca1bea8",
       abi: [
         {
           type: "impl",
@@ -429,6 +429,66 @@ const deployedContracts = {
                 {
                   name: "deadline",
                   type: "core::integer::u64",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_admin_role",
+              inputs: [
+                {
+                  name: "new_admin",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_auditor_role",
+              inputs: [
+                {
+                  name: "auditor",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_task_creator_role",
+              inputs: [
+                {
+                  name: "task_creator",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_proposal_creator_role",
+              inputs: [
+                {
+                  name: "proposal_creator",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_user_role",
+              inputs: [
+                {
+                  name: "user",
+                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               outputs: [],
@@ -940,7 +1000,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x3b02deed5416807b74ffda06cab301f6713974e32a177895fc34aaff0e94bcb",
+        "0x3cdfa23376d6c03141f93d433e496b3fbdc5b621e2bef03403d4f51486bd70d",
     },
   },
   sepolia: {
@@ -1368,6 +1428,66 @@ const deployedContracts = {
                 {
                   name: "deadline",
                   type: "core::integer::u64",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_admin_role",
+              inputs: [
+                {
+                  name: "new_admin",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_auditor_role",
+              inputs: [
+                {
+                  name: "auditor",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_task_creator_role",
+              inputs: [
+                {
+                  name: "task_creator",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_proposal_creator_role",
+              inputs: [
+                {
+                  name: "proposal_creator",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "create_user_role",
+              inputs: [
+                {
+                  name: "user",
+                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               outputs: [],

@@ -4,7 +4,7 @@ import { CalendarDays, Coins, Info, User } from 'lucide-react';
 import React from 'react';
 import { Address } from '~~/components/scaffold-stark';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
-import { CairoCustomEnum } from 'starknet';
+import { CairoCustomEnum, num } from 'starknet';
 import { formatEther } from 'ethers';
 import { useDaoState } from '~~/services/store/dao';
 
@@ -63,8 +63,8 @@ export const AvailableTaskGrid: React.FC = () => {
         availableTasks.map((x, y) => {
           const task = x as unknown as ITask;
 
+          const parsedAddress = num.toHex(task.creator);
           const status = task.status.activeVariant();
-
           const parsedDate = new Date(Number(task.deadline) * 1000)
             .toISOString()
             .slice(0, 10)
@@ -76,14 +76,12 @@ export const AvailableTaskGrid: React.FC = () => {
               className='card bg-base-200 shadow-sm border border-gradient'
             >
               <div className='card-body'>
-                <h2 className='card-title break-all'>
-                  {task.title}
-                </h2>
+                <h2 className='card-title break-all'>{task.title}</h2>
                 <div className='badge badge-warning'>{status}</div>
                 <p className='my-1 break-all line-clamp-3'>
                   {task.description}
                 </p>
-                <Address address='0x123456789' />
+                <Address address={parsedAddress as `0x${string}`} />
                 {task.deadline !== 0n && <p className='my-0'>{parsedDate}</p>}
                 <p className='my-0 font-bold'>
                   {formatEther(task.reward)} STRK

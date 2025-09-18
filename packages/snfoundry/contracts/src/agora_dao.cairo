@@ -23,6 +23,13 @@ pub trait IAgoraDao<TContractState> {
         deadline: u64,
     );
 
+    fn create_admin_role(ref self: TContractState, new_admin: ContractAddress);
+    fn create_auditor_role(ref self: TContractState, auditor: ContractAddress);
+    fn create_task_creator_role(ref self: TContractState, task_creator: ContractAddress);
+    fn create_proposal_creator_role(ref self: TContractState, proposal_creator: ContractAddress);
+    fn create_user_role(ref self: TContractState, user: ContractAddress);
+
+
     // --- READ STATES ---
     fn user_counter(self: @TContractState) -> u16;
     fn fabric(self: @TContractState) -> ContractAddress;
@@ -60,7 +67,7 @@ pub mod AgoraDao {
 
     //imports
     use super::events::{TaskCreated, UserJoined};
-    use super::functions::{add_task_category, add_task_difficulty};
+    use super::functions::{_add_task_category, _add_task_difficulty};
     use super::roles::{
         ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, TASK_CREATOR_ROLE, USER_ROLE,
     };
@@ -132,19 +139,19 @@ pub mod AgoraDao {
         self.admin_roles.write(admin_role_counter, creator);
         self.admin_role_counter.write(admin_role_counter + 1);
 
-        add_task_category(ref self, "DOCUMENTATION");
-        add_task_category(ref self, "DESIGN");
-        add_task_category(ref self, "MARKETING");
-        add_task_category(ref self, "DEVELOPMENT");
-        add_task_category(ref self, "TRANSLATION");
-        add_task_category(ref self, "PARTNERSHIPS");
-        add_task_category(ref self, "OTHER");
+        _add_task_category(ref self, "DOCUMENTATION");
+        _add_task_category(ref self, "DESIGN");
+        _add_task_category(ref self, "MARKETING");
+        _add_task_category(ref self, "DEVELOPMENT");
+        _add_task_category(ref self, "TRANSLATION");
+        _add_task_category(ref self, "PARTNERSHIPS");
+        _add_task_category(ref self, "OTHER");
 
-        add_task_difficulty(ref self, "TRIVIAL");
-        add_task_difficulty(ref self, "LOW");
-        add_task_difficulty(ref self, "MEDIUM");
-        add_task_difficulty(ref self, "HIGH");
-        add_task_difficulty(ref self, "CRITICAL");
+        _add_task_difficulty(ref self, "TRIVIAL");
+        _add_task_difficulty(ref self, "LOW");
+        _add_task_difficulty(ref self, "MEDIUM");
+        _add_task_difficulty(ref self, "HIGH");
+        _add_task_difficulty(ref self, "CRITICAL");
     }
 
     #[abi(embed_v0)]
@@ -266,6 +273,52 @@ pub mod AgoraDao {
 
             self.task_counter.write(task_id + 1);
         }
+
+        fn create_admin_role(ref self: ContractState, new_admin: ContractAddress) {
+            let caller = get_caller_address();
+
+            assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+
+            //verify admin exist
+            let admin_counter = self.admin_role_counter.read();
+            let mut i: u16 = 0;
+
+            while i != admin_counter {
+                assert!(self.admin_roles.read(i) != new_admin, "Admin already exists");
+                i += 1;
+            }
+
+            let mut j: u16 = 0;
+            let mut empty_space: bool = false;
+
+            let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
+
+            //save admin
+            while j != admin_counter {
+                if (self.admin_roles.read(j) == empty_contract) {
+                    empty_space = true;
+                    break;
+                }
+                j += 1;
+            }
+
+            if (empty_space) {
+                self.admin_roles.write(j, new_admin);
+            } else {
+                self.admin_roles.write(admin_counter, new_admin);
+                self.admin_role_counter.write(admin_counter + 1);
+            }
+
+            //grant role
+            self.accesscontrol._grant_role(ADMIN_ROLE, new_admin);
+        }
+
+        fn create_auditor_role(ref self: ContractState, auditor: ContractAddress) {}
+        fn create_task_creator_role(ref self: ContractState, task_creator: ContractAddress) {}
+        fn create_proposal_creator_role(
+            ref self: ContractState, proposal_creator: ContractAddress,
+        ) {}
+        fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
         // --- READ STATES ---
         fn fabric(self: @ContractState) -> ContractAddress {
