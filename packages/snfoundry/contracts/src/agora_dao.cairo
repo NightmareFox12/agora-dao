@@ -226,7 +226,7 @@ pub mod AgoraDao {
                     || self.accesscontrol.has_role(AUDITOR_ROLE, caller)
                     || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
                 "role no cumplided",
-            )
+            );
 
             //transfer
             let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();

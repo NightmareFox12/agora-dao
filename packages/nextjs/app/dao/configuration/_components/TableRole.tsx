@@ -1,11 +1,39 @@
+'use client';
+
+import { Minus } from 'lucide-react';
 import React from 'react';
+import { num } from 'starknet';
+import { Address } from '~~/components/scaffold-stark';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
+
+const GetAdminData = (
+  daoAddress: string,
+  address: `0x${string}` | undefined
+) => {
+  const { data: adminData } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_all_admin_role',
+    contractAddress: daoAddress,
+    args: [address],
+    watch: false,
+  });
+
+  return adminData;
+};
 
 type TableRoleProps = {
   role: string;
-  data: [];
+  daoAddress: string;
+  address: `0x${string}`;
 };
 
-export const TableRole: React.FC<TableRoleProps> = ({ role, data }) => {
+export const TableRole: React.FC<TableRoleProps> = ({
+  role,
+  daoAddress,
+  address,
+}) => {
+  const adminData = GetAdminData(daoAddress, address);
+
   return (
     <div className='overflow-x-auto'>
       <table className='table bg-primary'>
@@ -18,159 +46,36 @@ export const TableRole: React.FC<TableRoleProps> = ({ role, data }) => {
               </label>
             </th>
             <th>Address</th>
-            <th>Job</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-          <tr>
-            <th>
-              <label>
-                <input type='checkbox' className='checkbox' />
-              </label>
-            </th>
-            <td>
-              <div className='flex items-center gap-3'>
-                <div className='avatar'>
-                  <div className='mask mask-squircle h-12 w-12'>
-                    <img
-                      src='https://img.daisyui.com/images/profile/demo/2@94.webp'
-                      alt='Avatar Tailwind CSS Component'
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className='font-bold'>Hart Hagerty</div>
-                  <div className='text-sm opacity-50'>United States</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Zemlak, Daniel and Leannon
-              <br />
-              <span className='badge badge-ghost badge-sm'>
-                Desktop Support Technician
-              </span>
-            </td>
-            <td>Purple</td>
-            <th>
-              <button className='btn btn-ghost btn-xs'>details</button>
-            </th>
-          </tr>
-          {/* row 2 */}
-          <tr>
-            <th>
-              <label>
-                <input type='checkbox' className='checkbox' />
-              </label>
-            </th>
-            <td>
-              <div className='flex items-center gap-3'>
-                <div className='avatar'>
-                  <div className='mask mask-squircle h-12 w-12'>
-                    <img
-                      src='https://img.daisyui.com/images/profile/demo/3@94.webp'
-                      alt='Avatar Tailwind CSS Component'
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className='font-bold'>Brice Swyre</div>
-                  <div className='text-sm opacity-50'>China</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Carroll Group
-              <br />
-              <span className='badge badge-ghost badge-sm'>Tax Accountant</span>
-            </td>
-            <td>Red</td>
-            <th>
-              <button className='btn btn-ghost btn-xs'>details</button>
-            </th>
-          </tr>
-          {/* row 3 */}
-          <tr>
-            <th>
-              <label>
-                <input type='checkbox' className='checkbox' />
-              </label>
-            </th>
-            <td>
-              <div className='flex items-center gap-3'>
-                <div className='avatar'>
-                  <div className='mask mask-squircle h-12 w-12'>
-                    <img
-                      src='https://img.daisyui.com/images/profile/demo/4@94.webp'
-                      alt='Avatar Tailwind CSS Component'
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className='font-bold'>Marjy Ferencz</div>
-                  <div className='text-sm opacity-50'>Russia</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Rowe-Schoen
-              <br />
-              <span className='badge badge-ghost badge-sm'>
-                Office Assistant I
-              </span>
-            </td>
-            <td>Crimson</td>
-            <th>
-              <button className='btn btn-ghost btn-xs'>details</button>
-            </th>
-          </tr>
-          {/* row 4 */}
-          <tr>
-            <th>
-              <label>
-                <input type='checkbox' className='checkbox' />
-              </label>
-            </th>
-            <td>
-              <div className='flex items-center gap-3'>
-                <div className='avatar'>
-                  <div className='mask mask-squircle h-12 w-12'>
-                    <img
-                      src='https://img.daisyui.com/images/profile/demo/5@94.webp'
-                      alt='Avatar Tailwind CSS Component'
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className='font-bold'>Yancy Tear</div>
-                  <div className='text-sm opacity-50'>Brazil</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Wyman-Ledner
-              <br />
-              <span className='badge badge-ghost badge-sm'>
-                Community Outreach Specialist
-              </span>
-            </td>
-            <td>Indigo</td>
-            <th>
-              <button className='btn btn-ghost btn-xs'>details</button>
-            </th>
-          </tr>
+          {adminData?.map((x, y) => {
+            const address_x = x as unknown as bigint;
+            const parsedAddress = num.toHex(address_x);
+
+            return (
+              <tr key={y}>
+                <th>
+                  <label>
+                    <input type='checkbox' className='checkbox' />
+                  </label>
+                </th>
+                <td>
+                  <Address address={parsedAddress as `0x${string}`} />
+                </td>
+
+                {parsedAddress !== num.cleanHex(address) && (
+                  <th>
+                    <button className='btn btn-accent btn-sm'>
+                      <Minus className='w-4 h-4' />
+                    </button>
+                  </th>
+                )}
+              </tr>
+            );
+          })}
         </tbody>
-        {/* foot */}
-        {/* <tfoot>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
-            <th></th>
-          </tr>
-        </tfoot> */}
       </table>
     </div>
   );

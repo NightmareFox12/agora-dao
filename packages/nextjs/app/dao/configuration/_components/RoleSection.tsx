@@ -10,7 +10,6 @@ import { TableRole } from './TableRole';
 interface IShowData {
   showTable: boolean;
   role: 'admin' | 'auditor' | 'user';
-  data: []
 }
 
 export const RoleSection: React.FC = () => {
@@ -20,7 +19,6 @@ export const RoleSection: React.FC = () => {
   const [showData, setShowData] = useState<IShowData>({
     showTable: false,
     role: 'admin',
-    data: [],
   });
 
   //Smart Contract
@@ -105,7 +103,16 @@ export const RoleSection: React.FC = () => {
           </button>
 
           <p className='font-semibold'>{showData.role}</p>
-          <TableRole role={showData.role} data={showData.data} />
+
+          {address === undefined ? (
+            <div />
+          ) : (
+            <TableRole
+              role={showData.role}
+              daoAddress={daoAddress}
+              address={address}
+            />
+          )}
         </section>
       ) : (
         <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -118,7 +125,6 @@ export const RoleSection: React.FC = () => {
                 setShowData({
                   showTable: true,
                   role: 'admin',
-                  data: [],
                 })
               }
               className='card bg-base-200 w-full border border-gradient shadow-sm cursor-pointer hover:scale-[1.03] transition-all delay-75'
