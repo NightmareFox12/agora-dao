@@ -10,15 +10,14 @@ import { AdminModal } from './AdminModal';
 
 export const ConfigurationClientController: React.FC = () => {
   const router = useRouter();
+
   //global states
   const { showHeader, setShowHeader } = useHeaderState();
   const { daoAddress, setDaoAddress } = useDaoState();
 
   useEffect(() => {
     if (!showHeader) setShowHeader(true);
-
     const dao = localStorage.getItem(LOCAL_STORAGE_KEYS.DAO_ADDRESS);
-
     if (dao === null) return router.replace('/daos');
 
     setDaoAddress(dao);

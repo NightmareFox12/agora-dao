@@ -102,6 +102,9 @@ export const RoleSection: React.FC = () => {
             <ArrowLeft className='w-4 h-4' />
           </button>
 
+          <div className='w-full flex justify-center'>
+            <button className='btn btn-accent'>Create {showData.role}</button>
+          </div>
           <p className='font-semibold'>{showData.role}</p>
 
           {address === undefined ? (
