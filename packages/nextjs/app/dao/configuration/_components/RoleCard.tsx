@@ -33,7 +33,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
         >
           <div className='card-body'>
             <h2 className='card-title'>{title}</h2>
-            <p>{description}</p>
+            <p className='mb-0'>{description}</p>
             <div className='flex items-center gap-2'>
               <Users className='w-5 h-5' />
               <p className='my-0'>{counter?.toString() ?? 0} members</p>

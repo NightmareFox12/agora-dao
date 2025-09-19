@@ -11,12 +11,7 @@ import { RoleCard } from './RoleCard';
 
 interface IShowData {
   showTable: boolean;
-  role:
-    | 'roleManager'
-    | 'auditor'
-    | 'task_creator'
-    | 'propossal_creator'
-    | 'user';
+  role: 'roleManager' | 'auditor' | 'taskCreator' | 'propossalCreator' | 'user';
 }
 
 export const RoleSection: React.FC = () => {
@@ -147,51 +142,52 @@ export const RoleSection: React.FC = () => {
           {/* Role Manager card */}
           <RoleCard
             title='Role Manager'
-            description='Can manage roles.'
+            description='
+            Manage roles within the DAO. You can create basic roles (User, Proposal Creator, and Task Creator) and delete up to 3 roles per day to maintain balance and prevent abuse.'
             counter={roleManagerCounter as bigint | undefined}
             counterLoading={roleManagerCounterLoading}
             setShowData={setShowData}
-            role={'roleManager'}
+            role='roleManager'
           />
 
           {/* Auditor card */}
           <RoleCard
             title='Auditor'
-            description='Can audit tasks.'
+            description='Oversees the operation of the DAO. Can review tasks, processes, and votes to ensure transparency and compliance with the rules.'
             counter={auditorRoleCounter as bigint | undefined}
             counterLoading={auditorRoleCounterLoading}
             setShowData={setShowData}
-            role={'auditor'}
+            role='auditor'
           />
 
           {/* Task creator card */}
           <RoleCard
             title='Task Creator'
-            description='Can create tasks.'
+            description='Responsible for generating new tasks. In addition, they can validate tasks once they are completed, but only those that they have created themselves.'
             counter={taskCreatorRoleCounter as bigint | undefined}
             counterLoading={taskCreatorRoleCounterLoading}
             setShowData={setShowData}
-            role={'user'}
+            role='user'
           />
 
           {/* propossal creator card */}
           <RoleCard
             title='Proposal Creator'
-            description='Can create proposals.'
+            description='Responsible for initiating proposals and votes within the DAO. Allows the community to participate in decision-making.'
             setShowData={setShowData}
             counter={propossalRoleCounter as bigint | undefined}
             counterLoading={propossalRoleCounterLoading}
             role=''
           />
-          {/* User card */}
 
+          {/* User card */}
           <RoleCard
             title='User'
-            description='Can accept tasks and participate in voting.'
+            description='Basic role of all participants. They can accept assigned tasks and participate in DAO voting.'
             setShowData={setShowData}
             counter={userRoleCounter as bigint | undefined}
             counterLoading={userRoleCounterLoading}
-            role={'user'}
+            role='user'
           />
         </section>
       )}
