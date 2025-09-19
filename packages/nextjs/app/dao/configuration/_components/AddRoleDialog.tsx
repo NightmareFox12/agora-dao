@@ -1,30 +1,54 @@
-import React from 'react';
+'use client';
 
-export const AddRoleDialog: React.FC = () => {
+import React, { useState } from 'react';
+import { AddressInput } from '~~/components/scaffold-stark';
+
+type AddRoleDialogProps = {
+  role: string;
+  daoAddress: string;
+  address: `0x${string}`;
+};
+
+export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
+  role,
+  daoAddress,
+  address,
+}) => {
+  //states
+  const [newRoleAddress, setNewRoleAddress] = useState<string>('');
+
   return (
     <>
-      {/* You can open the modal using document.getElementById('ID').showModal() method */}
       <button
         className='btn'
         onClick={() => {
           const dialog = document.getElementById(
-            'my_modal_3'
+            'create_role'
           ) as HTMLDialogElement;
           dialog.showModal();
         }}
       >
-        open modal
+        Create {role}
       </button>
-      <dialog id='my_modal_3' className='modal'>
+      
+      {/* Modal */}
+      <dialog id='create_role' className='modal'>
         <div className='modal-box'>
           <form method='dialog'>
-            {/* if there is a button in form, it will close the modal */}
             <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
               ✕
             </button>
           </form>
           <h3 className='font-bold text-lg'>Hello!</h3>
           <p className='py-4'>Press ESC key or click on ✕ button to close</p>
+
+          <AddressInput
+            onChange={setNewRoleAddress}
+            value={newRoleAddress}
+            placeholder='Input your address'
+          />
+
+          <div className='modal-action' />
         </div>
       </dialog>
     </>

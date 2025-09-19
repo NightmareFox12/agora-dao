@@ -73,7 +73,7 @@ export const RoleSection: React.FC = () => {
       watch: false,
     });
 
-  if (isUser !== undefined && isUser) {
+  if ((isUser !== undefined && isUser) || address === undefined) {
     return (
       <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
         {Array(5)
@@ -88,7 +88,7 @@ export const RoleSection: React.FC = () => {
   return (
     <>
       {showData.showTable ? (
-        <section>
+        <section className='h-screen'>
           <button
             onClick={() =>
               setShowData((prev) => {
@@ -103,21 +103,20 @@ export const RoleSection: React.FC = () => {
             <ArrowLeft className='w-4 h-4' />
           </button>
 
-          <AddRoleDialog />
           <div className='w-full flex justify-center'>
-            <button className='btn btn-accent'>Create {showData.role}</button>
-          </div>
-          <p className='font-semibold'>{showData.role}</p>
-
-          {address === undefined ? (
-            <div />
-          ) : (
-            <TableRole
+            <AddRoleDialog
               role={showData.role}
               daoAddress={daoAddress}
               address={address}
             />
-          )}
+          </div>
+          <p className='font-semibold text-center'>{showData.role}s</p>
+
+          <TableRole
+            role={showData.role}
+            daoAddress={daoAddress}
+            address={address}
+          />
         </section>
       ) : (
         <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>

@@ -35,8 +35,8 @@ export const TableRole: React.FC<TableRoleProps> = ({
   const adminData = GetAdminData(daoAddress, address);
 
   return (
-    <div className='overflow-x-auto'>
-      <table className='table bg-primary'>
+    <div className='overflow-x-auto flex justify-center'>
+      <table className='table bg-primary sm:w-7/12'>
         {/* head */}
         <thead>
           <tr>
@@ -45,8 +45,7 @@ export const TableRole: React.FC<TableRoleProps> = ({
                 <input type='checkbox' className='checkbox' />
               </label>
             </th>
-            <th>Address</th>
-            <th>Actions</th>
+            <th className='text-center'>Address</th>
           </tr>
         </thead>
         <tbody>
@@ -61,17 +60,18 @@ export const TableRole: React.FC<TableRoleProps> = ({
                     <input type='checkbox' className='checkbox' />
                   </label>
                 </th>
-                <td>
+
+                <td className='flex justify-center'>
                   <Address address={parsedAddress as `0x${string}`} />
                 </td>
 
-                {parsedAddress !== num.cleanHex(address) && (
+                {/* {parsedAddress !== num.cleanHex(address) && (
                   <th>
                     <button className='btn btn-accent btn-sm'>
                       <Minus className='w-4 h-4' />
                     </button>
                   </th>
-                )}
+                )} */}
               </tr>
             );
           })}

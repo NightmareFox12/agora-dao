@@ -24,7 +24,7 @@ pub trait IAgoraDao<TContractState> {
     );
 
     // --- WRITE ROLES ---
-    fn create_admin_role(ref self: TContractState, new_admin: ContractAddress);
+    fn create_role_manager_role(ref self: TContractState, new_role_manager: ContractAddress);
     fn create_auditor_role(ref self: TContractState, auditor: ContractAddress);
     fn create_task_creator_role(ref self: TContractState, task_creator: ContractAddress);
     fn create_proposal_creator_role(ref self: TContractState, proposal_creator: ContractAddress);
@@ -34,7 +34,6 @@ pub trait IAgoraDao<TContractState> {
     fn member_counter(self: @TContractState) -> u16;
     // fn user_counter(self: @TContractState) -> u16;
     // fn fabric(self: @TContractState) -> ContractAddress;
-    fn admin_role_counter(self: @TContractState) -> u16;
     fn auditor_role_counter(self: @TContractState) -> u16;
     fn task_creator_role_counter(self: @TContractState) -> u16;
     fn proposal_creator_role_counter(self: @TContractState) -> u16;
@@ -46,7 +45,6 @@ pub trait IAgoraDao<TContractState> {
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
     fn get_available_tasks(self: @TContractState) -> Array<Task>;
-    fn get_all_admin_role(self: @TContractState, caller: ContractAddress) -> Array<ContractAddress>;
 }
 
 #[starknet::contract]
@@ -70,7 +68,8 @@ pub mod AgoraDao {
     use super::events::{TaskCreated, UserJoined};
     use super::functions::{_add_task_category, _add_task_difficulty};
     use super::roles::{
-        ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, TASK_CREATOR_ROLE, USER_ROLE,
+        ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, ROLE_MANAGER_ROLE, TASK_CREATOR_ROLE,
+        USER_ROLE,
     };
     use super::structs::Task;
     use super::validations::_create_task_validation;
@@ -97,7 +96,7 @@ pub mod AgoraDao {
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
         //Role counters
-        pub admin_role_counter: u16,
+        pub role_manager_role_counter: u16,
         pub auditor_role_counter: u16,
         pub task_creator__role_counter: u16,
         pub proposal_creator_role_counter: u16,
@@ -108,7 +107,10 @@ pub mod AgoraDao {
         pub task_categories: Map<u16, ByteArray>,
         pub task_difficulties: Map<u16, ByteArray>,
         //Role Mappings
-        pub admin_roles: Map<u16, ContractAddress>,
+        pub role_manager_roles: Map<u16, ContractAddress>,
+        pub auditor_roles: Map<u16, ContractAddress>,
+        pub task_creator_roles: Map<u16, ContractAddress>,
+        pub proposal_creator_roles: Map<u16, ContractAddress>,
         pub user_roles: Map<u16, ContractAddress>,
         #[substorage(v0)]
         pub accesscontrol: AccessControlComponent::Storage,
@@ -139,9 +141,6 @@ pub mod AgoraDao {
 
         //grant role
         self.accesscontrol._grant_role(ADMIN_ROLE, creator);
-        let admin_role_counter = self.admin_role_counter.read();
-        self.admin_roles.write(admin_role_counter, creator);
-        self.admin_role_counter.write(admin_role_counter + 1);
 
         _add_task_category(ref self, "DOCUMENTATION");
         _add_task_category(ref self, "DESIGN");
@@ -278,17 +277,21 @@ pub mod AgoraDao {
             self.task_counter.write(task_id + 1);
         }
 
-        fn create_admin_role(ref self: ContractState, new_admin: ContractAddress) {
+        // --- WRITE ROLES ---
+        fn create_role_manager_role(ref self: ContractState, new_role_manager: ContractAddress) {
             let caller = get_caller_address();
 
             assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
 
-            //verify admin exist
-            let admin_counter = self.admin_role_counter.read();
+            //     //verify manager role exist
+            let role_manager_role_counter = self.role_manager_role_counter.read();
             let mut i: u16 = 0;
 
-            while i != admin_counter {
-                assert!(self.admin_roles.read(i) != new_admin, "Admin already exists");
+            while i != role_manager_role_counter {
+                assert!(
+                    self.role_manager_roles.read(i) != new_role_manager,
+                    "Manager role already exists",
+                );
                 i += 1;
             }
 
@@ -297,9 +300,9 @@ pub mod AgoraDao {
 
             let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
 
-            //save admin
-            while j != admin_counter {
-                if (self.admin_roles.read(j) == empty_contract) {
+            //save role manager
+            while j != role_manager_role_counter {
+                if (self.role_manager_roles.read(j) == empty_contract) {
                     empty_space = true;
                     break;
                 }
@@ -307,14 +310,14 @@ pub mod AgoraDao {
             }
 
             if (empty_space) {
-                self.admin_roles.write(j, new_admin);
+                self.role_manager_roles.write(j, new_role_manager);
             } else {
-                self.admin_roles.write(admin_counter, new_admin);
-                self.admin_role_counter.write(admin_counter + 1);
+                self.role_manager_roles.write(role_manager_role_counter, new_role_manager);
+                self.role_manager_role_counter.write(role_manager_role_counter + 1);
             }
 
             //grant role
-            self.accesscontrol._grant_role(ADMIN_ROLE, new_admin);
+            self.accesscontrol._grant_role(ROLE_MANAGER_ROLE, new_role_manager);
         }
 
         fn create_auditor_role(ref self: ContractState, auditor: ContractAddress) {}
@@ -337,10 +340,6 @@ pub mod AgoraDao {
 
         fn member_counter(self: @ContractState) -> u16 {
             self.member_counter.read()
-        }
-
-        fn admin_role_counter(self: @ContractState) -> u16 {
-            self.admin_role_counter.read()
         }
 
         fn auditor_role_counter(self: @ContractState) -> u16 {
@@ -408,22 +407,6 @@ pub mod AgoraDao {
                 if self.tasks.read(i).status == TaskStatus::OPEN {
                     res.append(self.tasks.read(i));
                 }
-                i += 1;
-            }
-            res
-        }
-
-        fn get_all_admin_role(
-            self: @ContractState, caller: ContractAddress,
-        ) -> Array<ContractAddress> {
-            assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
-
-            let mut res: Array<ContractAddress> = ArrayTrait::new();
-            let mut i: u16 = 0;
-            let admin_role_counter: u16 = self.admin_role_counter.read();
-
-            while i != admin_role_counter {
-                res.append(self.admin_roles.read(i));
                 i += 1;
             }
             res
