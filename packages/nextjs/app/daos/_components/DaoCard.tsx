@@ -68,10 +68,10 @@ export const DaoCard: React.FC<DaoCardProps> = ({
     contractAddress: daoAddress,
   });
 
-  const { data: userCounter, isLoading: userCounterLoading } =
+  const { data: memberCounter, isLoading: memberCounterLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDao',
-      functionName: 'user_counter',
+      functionName: 'member_counter',
       contractAddress: daoAddress,
     });
 
@@ -122,12 +122,12 @@ export const DaoCard: React.FC<DaoCardProps> = ({
               <h2 className='card-title'>{name}</h2>
               <div className='flex items-center gap-1'>
                 <Users className='h-4 w-4 text-muted-foreground' />
-                {userCounter === undefined || userCounterLoading ? (
+                {memberCounter === undefined || memberCounterLoading ? (
                   <div className='h-5 w-16 bg-accent skeleton' />
                 ) : (
                   <span className='text-sm text-muted-foreground'>
-                    {parseInt(`${userCounter}`)}{' '}
-                    {BigInt(`${userCounter}`) > 1n ? 'users' : 'user'}
+                    {parseInt(`${memberCounter}`)}{' '}
+                    {BigInt(`${memberCounter}`) > 1n ? 'members' : 'member'}
                   </span>
                 )}
               </div>
@@ -158,7 +158,7 @@ export const DaoCard: React.FC<DaoCardProps> = ({
 
   useEffect(() => {
     if (joinHash === undefined) return;
-    toast.dismissAll()
+    toast.dismissAll();
     router.replace('/dao');
   }, [joinHash, router]);
 

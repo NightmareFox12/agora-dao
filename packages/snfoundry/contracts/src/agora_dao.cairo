@@ -23,16 +23,17 @@ pub trait IAgoraDao<TContractState> {
         deadline: u64,
     );
 
+    // --- WRITE ROLES ---
     fn create_admin_role(ref self: TContractState, new_admin: ContractAddress);
     fn create_auditor_role(ref self: TContractState, auditor: ContractAddress);
     fn create_task_creator_role(ref self: TContractState, task_creator: ContractAddress);
     fn create_proposal_creator_role(ref self: TContractState, proposal_creator: ContractAddress);
     fn create_user_role(ref self: TContractState, user: ContractAddress);
 
-
     // --- READ STATES ---
-    fn user_counter(self: @TContractState) -> u16;
-    fn fabric(self: @TContractState) -> ContractAddress;
+    fn member_counter(self: @TContractState) -> u16;
+    // fn user_counter(self: @TContractState) -> u16;
+    // fn fabric(self: @TContractState) -> ContractAddress;
     fn admin_role_counter(self: @TContractState) -> u16;
     fn auditor_role_counter(self: @TContractState) -> u16;
     fn task_creator_role_counter(self: @TContractState) -> u16;
@@ -91,7 +92,7 @@ pub mod AgoraDao {
     #[storage]
     struct Storage {
         pub fabric: ContractAddress,
-        pub user_counter: u16,
+        pub member_counter: u16,
         pub task_counter: u16,
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
@@ -102,7 +103,7 @@ pub mod AgoraDao {
         pub proposal_creator_role_counter: u16,
         pub user_role_counter: u16,
         //Mappings
-        pub users: Map<u16, ContractAddress>,
+        pub members: Map<u16, ContractAddress>,
         pub tasks: Map<u16, Task>,
         pub task_categories: Map<u16, ByteArray>,
         pub task_difficulties: Map<u16, ByteArray>,
@@ -132,6 +133,9 @@ pub mod AgoraDao {
 
         // AccessControl-related initialization
         self.accesscontrol.initializer();
+
+        self.members.write(0, creator);
+        self.member_counter.write(self.member_counter.read() + 1);
 
         //grant role
         self.accesscontrol._grant_role(ADMIN_ROLE, creator);
@@ -169,10 +173,10 @@ pub mod AgoraDao {
                 "Creator cannot join",
             );
 
-            //add user into counter
-            let user_id = self.user_counter.read();
-            self.users.write(user_id, caller);
-            self.user_counter.write(user_id + 1);
+            //add member into counter
+            let member_id = self.member_counter.read();
+            self.members.write(member_id, caller);
+            self.member_counter.write(member_id + 1);
 
             //save user into fabric
             let sel = selector!("add_user");
@@ -200,7 +204,7 @@ pub mod AgoraDao {
             self.user_role_counter.write(user_role_counter + 1);
 
             //emit event
-            self.emit(UserJoined { user: caller, user_ID: user_id });
+            self.emit(UserJoined { user: caller, user_ID: member_id });
         }
 
         fn create_task(
@@ -314,19 +318,25 @@ pub mod AgoraDao {
         }
 
         fn create_auditor_role(ref self: ContractState, auditor: ContractAddress) {}
+
         fn create_task_creator_role(ref self: ContractState, task_creator: ContractAddress) {}
+
         fn create_proposal_creator_role(
             ref self: ContractState, proposal_creator: ContractAddress,
         ) {}
         fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
         // --- READ STATES ---
-        fn fabric(self: @ContractState) -> ContractAddress {
-            self.fabric.read()
-        }
+        // fn fabric(self: @ContractState) -> ContractAddress {
+        //     self.fabric.read()
+        // }
 
-        fn user_counter(self: @ContractState) -> u16 {
-            self.user_counter.read()
+        // fn user_counter(self: @ContractState) -> u16 {
+        //     self.user_counter.read()
+        // }
+
+        fn member_counter(self: @ContractState) -> u16 {
+            self.member_counter.read()
         }
 
         fn admin_role_counter(self: @ContractState) -> u16 {
@@ -352,10 +362,10 @@ pub mod AgoraDao {
         // --- READ FUNCTIONS ---
         fn is_member(self: @ContractState, caller: ContractAddress) -> bool {
             let mut i: u16 = 0;
-            let user_counter: u16 = self.user_counter.read();
+            let member_counter: u16 = self.member_counter.read();
 
-            while i != user_counter {
-                if self.users.read(i) == caller {
+            while i != member_counter {
+                if self.members.read(i) == caller {
                     return true;
                 }
                 i += 1;

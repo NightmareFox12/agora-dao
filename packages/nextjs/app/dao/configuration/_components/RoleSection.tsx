@@ -6,6 +6,7 @@ import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldRead
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 import { TableRole } from './TableRole';
+import { AddRoleDialog } from './AddRoleDialog';
 
 interface IShowData {
   showTable: boolean;
@@ -27,7 +28,7 @@ export const RoleSection: React.FC = () => {
     functionName: 'is_user',
     args: [address],
     contractAddress: daoAddress,
-    watch: false,
+    // watch: false,
   });
 
   const { data: adminRoleCounter, isLoading: adminRoleCounterLoading } =
@@ -102,6 +103,7 @@ export const RoleSection: React.FC = () => {
             <ArrowLeft className='w-4 h-4' />
           </button>
 
+          <AddRoleDialog />
           <div className='w-full flex justify-center'>
             <button className='btn btn-accent'>Create {showData.role}</button>
           </div>

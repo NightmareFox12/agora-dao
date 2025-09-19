@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x792f9672e10e231692f07809acb6249c0b743090619c796e01a3ef7c37dd681",
+        "0x78722c485b5c6d92b611ec10aa739262c4f083a9ed5f085050f4aa8d27e14c9",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x189e1d09368089db4d73b19e29b5421d7e37bb12de8b0eae7a52c68903f12f3",
+        "0x20da4adf759d7d5f75be7138d6936e2fb49f9773a576a33e0d55e092978dd6f",
     },
     AgoraDao: {
       address:
-        "0x49d010511490cdf1a8bee7cd5f9d9708a67087dd135b13e3c200269bca1bea8",
+        "0x51f4e734a46d944034f0a4d750bf118ef5f30e9de7dc75e0eb9fd5ab8636b1f",
       abi: [
         {
           type: "impl",
@@ -496,22 +496,11 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "user_counter",
+              name: "member_counter",
               inputs: [],
               outputs: [
                 {
                   type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "fabric",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               state_mutability: "view",
@@ -1000,7 +989,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x3cdfa23376d6c03141f93d433e496b3fbdc5b621e2bef03403d4f51486bd70d",
+        "0x48178d29a2b5965db63c744e9f1f7ef87fb18d3e3691c720edbb133519cac2a",
     },
   },
   sepolia: {
@@ -1495,22 +1484,11 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "user_counter",
+              name: "member_counter",
               inputs: [],
               outputs: [
                 {
                   type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "fabric",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
               state_mutability: "view",

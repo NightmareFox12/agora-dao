@@ -12,21 +12,34 @@ export const AdminModal: React.FC = () => {
   const router = useRouter();
 
   //Smart contract
-  const { data: is_user, isLoading: is_user_loading } = useScaffoldReadContract(
-    {
+  const { data: isUser, isLoading: isUserLoading } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_user',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
+  const { data: isMember, isLoading: isMemberLoading } =
+    useScaffoldReadContract({
       contractName: 'AgoraDao',
-      functionName: 'is_user',
+      functionName: 'is_member',
       args: [address],
       contractAddress: daoAddress,
       watch: false,
-    }
-  );
+    });
+
+  const parsedUser = isUser as any as boolean | undefined;
+  const parsedMember = isMember as any as boolean | undefined;
 
   return (
     !isConnected ||
-    is_user_loading ||
-    is_user === undefined ||
-    (is_user && (
+    isUserLoading ||
+    isMemberLoading ||
+    isMember === undefined ||
+    isUser === undefined ||
+    parsedUser ||
+    (!parsedMember && (
       <dialog open onClose={(e) => e.preventDefault()} className='modal'>
         <div className='modal-box modal-middle !min-h-10'>
           <h3 className='text-lg font-bold'>⚠️ Attention!</h3>

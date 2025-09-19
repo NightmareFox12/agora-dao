@@ -1,5 +1,3 @@
-'use server';
-
 import React from 'react';
 import { LucideProps, Trophy, Vote, Zap } from 'lucide-react';
 
@@ -30,7 +28,7 @@ const mainFeatures: Feature[] = [
   },
 ];
 
-export const FeatureSection: React.FC = async () => {
+export const FeatureSection: React.FC = () => {
   return (
     <section id='features' className='py-20 px-4 bg-card/30 relative z-10'>
       <div className='container mx-auto'>

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface Particle {
   x: number;
@@ -21,7 +21,7 @@ export const ParticlesBackground: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const resizeCanvas = () => {
@@ -41,7 +41,7 @@ export const ParticlesBackground: React.FC = () => {
           vy: (Math.random() - 0.5) * 1,
           size: Math.random() * 3 + 2,
           opacity: Math.random() * 0.6 + 0.4,
-          color: Math.random() > 0.5 ? "#3b82f6" : "#06b6d4",
+          color: Math.random() > 0.5 ? '#3b82f6' : '#06b6d4',
         });
       }
 
@@ -74,7 +74,7 @@ export const ParticlesBackground: React.FC = () => {
         ctx.restore();
 
         // Draw connections to nearby particles
-        particlesRef.current.slice(index + 1).forEach(otherParticle => {
+        particlesRef.current.slice(index + 1).forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -105,10 +105,10 @@ export const ParticlesBackground: React.FC = () => {
       createParticles();
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -118,8 +118,8 @@ export const ParticlesBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ background: "rgba(0,0,0,0.02)" }}
+      className='fixed inset-0 pointer-events-none z-0'
+      style={{ background: 'rgba(0,0,0,0.02)' }}
     />
   );
 };
