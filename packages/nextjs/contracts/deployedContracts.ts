@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x78722c485b5c6d92b611ec10aa739262c4f083a9ed5f085050f4aa8d27e14c9",
+        "0x93f1ce66f5694e083e8ccf3510113ef6cc8978b00360687c1536be602afb26",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x20da4adf759d7d5f75be7138d6936e2fb49f9773a576a33e0d55e092978dd6f",
+        "0x3463addaa0a16c2e4d49435b222f9629b2bf8cb4b1aa032193db6421c3bf2a2",
     },
     AgoraDao: {
       address:
-        "0x51f4e734a46d944034f0a4d750bf118ef5f30e9de7dc75e0eb9fd5ab8636b1f",
+        "0x7c6fccea0d059936d37b19f98540cf16eb83a5a9ff2147ea1e4cf9cbbfbf18",
       abi: [
         {
           type: "impl",
@@ -436,10 +436,10 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "create_admin_role",
+              name: "create_role_manager_role",
               inputs: [
                 {
-                  name: "new_admin",
+                  name: "new_role_manager",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
@@ -507,7 +507,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "admin_role_counter",
+              name: "role_manager_role_counter",
               inputs: [],
               outputs: [
                 {
@@ -621,22 +621,6 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<contracts::agora_dao::structs::Task>",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "get_all_admin_role",
-              inputs: [
-                {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
                 },
               ],
               state_mutability: "view",
@@ -989,7 +973,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x48178d29a2b5965db63c744e9f1f7ef87fb18d3e3691c720edbb133519cac2a",
+        "0x70dcca10659247848bf66e4d43fcc7237267df3a1c1fe59085e289919cb27af",
     },
   },
   sepolia: {
@@ -1424,10 +1408,10 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "create_admin_role",
+              name: "create_role_manager_role",
               inputs: [
                 {
-                  name: "new_admin",
+                  name: "new_role_manager",
                   type: "core::starknet::contract_address::ContractAddress",
                 },
               ],
@@ -1495,7 +1479,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "admin_role_counter",
+              name: "role_manager_role_counter",
               inputs: [],
               outputs: [
                 {
@@ -1609,22 +1593,6 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<contracts::agora_dao::structs::Task>",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "get_all_admin_role",
-              inputs: [
-                {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
-                },
-              ],
-              outputs: [
-                {
-                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
                 },
               ],
               state_mutability: "view",

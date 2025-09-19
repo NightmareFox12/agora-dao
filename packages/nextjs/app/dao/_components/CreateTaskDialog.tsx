@@ -477,6 +477,14 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 };
 
+//TODO: arreglar lo del task_manager role, eliminar lo del rol admin y poner rol manager card
+
+//TODO: el role manager puede modificar los roles de usuario,crea tarea y crea propuesta. y solo eliminar 3 veces por dia
+
+//TODO: crear una card de eventos para que se vea que esta hciendo el task manager y asi el admin pueda eliminiarlo en caso que se vuelva asesino
+
+//TODO: hacer verificaciones especiales si el rol tiene aceptada una tarea o creo una y esta en progreso. porque si se le afecta el rol hay que tener eso en cuenta
+
 //TODO: agregar un modal de primera vez para decirle que vaya a editar los permisos
 
 //TODO: luego de subir mi primer tarea hacer lo de los roles para que no todos puedan subir tareas

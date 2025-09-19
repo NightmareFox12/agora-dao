@@ -1,16 +1,22 @@
 'use client';
 
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import React, { useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 import { TableRole } from './TableRole';
 import { AddRoleDialog } from './AddRoleDialog';
+import { RoleCard } from './RoleCard';
 
 interface IShowData {
   showTable: boolean;
-  role: 'admin' | 'auditor' | 'user';
+  role:
+    | 'roleManager'
+    | 'auditor'
+    | 'task_creator'
+    | 'propossal_creator'
+    | 'user';
 }
 
 export const RoleSection: React.FC = () => {
@@ -19,7 +25,7 @@ export const RoleSection: React.FC = () => {
 
   const [showData, setShowData] = useState<IShowData>({
     showTable: false,
-    role: 'admin',
+    role: 'user',
   });
 
   //Smart Contract
@@ -31,10 +37,18 @@ export const RoleSection: React.FC = () => {
     // watch: false,
   });
 
-  const { data: adminRoleCounter, isLoading: adminRoleCounterLoading } =
+  const { data: isMember } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_member',
+    contractAddress: daoAddress,
+    args: [address],
+    watch: false,
+  });
+
+  const { data: roleManagerCounter, isLoading: roleManagerCounterLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDao',
-      functionName: 'admin_role_counter',
+      functionName: 'role_manager_role_counter',
       contractAddress: daoAddress,
       watch: false,
     });
@@ -73,7 +87,17 @@ export const RoleSection: React.FC = () => {
       watch: false,
     });
 
-  if ((isUser !== undefined && isUser) || address === undefined) {
+  //parsedData
+  const isMemberParsed = isMember as any as boolean | undefined;
+  const isUserParsed = isUser as any as boolean | undefined;
+
+  if (
+    address === undefined ||
+    isUserParsed === undefined ||
+    isMemberParsed === undefined ||
+    isUserParsed ||
+    isMemberParsed === false
+  ) {
     return (
       <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
         {Array(5)
@@ -120,103 +144,55 @@ export const RoleSection: React.FC = () => {
         </section>
       ) : (
         <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
-          {/* Admin card */}
-          {adminRoleCounterLoading ? (
-            <div className='h-56 w-full skeleton bg-base-200' />
-          ) : (
-            <div
-              onClick={() =>
-                setShowData({
-                  showTable: true,
-                  role: 'admin',
-                })
-              }
-              className='card bg-base-200 w-full border border-gradient shadow-sm cursor-pointer hover:scale-[1.03] transition-all delay-75'
-            >
-              <div className='card-body'>
-                <h2 className='card-title'>Admin Role</h2>
-                <p>Can accept tasks and participate in voting.</p>
-                <div className='flex items-center gap-2'>
-                  <Users className='w-5 h-5' />
-                  <p className='my-0'>
-                    {adminRoleCounter?.toString() ?? 0} members
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Role Manager card */}
+          <RoleCard
+            title='Role Manager'
+            description='Can manage roles.'
+            counter={roleManagerCounter as bigint | undefined}
+            counterLoading={roleManagerCounterLoading}
+            setShowData={setShowData}
+            role={'roleManager'}
+          />
 
           {/* Auditor card */}
-          {auditorRoleCounterLoading ? (
-            <div className='h-56 w-full skeleton bg-base-200' />
-          ) : (
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Auditor Role</h2>
-                <p>Can accept tasks and participate in voting.</p>
-                <div className='flex items-center gap-2'>
-                  <Users className='w-5 h-5' />
-                  <p className='my-0'>
-                    {auditorRoleCounter?.toString() ?? 0} members
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          <RoleCard
+            title='Auditor'
+            description='Can audit tasks.'
+            counter={auditorRoleCounter as bigint | undefined}
+            counterLoading={auditorRoleCounterLoading}
+            setShowData={setShowData}
+            role={'auditor'}
+          />
 
           {/* Task creator card */}
-          {taskCreatorRoleCounterLoading ? (
-            <div className='h-56 w-full skeleton bg-base-200' />
-          ) : (
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Task Creator Role</h2>
-                <p>Can accept tasks and participate in voting.</p>
-                <div className='flex items-center gap-2'>
-                  <Users className='w-5 h-5' />
-                  <p className='my-0'>
-                    {taskCreatorRoleCounter?.toString() ?? 0} members
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          <RoleCard
+            title='Task Creator'
+            description='Can create tasks.'
+            counter={taskCreatorRoleCounter as bigint | undefined}
+            counterLoading={taskCreatorRoleCounterLoading}
+            setShowData={setShowData}
+            role={'user'}
+          />
 
           {/* propossal creator card */}
-          {propossalRoleCounterLoading ? (
-            <div className='h-56 w-full skeleton bg-base-200' />
-          ) : (
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>Propossal Role</h2>
-                <p>Can accept tasks and participate in voting.</p>
-                <div className='flex items-center gap-2'>
-                  <Users className='w-5 h-5' />
-                  <p className='my-0'>
-                    {propossalRoleCounter?.toString() ?? 0} members
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
+          <RoleCard
+            title='Proposal Creator'
+            description='Can create proposals.'
+            setShowData={setShowData}
+            counter={propossalRoleCounter as bigint | undefined}
+            counterLoading={propossalRoleCounterLoading}
+            role=''
+          />
           {/* User card */}
-          {userRoleCounterLoading ? (
-            <div className='h-56 w-full skeleton bg-base-200' />
-          ) : (
-            <div className='card bg-base-200 w-full border border-gradient shadow-sm'>
-              <div className='card-body'>
-                <h2 className='card-title'>User Role</h2>
-                <p>Can accept tasks and participate in voting.</p>
-                <div className='flex items-center gap-2'>
-                  <Users className='w-5 h-5' />
-                  <p className='my-0'>
-                    {userRoleCounter?.toString() ?? 0} members
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+
+          <RoleCard
+            title='User'
+            description='Can accept tasks and participate in voting.'
+            setShowData={setShowData}
+            counter={userRoleCounter as bigint | undefined}
+            counterLoading={userRoleCounterLoading}
+            role={'user'}
+          />
         </section>
       )}
     </>
