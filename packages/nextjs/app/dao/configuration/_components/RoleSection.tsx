@@ -1,13 +1,14 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 import { TableRole } from './TableRole';
 import { AddRoleDialog } from './AddRoleDialog';
 import { RoleCard } from './RoleCard';
+import { LastChangesDialog } from './LastChangesDialog';
 
 interface IShowData {
   showTable: boolean;
@@ -18,10 +19,14 @@ export const RoleSection: React.FC = () => {
   const { address } = useAccount();
   const { daoAddress } = useDaoState();
 
+  //states
   const [showData, setShowData] = useState<IShowData>({
     showTable: false,
     role: 'user',
   });
+
+  //refs
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   //Smart Contract
   const { data: isUser } = useScaffoldReadContract({
@@ -138,57 +143,80 @@ export const RoleSection: React.FC = () => {
           />
         </section>
       ) : (
-        <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
-          {/* Role Manager card */}
-          <RoleCard
-            title='Role Manager'
-            description='
+        <section className='sm:px-2 lg:px-4'>
+          {/* Modals */}
+          <LastChangesDialog />
+
+          <div
+            onClick={() => {
+              const dialog = document.getElementById(
+                'last_changes'
+              ) as HTMLDialogElement;
+              dialog.showModal();
+            }}
+            className='card bg-base-100 border border-gradient shadow-sm mb-6 cursor-pointer hover:scale-[1.03] transition-all delay-75'
+          >
+            <div className='card-body'>
+              <h2 className='card-title justify-center'>Last Changes</h2>
+              <p className='text-center'>
+                Displays the recent history of activities related to role
+                management.
+              </p>
+            </div>
+          </div>
+
+          <article className='h-screen grid grid-cols-1 md:grid-cols-2 gap-6'>
+            {/* Role Manager card */}
+            <RoleCard
+              title='Role Manager'
+              description='
             Manage roles within the DAO. You can create basic roles (User, Proposal Creator, and Task Creator) and delete up to 3 roles per day to maintain balance and prevent abuse.'
-            counter={roleManagerCounter as bigint | undefined}
-            counterLoading={roleManagerCounterLoading}
-            setShowData={setShowData}
-            role='roleManager'
-          />
+              counter={roleManagerCounter as bigint | undefined}
+              counterLoading={roleManagerCounterLoading}
+              setShowData={setShowData}
+              role='roleManager'
+            />
 
-          {/* Auditor card */}
-          <RoleCard
-            title='Auditor'
-            description='Oversees the operation of the DAO. Can review tasks, processes, and votes to ensure transparency and compliance with the rules.'
-            counter={auditorRoleCounter as bigint | undefined}
-            counterLoading={auditorRoleCounterLoading}
-            setShowData={setShowData}
-            role='auditor'
-          />
+            {/* Auditor card */}
+            <RoleCard
+              title='Auditor'
+              description='Oversees the operation of the DAO. Can review tasks, processes, and votes to ensure transparency and compliance with the rules.'
+              counter={auditorRoleCounter as bigint | undefined}
+              counterLoading={auditorRoleCounterLoading}
+              setShowData={setShowData}
+              role='auditor'
+            />
 
-          {/* Task creator card */}
-          <RoleCard
-            title='Task Creator'
-            description='Responsible for generating new tasks. In addition, they can validate tasks once they are completed, but only those that they have created themselves.'
-            counter={taskCreatorRoleCounter as bigint | undefined}
-            counterLoading={taskCreatorRoleCounterLoading}
-            setShowData={setShowData}
-            role='user'
-          />
+            {/* Task creator card */}
+            <RoleCard
+              title='Task Creator'
+              description='Responsible for generating new tasks. In addition, they can validate tasks once they are completed, but only those that they have created themselves.'
+              counter={taskCreatorRoleCounter as bigint | undefined}
+              counterLoading={taskCreatorRoleCounterLoading}
+              setShowData={setShowData}
+              role='user'
+            />
 
-          {/* propossal creator card */}
-          <RoleCard
-            title='Proposal Creator'
-            description='Responsible for initiating proposals and votes within the DAO. Allows the community to participate in decision-making.'
-            setShowData={setShowData}
-            counter={propossalRoleCounter as bigint | undefined}
-            counterLoading={propossalRoleCounterLoading}
-            role=''
-          />
+            {/* propossal creator card */}
+            <RoleCard
+              title='Proposal Creator'
+              description='Responsible for initiating proposals and votes within the DAO. Allows the community to participate in decision-making.'
+              setShowData={setShowData}
+              counter={propossalRoleCounter as bigint | undefined}
+              counterLoading={propossalRoleCounterLoading}
+              role=''
+            />
 
-          {/* User card */}
-          <RoleCard
-            title='User'
-            description='Basic role of all participants. They can accept assigned tasks and participate in DAO voting.'
-            setShowData={setShowData}
-            counter={userRoleCounter as bigint | undefined}
-            counterLoading={userRoleCounterLoading}
-            role='user'
-          />
+            {/* User card */}
+            <RoleCard
+              title='User'
+              description='Basic role of all participants. They can accept assigned tasks and participate in DAO voting.'
+              setShowData={setShowData}
+              counter={userRoleCounter as bigint | undefined}
+              counterLoading={userRoleCounterLoading}
+              role='user'
+            />
+          </article>
         </section>
       )}
     </>

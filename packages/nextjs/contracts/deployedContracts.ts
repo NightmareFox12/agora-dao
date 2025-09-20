@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x5f7e323472daf2ee4db04818b2d97d63351e4cdb65f47b04bbf8ef393dbf8a8",
+        "0x4a957f23d47297a73b1136975a76196c633f0245a0b67dcfac610931069fd2c",
       abi: [
         {
           type: "impl",
@@ -274,7 +274,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x5b59917028b10802cef6ebb2117833c3f28b7a0d399e829206797c706543913",
+        "0x12ad841ab28afbc460174ae2dd7333aa20b3ec89231643ea1839e8298c91b5d",
       abi: [
         {
           type: "impl",
@@ -820,6 +820,33 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "contracts::agora_dao::events::RoleCreated",
+          kind: "struct",
+          members: [
+            {
+              name: "assigned_by",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "assigned_to",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "role_name",
+              type: "core::felt252",
+              kind: "key",
+            },
+            {
+              name: "role_ID",
+              type: "core::integer::u16",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
           kind: "struct",
           members: [
@@ -960,6 +987,11 @@ const deployedContracts = {
               kind: "nested",
             },
             {
+              name: "RoleCreated",
+              type: "contracts::agora_dao::events::RoleCreated",
+              kind: "nested",
+            },
+            {
               name: "AccessControlEvent",
               type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::Event",
               kind: "flat",
@@ -973,7 +1005,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x70dcca10659247848bf66e4d43fcc7237267df3a1c1fe59085e289919cb27af",
+        "0x6eb1de3a44c6014a5556ae8093592e8433423218064261bf827359ce46db96d",
     },
   },
   sepolia: {
@@ -1792,6 +1824,33 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "contracts::agora_dao::events::RoleCreated",
+          kind: "struct",
+          members: [
+            {
+              name: "assigned_by",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "assigned_to",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
+            },
+            {
+              name: "role_name",
+              type: "core::felt252",
+              kind: "key",
+            },
+            {
+              name: "role_ID",
+              type: "core::integer::u16",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
           name: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::RoleGranted",
           kind: "struct",
           members: [
@@ -1929,6 +1988,11 @@ const deployedContracts = {
             {
               name: "TaskCreated",
               type: "contracts::agora_dao::events::TaskCreated",
+              kind: "nested",
+            },
+            {
+              name: "RoleCreated",
+              type: "contracts::agora_dao::events::RoleCreated",
               kind: "nested",
             },
             {

@@ -66,7 +66,7 @@ pub mod AgoraDao {
     use super::enums::TaskStatus;
 
     //imports
-    use super::events::{TaskCreated, UserJoined};
+    use super::events::{RoleCreated, TaskCreated, UserJoined};
     use super::functions::{_add_task_category, _add_task_difficulty};
     use super::roles::{
         ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, ROLE_MANAGER_ROLE, TASK_CREATOR_ROLE,
@@ -124,6 +124,7 @@ pub mod AgoraDao {
     enum Event {
         UserJoined: UserJoined,
         TaskCreated: TaskCreated,
+        RoleCreated: RoleCreated,
         #[flat]
         AccessControlEvent: AccessControlComponent::Event,
         #[flat]
@@ -284,7 +285,7 @@ pub mod AgoraDao {
 
             assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
 
-            //     //verify manager role exist
+            //verify manager role exist
             let role_manager_role_counter = self.role_manager_role_counter.read();
             let mut i: u16 = 0;
 
@@ -319,6 +320,16 @@ pub mod AgoraDao {
 
             //grant role
             self.accesscontrol._grant_role(ROLE_MANAGER_ROLE, new_role_manager);
+
+            self
+                .emit(
+                    RoleCreated {
+                        assigned_by: caller,
+                        assigned_to: new_role_manager,
+                        role_name: ROLE_MANAGER_ROLE,
+                        role_ID: self.role_manager_role_counter.read() - 1,
+                    },
+                );
         }
 
         fn create_auditor_role(ref self: ContractState, auditor: ContractAddress) {}
