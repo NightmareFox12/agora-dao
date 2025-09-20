@@ -130,13 +130,11 @@ export const RoleSection: React.FC = () => {
             <ArrowLeft className='w-4 h-4' />
           </button>
 
-          <div className='w-full flex justify-center'>
-            <AddRoleDialog
-              role={showData.role}
-              daoAddress={daoAddress}
-              address={address}
-            />
-          </div>
+          <AddRoleDialog
+            role={showData.role}
+            daoAddress={daoAddress}
+            address={address}
+          />
           <p className='font-semibold text-center'>{showData.role}s</p>
 
           <TableRole
