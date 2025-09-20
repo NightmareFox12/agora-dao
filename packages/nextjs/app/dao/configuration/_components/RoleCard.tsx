@@ -3,7 +3,12 @@ import { Users } from 'lucide-react';
 type RoleCardProps = {
   title: string;
   description: string;
-  role: string;
+  role:
+    | 'Role Manager'
+    | 'Auditor'
+    | 'Task Creator'
+    | 'Propossal Creator'
+    | 'User';
   counter: bigint | undefined;
   counterLoading: boolean;
   setShowData: React.Dispatch<React.SetStateAction<any>>;

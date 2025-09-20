@@ -20,7 +20,7 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
   return (
     <>
       <button
-        className='btn'
+        className='btn btn-primary'
         onClick={() => {
           const dialog = document.getElementById(
             'create_role'

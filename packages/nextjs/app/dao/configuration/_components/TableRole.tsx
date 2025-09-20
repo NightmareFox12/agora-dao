@@ -12,7 +12,7 @@ const GetAdminData = (
 ) => {
   const { data: adminData } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'get_all_admin_role',
+    functionName: 'auditor_role_counter',
     contractAddress: daoAddress,
     args: [address],
     watch: false,

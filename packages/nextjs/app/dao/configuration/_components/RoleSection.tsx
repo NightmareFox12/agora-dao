@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
@@ -12,7 +12,12 @@ import { LastChangesDialog } from './LastChangesDialog';
 
 interface IShowData {
   showTable: boolean;
-  role: 'roleManager' | 'auditor' | 'taskCreator' | 'propossalCreator' | 'user';
+  role:
+    | 'Role Manager'
+    | 'Auditor'
+    | 'Task Creator'
+    | 'Propossal Creator'
+    | 'User';
 }
 
 export const RoleSection: React.FC = () => {
@@ -22,11 +27,8 @@ export const RoleSection: React.FC = () => {
   //states
   const [showData, setShowData] = useState<IShowData>({
     showTable: false,
-    role: 'user',
+    role: 'User',
   });
-
-  //refs
-  const modalRef = useRef<HTMLDialogElement>(null);
 
   //Smart Contract
   const { data: isUser } = useScaffoldReadContract({
@@ -111,6 +113,7 @@ export const RoleSection: React.FC = () => {
 
   return (
     <>
+      {/* Show table */}
       {showData.showTable ? (
         <section className='h-screen'>
           <button
@@ -147,6 +150,7 @@ export const RoleSection: React.FC = () => {
           {/* Modals */}
           <LastChangesDialog />
 
+          {/* Event Card */}
           <div
             onClick={() => {
               const dialog = document.getElementById(
@@ -165,16 +169,16 @@ export const RoleSection: React.FC = () => {
             </div>
           </div>
 
+          {/* Cards */}
           <article className='h-screen grid grid-cols-1 md:grid-cols-2 gap-6'>
             {/* Role Manager card */}
             <RoleCard
               title='Role Manager'
-              description='
-            Manage roles within the DAO. You can create basic roles (User, Proposal Creator, and Task Creator) and delete up to 3 roles per day to maintain balance and prevent abuse.'
+              description='Manage roles within the DAO. You can create basic roles (User, Proposal Creator, and Task Creator) and delete up to 3 roles per day to maintain balance and prevent abuse.'
               counter={roleManagerCounter as bigint | undefined}
               counterLoading={roleManagerCounterLoading}
               setShowData={setShowData}
-              role='roleManager'
+              role='Role Manager'
             />
 
             {/* Auditor card */}
@@ -184,7 +188,7 @@ export const RoleSection: React.FC = () => {
               counter={auditorRoleCounter as bigint | undefined}
               counterLoading={auditorRoleCounterLoading}
               setShowData={setShowData}
-              role='auditor'
+              role='Auditor'
             />
 
             {/* Task creator card */}
@@ -194,7 +198,7 @@ export const RoleSection: React.FC = () => {
               counter={taskCreatorRoleCounter as bigint | undefined}
               counterLoading={taskCreatorRoleCounterLoading}
               setShowData={setShowData}
-              role='user'
+              role='Task Creator'
             />
 
             {/* propossal creator card */}
@@ -204,7 +208,7 @@ export const RoleSection: React.FC = () => {
               setShowData={setShowData}
               counter={propossalRoleCounter as bigint | undefined}
               counterLoading={propossalRoleCounterLoading}
-              role=''
+              role='Propossal Creator'
             />
 
             {/* User card */}
@@ -214,7 +218,7 @@ export const RoleSection: React.FC = () => {
               setShowData={setShowData}
               counter={userRoleCounter as bigint | undefined}
               counterLoading={userRoleCounterLoading}
-              role='user'
+              role='User'
             />
           </article>
         </section>
