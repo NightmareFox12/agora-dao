@@ -3,6 +3,7 @@
 import { Minus, Plus, UserRoundPen, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { AddressInput } from '~~/components/scaffold-stark';
+import { useScaffoldMultiWriteContract } from '~~/hooks/scaffold-stark/useScaffoldMultiWriteContract';
 
 type AddRoleDialogProps = {
   role: string;
@@ -17,6 +18,16 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
 }) => {
   //states
   const [addressInputs, setAddressInputs] = useState<string[]>(['']);
+
+  //Smart Contract
+  const { sendAsync } = useScaffoldMultiWriteContract({
+    calls: addressInputs.map((addr) => ({
+      contractName: 'AgoraDao',
+      functionName: 'create_role_manager_role',
+      args: [addr] as const,
+      contractAddress: daoAddress,
+    })),
+  });
 
   //functions
   const handlePlusClick = () => {
@@ -34,6 +45,15 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
     const newAddresses = [...addressInputs];
     newAddresses[index] = value;
     setAddressInputs(newAddresses);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await sendAsync();
+    } catch (err) {
+      console.log(err);
+    } finally {
+    }
   };
 
   return (
@@ -98,7 +118,8 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
               </button>
             </div>
             <button
-              disabled={addressInputs.every((addr) => addr.trim() !== '')}
+              disabled={addressInputs.every((addr) => addr.trim() === '')}
+              onClick={handleSubmit}
               className='btn btn-accent'
             >
               <UserRoundPen className='w-4 h-4' />

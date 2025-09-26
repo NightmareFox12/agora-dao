@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x192ef7d91e76607a6a2b634e43cc51d74e54951b6c7cf4bd1a26cd57385af25",
+        "0xc4aa6a213cf9e1f20c808829d0ea3e211a6a10f33e28be016077960fa6637a",
       abi: [
         {
           type: "impl",
@@ -270,11 +270,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x7905156481e626240081eb115a88e30378377af63f703c0ee04fb6905366f2b",
+        "0x19f42ad309369d028a5498a8d62a8dd58d79c1cb305e3a46f46a120a63b64ab",
     },
     AgoraDao: {
       address:
-        "0x7e5925bbd99dadcfb4a676653c1026e287bd29542384bd36a402042d6b7d7e0",
+        "0x356441b94545c4aaaeb31c6c1fe6618b789f182dff751f0ccaaf3ca7d9d981a",
       abi: [
         {
           type: "impl",
@@ -496,7 +496,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "member_counter",
+              name: "manager_role_counter",
               inputs: [],
               outputs: [
                 {
@@ -507,7 +507,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "role_manager_role_counter",
+              name: "member_counter",
               inputs: [],
               outputs: [
                 {
@@ -1005,7 +1005,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x6eb1de3a44c6014a5556ae8093592e8433423218064261bf827359ce46db96d",
+        "0x59701df8bbd2905ef48a03eaceb67faba7b9798afde97321efca73c0a38a598",
     },
   },
   sepolia: {
@@ -1500,7 +1500,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "member_counter",
+              name: "manager_role_counter",
               inputs: [],
               outputs: [
                 {
@@ -1511,7 +1511,7 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "role_manager_role_counter",
+              name: "member_counter",
               inputs: [],
               outputs: [
                 {

@@ -30,11 +30,14 @@ pub trait IAgoraDao<TContractState> {
     fn create_proposal_creator_role(ref self: TContractState, proposal_creator: ContractAddress);
     fn create_user_role(ref self: TContractState, user: ContractAddress);
 
+
+    // --- READ ROLES ---
+    fn manager_role_counter(self: @TContractState) -> u16;
+
     // --- READ STATES ---
     fn member_counter(self: @TContractState) -> u16;
     // fn user_counter(self: @TContractState) -> u16;
     // fn fabric(self: @TContractState) -> ContractAddress;
-    fn role_manager_role_counter(self: @TContractState) -> u16;
     fn auditor_role_counter(self: @TContractState) -> u16;
     fn task_creator_role_counter(self: @TContractState) -> u16;
     fn proposal_creator_role_counter(self: @TContractState) -> u16;
@@ -97,7 +100,7 @@ pub mod AgoraDao {
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
         //Role counters
-        pub role_manager_role_counter: u16,
+        pub manager_role_counter: u16,
         pub auditor_role_counter: u16,
         pub task_creator__role_counter: u16,
         pub proposal_creator_role_counter: u16,
@@ -286,10 +289,10 @@ pub mod AgoraDao {
             assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
 
             //verify manager role exist
-            let role_manager_role_counter = self.role_manager_role_counter.read();
+            let manager_role_counter = self.manager_role_counter.read();
             let mut i: u16 = 0;
 
-            while i != role_manager_role_counter {
+            while i != manager_role_counter {
                 assert!(
                     self.role_manager_roles.read(i) != new_role_manager,
                     "Manager role already exists",
@@ -303,7 +306,7 @@ pub mod AgoraDao {
             let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
 
             //save role manager
-            while j != role_manager_role_counter {
+            while j != manager_role_counter {
                 if (self.role_manager_roles.read(j) == empty_contract) {
                     empty_space = true;
                     break;
@@ -314,8 +317,8 @@ pub mod AgoraDao {
             if (empty_space) {
                 self.role_manager_roles.write(j, new_role_manager);
             } else {
-                self.role_manager_roles.write(role_manager_role_counter, new_role_manager);
-                self.role_manager_role_counter.write(role_manager_role_counter + 1);
+                self.role_manager_roles.write(manager_role_counter, new_role_manager);
+                self.manager_role_counter.write(manager_role_counter + 1);
             }
 
             //grant role
@@ -327,7 +330,7 @@ pub mod AgoraDao {
                         assigned_by: caller,
                         assigned_to: new_role_manager,
                         role_name: ROLE_MANAGER_ROLE,
-                        role_ID: self.role_manager_role_counter.read() - 1,
+                        role_ID: self.manager_role_counter.read() - 1,
                     },
                 );
         }
@@ -350,8 +353,8 @@ pub mod AgoraDao {
         //     self.user_counter.read()
         // }
 
-        fn role_manager_role_counter(self: @ContractState) -> u16 {
-            self.role_manager_role_counter.read()
+        fn manager_role_counter(self: @ContractState) -> u16 {
+            self.manager_role_counter.read()
         }
 
         fn member_counter(self: @ContractState) -> u16 {

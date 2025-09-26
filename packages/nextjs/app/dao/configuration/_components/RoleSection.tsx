@@ -50,7 +50,7 @@ export const RoleSection: React.FC = () => {
   const { data: roleManagerCounter, isLoading: roleManagerCounterLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDao',
-      functionName: 'role_manager_role_counter',
+      functionName: 'manager_role_counter',
       contractAddress: daoAddress,
       watch: false,
     });
