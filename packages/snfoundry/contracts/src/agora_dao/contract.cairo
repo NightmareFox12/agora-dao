@@ -25,8 +25,10 @@ pub trait IAgoraDao<TContractState> {
     fn create_user_role(ref self: TContractState, user: ContractAddress);
 
     // --- READ ROLES ---
-    fn manager_role_counter(self: @TContractState) -> u16;
-    fn get_all_manager_role(self: @TContractState) -> Array<ContractAddress>;
+    fn manager_role_counter(self: @TContractState, caller: ContractAddress) -> u16;
+    fn get_all_manager_role(
+        self: @TContractState, caller: ContractAddress,
+    ) -> Array<ContractAddress>;
 
     // --- READ STATES ---
     fn member_counter(self: @TContractState) -> u16;
@@ -186,12 +188,14 @@ pub mod AgoraDao {
         fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
         // --- READ ROLES ---
-        fn manager_role_counter(self: @ContractState) -> u16 {
+        fn manager_role_counter(self: @ContractState, caller: ContractAddress) -> u16 {
             self.manager_role_counter.read()
         }
 
-        fn get_all_manager_role(self: @ContractState) -> Array<ContractAddress> {
-            _get_all_manager_role(self)
+        fn get_all_manager_role(
+            self: @ContractState, caller: ContractAddress,
+        ) -> Array<ContractAddress> {
+            _get_all_manager_role(self, caller)
         }
 
         // --- READ STATES ---

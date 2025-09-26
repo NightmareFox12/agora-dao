@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x179ab200815cd49b872383f362ef4a821a43632addba7460b350324d38e26e5",
+        "0x387fe4dfd3faba9a039a373f5d4aa6fae87da99050b5cc328d858d5f2a1e408",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x30e75fdf8b0d2980d8cfb79538bd32f0ff6ce9dc6685111333ee53c8bcf5c84",
+        "0x210c013218551fb5db32e59782536ca04f27e6983ae403e8d05bb662cf90f72",
     },
     AgoraDao: {
       address:
-        "0x1090990ee2966ae97d2571cca6078b5ac4e2cf1906082876b87ebdbce606d6a",
+        "0x3d55e5c427053b31ca16c9ff8e0f70f859dd0c6fbaddc3b510ed57496173060",
       abi: [
         {
           type: "impl",
@@ -502,6 +502,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_manager_role",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
                 },
               ],
               state_mutability: "view",
@@ -1006,7 +1017,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x1650de0a5ae86f723698c8ec92608ce0af1d5833bd4ec11f9b01f421ba241b1",
+        "0x691a8819bf21ac5b127c9292701a797dbff13bb5789118243ea1651dc30dab3",
     },
   },
   sepolia: {
@@ -1507,6 +1518,17 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_manager_role",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
                 },
               ],
               state_mutability: "view",

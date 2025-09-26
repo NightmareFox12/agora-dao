@@ -39,7 +39,15 @@ export const TableRole: React.FC<TableRoleProps> = ({
     contractAddress: daoAddress,
     watch: false,
   });
-  // const adminData = GetAdminData(daoAddress, address);
+
+  const { data: allManager } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_all_manager_role',
+    args: [address],
+    contractAddress: daoAddress,
+  });
+
+  console.log(allManager)
 
   return (
     <div className='overflow-x-auto flex justify-center'>
@@ -56,7 +64,7 @@ export const TableRole: React.FC<TableRoleProps> = ({
           </tr>
         </thead>
         <tbody>
-          {roleManagerCounter?.map((x, y) => {
+          {allManager?.map((x, y) => {
             const address_x = x as unknown as bigint;
             const parsedAddress = num.toHex(address_x);
 
