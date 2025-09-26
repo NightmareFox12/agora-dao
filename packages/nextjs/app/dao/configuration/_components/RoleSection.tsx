@@ -153,7 +153,7 @@ export const RoleSection: React.FC = () => {
       ) : (
         <section className='sm:px-2 lg:px-4'>
           {/* Modals */}
-          <LastChangesDialog />
+          <LastChangesDialog daoAddress={daoAddress} />
 
           {/* Event Card */}
           <div

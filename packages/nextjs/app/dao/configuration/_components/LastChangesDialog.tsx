@@ -1,8 +1,27 @@
 import { RefObject } from 'react';
+import { useScaffoldEventHistory } from '~~/hooks/scaffold-stark/useScaffoldEventHistory';
 
-type LastChangesDialogProps = {};
+type LastChangesDialogProps = {
+  daoAddress: string;
+};
 
-export const LastChangesDialog: React.FC<LastChangesDialogProps> = ({}) => {
+export const LastChangesDialog: React.FC<LastChangesDialogProps> = ({
+  daoAddress,
+}) => {
+  const { data, isLoading, error } = useScaffoldEventHistory({
+    contractName: 'AgoraDao',
+    eventName: 'RoleCreated',
+    contractAddress: daoAddress,
+    fromBlock: BigInt(0),
+    // filters: { parameterName: value },
+    blockData: true,
+    transactionData: false,
+    receiptData: false,
+    watch: true,
+    enabled: true,
+  });
+
+  console.log(data);
   return (
     <dialog id='last_changes' className='modal'>
       <div className='modal-box'>

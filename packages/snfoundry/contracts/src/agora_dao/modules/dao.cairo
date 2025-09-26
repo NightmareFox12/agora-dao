@@ -37,7 +37,8 @@ pub fn _join_dao(ref self: ContractState) {
     let res = call_contract_syscall(self.fabric.read(), sel, calldata);
 
     if res.is_err() {
-        panic!("fabric.add_user failed: {:?}", res.unwrap_err());
+        print!("fabric.add_user failed: {:?}", res.unwrap_err());
+        // panic!("fabric.add_user failed: {:?}", res.unwrap_err());
     }
 
     //grant user role

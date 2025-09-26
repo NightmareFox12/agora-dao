@@ -40,7 +40,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({
             <div className='flex justify-between items-center'>
               <h2 className='card-title'>{title}</h2>
               {(role === 'Role Manager' || role === 'Auditor') && (
-                <span className='badge badge-secondary badge-sm mb-1'>
+                <span className='badge badge-secondary badge-sm mb-1.5'>
                   Only Admin
                 </span>
               )}
