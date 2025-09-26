@@ -1,15 +1,8 @@
-
-mod enums;
-mod events;
-mod functions;
-mod roles;
-mod structs;
-mod validations;
-
-
-//interface depends
 use starknet::ContractAddress;
 use structs::Task;
+use super::core::{events, roles, structs};
+use super::modules::{dao, rol, task};
+
 #[starknet::interface]
 pub trait IAgoraDao<TContractState> {
     // --- WRITE FUNCTIONS ---
@@ -30,7 +23,6 @@ pub trait IAgoraDao<TContractState> {
     fn create_task_creator_role(ref self: TContractState, task_creator: ContractAddress);
     fn create_proposal_creator_role(ref self: TContractState, proposal_creator: ContractAddress);
     fn create_user_role(ref self: TContractState, user: ContractAddress);
-
 
     // --- READ ROLES ---
     fn manager_role_counter(self: @TContractState) -> u16;
@@ -57,27 +49,24 @@ pub mod AgoraDao {
     //OpenZeppelin imports
     use openzeppelin_access::accesscontrol::AccessControlComponent;
     use openzeppelin_introspection::src5::SRC5Component;
-    use openzeppelin_token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
+    use starknet::ContractAddress;
+
     //Starknet imports
-    use starknet::event::EventEmitter;
     use starknet::storage::{
         Map, StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
         StoragePointerWriteAccess,
     };
-    use starknet::syscalls::call_contract_syscall;
-    use starknet::{ContractAddress, get_caller_address, get_contract_address};
-    use super::constants::FELT_STRK_CONTRACT;
-    use super::enums::TaskStatus;
+    use super::dao::_join_dao;
 
     //imports
     use super::events::{RoleCreated, TaskCreated, UserJoined};
-    use super::functions::{_add_task_category, _add_task_difficulty};
-    use super::roles::{
-        ADMIN_ROLE, AUDITOR_ROLE, PROPOSSAL_CREATOR_ROLE, ROLE_MANAGER_ROLE, TASK_CREATOR_ROLE,
-        USER_ROLE,
-    };
+    use super::rol::_create_role_manager_role;
+    use super::roles::{ADMIN_ROLE, USER_ROLE};
     use super::structs::Task;
-    use super::validations::_create_task_validation;
+    use super::task::{
+        _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
+        _get_task_categories, _get_task_difficulties,
+    };
 
     //components
     component!(path: AccessControlComponent, storage: accesscontrol, event: AccessControlEvent);
@@ -167,49 +156,7 @@ pub mod AgoraDao {
     impl AgoraDaoImpl of super::IAgoraDao<ContractState> {
         // --- WRITE FUNCTIONS ---
         fn join_dao(ref self: ContractState) {
-            let caller = get_caller_address();
-
-            assert!(
-                !self.accesscontrol.has_role(USER_ROLE, get_caller_address()),
-                "User already joined",
-            );
-            assert!(
-                !self.accesscontrol.has_role(ADMIN_ROLE, get_caller_address()),
-                "Creator cannot join",
-            );
-
-            //add member into counter
-            let member_id = self.member_counter.read();
-            self.members.write(member_id, caller);
-            self.member_counter.write(member_id + 1);
-
-            //save user into fabric
-            let sel = selector!("add_user");
-            let calldata = [caller.into()].span();
-            if let Ok(_r) =
-                call_contract_syscall(
-                    self.fabric.read(), selector!("add_user"), [caller.into()].span(),
-                ) {}
-
-            match call_contract_syscall(self.fabric.read(), sel, calldata) {
-                Ok(_) => {},
-                Err(e) => { panic!("fabric.add_user failed: {:?}", e); },
-            }
-
-            let res = call_contract_syscall(self.fabric.read(), sel, calldata);
-
-            if res.is_err() {
-                panic!("fabric.add_user failed: {:?}", res.unwrap_err());
-            }
-
-            //grant user role
-            self.accesscontrol._grant_role(USER_ROLE, caller);
-            let user_role_counter = self.user_role_counter.read();
-            self.user_roles.write(user_role_counter, caller);
-            self.user_role_counter.write(user_role_counter + 1);
-
-            //emit event
-            self.emit(UserJoined { user: caller, user_ID: member_id });
+            _join_dao(ref self)
         }
 
         fn create_task(
@@ -221,121 +168,12 @@ pub mod AgoraDao {
             amount: u256,
             deadline: u64,
         ) {
-            _create_task_validation(
-                ref self,
-                title.clone(),
-                description.clone(),
-                category_ID,
-                difficulty_ID,
-                amount,
-                deadline,
-            );
-
-            let caller = get_caller_address();
-
-            //TODO: crear una super funcion para verificar el rol/roles
-            //TODO: lo que se me ocurrio a futuro es poner condicionales para darle permisos a los
-            //roles. por ejemplo: que el admin pueda elegir si los usuarios pueden crear tareas
-            //(true/false)
-            assert!(
-                self.accesscontrol.has_role(ADMIN_ROLE, caller)
-                    || self.accesscontrol.has_role(AUDITOR_ROLE, caller)
-                    || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
-                "role no cumplided",
-            );
-
-            //transfer
-            let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();
-            let strk_dispatcher = IERC20Dispatcher { contract_address: strk_contract_address };
-            strk_dispatcher.transfer_from(caller, get_contract_address(), amount);
-
-            //save task
-            let task_id = self.task_counter.read();
-            self
-                .tasks
-                .write(
-                    task_id,
-                    Task {
-                        task_id: task_id,
-                        creator: caller,
-                        title: title.clone(),
-                        description: description,
-                        category: self.task_categories.read(category_ID),
-                        difficulty: self.task_difficulties.read(difficulty_ID),
-                        reward: amount,
-                        deadline: deadline,
-                        status: TaskStatus::OPEN,
-                    },
-                );
-            //emit event
-            self
-                .emit(
-                    TaskCreated {
-                        creator: caller,
-                        task_ID: task_id,
-                        title: title,
-                        category: self.task_categories.read(category_ID),
-                        reward: amount,
-                        deadline: deadline,
-                    },
-                );
-
-            self.task_counter.write(task_id + 1);
+            _create_task(ref self, title, description, category_ID, difficulty_ID, amount, deadline)
         }
 
         // --- WRITE ROLES ---
         fn create_role_manager_role(ref self: ContractState, new_role_manager: ContractAddress) {
-            let caller = get_caller_address();
-
-            assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
-
-            assert!(caller != new_role_manager,"Admin cannot be the same as new role manager");
-
-            //verify manager role exist
-            let manager_role_counter = self.manager_role_counter.read();
-            let mut i: u16 = 0;
-
-            while i != manager_role_counter {
-                assert!(
-                    self.role_manager_roles.read(i) != new_role_manager,
-                    "Manager role already exists",
-                );
-                i += 1;
-            }
-
-            let mut j: u16 = 0;
-            let mut empty_space: bool = false;
-
-            let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
-
-            //save role manager
-            while j != manager_role_counter {
-                if (self.role_manager_roles.read(j) == empty_contract) {
-                    empty_space = true;
-                    break;
-                }
-                j += 1;
-            }
-
-            if (empty_space) {
-                self.role_manager_roles.write(j, new_role_manager);
-            } else {
-                self.role_manager_roles.write(manager_role_counter, new_role_manager);
-                self.manager_role_counter.write(manager_role_counter + 1);
-            }
-
-            //grant role
-            self.accesscontrol._grant_role(ROLE_MANAGER_ROLE, new_role_manager);
-
-            self
-                .emit(
-                    RoleCreated {
-                        assigned_by: caller,
-                        assigned_to: new_role_manager,
-                        role_name: ROLE_MANAGER_ROLE,
-                        role_ID: self.manager_role_counter.read() - 1,
-                    },
-                );
+            _create_role_manager_role(ref self, new_role_manager)
         }
 
         fn create_auditor_role(ref self: ContractState, auditor: ContractAddress) {}
@@ -345,17 +183,10 @@ pub mod AgoraDao {
         fn create_proposal_creator_role(
             ref self: ContractState, proposal_creator: ContractAddress,
         ) {}
+
         fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
         // --- READ STATES ---
-        // fn fabric(self: @ContractState) -> ContractAddress {
-        //     self.fabric.read()
-        // }
-
-        // fn user_counter(self: @ContractState) -> u16 {
-        //     self.user_counter.read()
-        // }
-
         fn manager_role_counter(self: @ContractState) -> u16 {
             self.manager_role_counter.read()
         }
@@ -399,39 +230,15 @@ pub mod AgoraDao {
         }
 
         fn get_task_categories(self: @ContractState) -> Array<ByteArray> {
-            let mut res: Array<ByteArray> = ArrayTrait::new();
-            let mut i: u16 = 0;
-
-            while i != self.task_category_counter.read() {
-                res.append(self.task_categories.read(i));
-                i += 1;
-            }
-            res
+            _get_task_categories(self)
         }
 
         fn get_task_difficulties(self: @ContractState) -> Array<ByteArray> {
-            let mut res: Array<ByteArray> = ArrayTrait::new();
-            let mut i: u16 = 0;
-
-            while i != self.task_difficulty_counter.read() {
-                res.append(self.task_difficulties.read(i));
-                i += 1;
-            }
-            res
+            _get_task_difficulties(self)
         }
 
         fn get_available_tasks(self: @ContractState) -> Array<Task> {
-            let mut res: Array<Task> = ArrayTrait::new();
-            let mut i: u16 = 0;
-            let task_counter: u16 = self.task_counter.read();
-
-            while i != task_counter {
-                if self.tasks.read(i).status == TaskStatus::OPEN {
-                    res.append(self.tasks.read(i));
-                }
-                i += 1;
-            }
-            res
+            _get_available_tasks(self)
         }
     }
 }

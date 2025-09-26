@@ -1,7 +1,9 @@
 // use openzeppelin_access::accesscontrol::interface::IAccessControl;
 use starknet::get_block_timestamp;
 use starknet::storage::StoragePointerReadAccess;
-use super::AgoraDao::ContractState;
+
+//imports
+use crate::agora_dao::contract::AgoraDao::ContractState;
 
 pub fn _create_task_validation(
     ref self: ContractState,
