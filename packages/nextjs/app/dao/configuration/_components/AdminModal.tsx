@@ -41,8 +41,7 @@ export const AdminModal: React.FC = () => {
   const showModal =
     !isConnected ||
     (parsedAdmin === undefined && parsedManagerRole === undefined) ||
-    !parsedAdmin ||
-    !parsedManagerRole;
+    (parsedAdmin === false && parsedManagerRole === false)
 
   return (
     showModal && (
