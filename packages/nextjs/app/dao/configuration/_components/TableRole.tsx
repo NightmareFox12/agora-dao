@@ -1,16 +1,31 @@
 'use client';
 
-import { Minus } from 'lucide-react';
 import React from 'react';
 import { num } from 'starknet';
 import { Address } from '~~/components/scaffold-stark';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 
-const GetAdminData = (
+const useTableData = (
+  role: string,
   daoAddress: string,
   address: `0x${string}` | undefined
 ) => {
-  const { data: adminData } = useScaffoldReadContract({
+  const { data: allManager } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_all_manager_role',
+    args: [address],
+    contractAddress: daoAddress,
+  });
+
+  const { data: allAuditor } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_all_auditor_role',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
+  const { data: adminData3 } = useScaffoldReadContract({
     contractName: 'AgoraDao',
     functionName: 'user_role_counter',
     args: [address],
@@ -18,7 +33,28 @@ const GetAdminData = (
     watch: false,
   });
 
-  return adminData;
+  const { data: adminData4 } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'user_role_counter',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
+  switch (role) {
+    case 'Role Manager':
+      return allManager;
+    case 'Auditor':
+      return allAuditor;
+    case 'Task Creator':
+      return adminData3;
+    case 'Propossal Creator':
+      return adminData4;
+    case 'User':
+      return adminData4;
+    default:
+      return [];
+  }
 };
 
 type TableRoleProps = {
@@ -32,22 +68,7 @@ export const TableRole: React.FC<TableRoleProps> = ({
   daoAddress,
   address,
 }) => {
-  const { data: roleManagerCounter } = useScaffoldReadContract({
-    contractName: 'AgoraDao',
-    functionName: 'manager_role_counter',
-    args: [address],
-    contractAddress: daoAddress,
-    watch: false,
-  });
-
-  const { data: allManager } = useScaffoldReadContract({
-    contractName: 'AgoraDao',
-    functionName: 'get_all_manager_role',
-    args: [address],
-    contractAddress: daoAddress,
-  });
-
-  console.log(allManager)
+  const tableData = useTableData(role, daoAddress, address);
 
   return (
     <div className='overflow-x-auto flex justify-center'>
@@ -64,7 +85,7 @@ export const TableRole: React.FC<TableRoleProps> = ({
           </tr>
         </thead>
         <tbody>
-          {allManager?.map((x, y) => {
+          {tableData?.map((x, y) => {
             const address_x = x as unknown as bigint;
             const parsedAddress = num.toHex(address_x);
 

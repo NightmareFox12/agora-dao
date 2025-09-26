@@ -12,17 +12,17 @@ use starknet::{ContractAddress, get_caller_address};
 //imports
 use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::events::RoleCreated;
-use crate::agora_dao::core::roles::{ADMIN_ROLE, ROLE_MANAGER_ROLE};
+use crate::agora_dao::core::roles::{ADMIN_ROLE, AUDITOR_ROLE, ROLE_MANAGER_ROLE};
 
 // --- WRITE FUNCTIONS ---
 pub fn _create_role_manager_role(ref self: ContractState, new_role_manager: ContractAddress) {
-    let caller = get_caller_address();
+    let caller: ContractAddress = get_caller_address();
 
     assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
     assert!(caller != new_role_manager, "Admin cannot be the same as new role manager");
 
     //verify manager role exist
-    let manager_role_counter = self.manager_role_counter.read();
+    let manager_role_counter: u16 = self.manager_role_counter.read();
     let mut i: u16 = 0;
 
     while i != manager_role_counter {
@@ -65,17 +65,80 @@ pub fn _create_role_manager_role(ref self: ContractState, new_role_manager: Cont
         );
 }
 
+pub fn _create_auditor_role(ref self: ContractState, new_auditor: ContractAddress) {
+    let caller: ContractAddress = get_caller_address();
+
+    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+    assert!(caller != new_auditor, "Admin cannot be the same as new role manager");
+
+    //verify manager role exist
+    let auditor_role_counter: u16 = self.auditor_role_counter.read();
+    let mut i: u16 = 0;
+
+    while i != auditor_role_counter {
+        assert!(self.auditor_roles.read(i) != new_auditor, "Auditor role already exists");
+        i += 1;
+    }
+
+    let mut j: u16 = 0;
+    let mut empty_space: bool = false;
+
+    let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
+
+    //save role manager
+    while j != auditor_role_counter {
+        if (self.auditor_roles.read(j) == empty_contract) {
+            empty_space = true;
+            break;
+        }
+        j += 1;
+    }
+
+    if (empty_space) {
+        self.auditor_roles.write(j, new_auditor);
+    } else {
+        self.auditor_roles.write(auditor_role_counter, new_auditor);
+        self.auditor_role_counter.write(auditor_role_counter + 1);
+    }
+
+    //grant role
+    self.accesscontrol._grant_role(AUDITOR_ROLE, new_auditor);
+
+    self
+        .emit(
+            RoleCreated {
+                assigned_by: caller,
+                assigned_to: new_auditor,
+                role_name: AUDITOR_ROLE,
+                role_ID: self.manager_role_counter.read() - 1,
+            },
+        );
+}
 
 // --- READ FUNCTIONS ---
 pub fn _get_all_manager_role(
     self: @ContractState, caller: ContractAddress,
 ) -> Array<ContractAddress> {
-    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin")
+    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
     let mut res: Array<ContractAddress> = ArrayTrait::new();
 
     let mut i: u16 = 0;
     while i != self.manager_role_counter.read() {
         res.append(self.role_manager_roles.read(i));
+        i += 1;
+    }
+    res
+}
+
+pub fn _get_all_auditor_role(
+    self: @ContractState, caller: ContractAddress,
+) -> Array<ContractAddress> {
+    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+    let mut res: Array<ContractAddress> = ArrayTrait::new();
+
+    let mut i: u16 = 0;
+    while i != self.auditor_role_counter.read() {
+        res.append(self.auditor_roles.read(i));
         i += 1;
     }
     res

@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x413e60adc6c25ce5ab6d20360bda995055e82abc881871e18f05839d73520f",
+        "0x2e2479547521c3c1ed73a70adb705906e64585401cb663210a6d36e24d2ac85",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x33df409c676b324ac779891275d206cc2a334fa19da20d81ce2c99821e570a7",
+        "0x6e747126b75cebc91b887c9b472420c8b817d62cc59171b61d5d93d32088fd",
     },
     AgoraDao: {
       address:
-        "0x371dbc6cefe676e909276aa3ac2732eb88b510f53b150d8ca9ce612367ce834",
+        "0x18e08286f0eed8a38b3b0627c8163cf449dc2ac93698a1cfc007239807eed08",
       abi: [
         {
           type: "impl",
@@ -514,6 +514,22 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_auditor_role",
               inputs: [
                 {
                   name: "caller",
@@ -1027,7 +1043,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x32a14106893320f4b0ebc6117bc2b9a57625c636ef9aea31d51033a66820335",
+        "0x31c1333f4bb9f5a3b784686e372d8a8734c6af443dd66f1e2e7685b34d83245",
     },
   },
   sepolia: {
@@ -1540,6 +1556,22 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_auditor_role",
               inputs: [
                 {
                   name: "caller",
