@@ -1,9 +1,10 @@
 'use client';
 
 import { Loader, Minus, Plus, UserRoundPen, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AddressInput } from '~~/components/scaffold-stark';
 import { useScaffoldMultiWriteContract } from '~~/hooks/scaffold-stark/useScaffoldMultiWriteContract';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 
 type AddRoleDialogProps = {
   role: string;
@@ -19,6 +20,9 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
   //states
   const [addressInputs, setAddressInputs] = useState<string[]>(['']);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+
+  //refs
+  const buttonCloseModal = useRef<HTMLButtonElement>(null);
 
   //Smart Contract
   const { sendAsync: createRoleManager } = useScaffoldMultiWriteContract({
@@ -66,6 +70,17 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
     })),
   });
 
+  const { data: isAdmin } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_admin_role',
+    contractAddress: daoAddress,
+    args: [address],
+    watch: false,
+  });
+
+  //parsed data
+  const isAdminParsed = isAdmin as any as boolean | undefined;
+
   //functions
   const handlePlusClick = () => {
     setAddressInputs([...addressInputs, '']);
@@ -109,6 +124,7 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
           setAddressInputs(['']);
           break;
       }
+      buttonCloseModal.current?.click();
     } catch (err) {
       console.log(err);
     } finally {
@@ -118,25 +134,32 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
 
   return (
     <>
-      <div className='w-full flex justify-center'>
-        <button
-          className='btn btn-primary'
-          onClick={() => {
-            const dialog = document.getElementById(
-              'create_role'
-            ) as HTMLDialogElement;
-            dialog.showModal();
-          }}
-        >
-          Create {role}
-        </button>
-      </div>
+      {(role === 'Role Manager' || role === 'Auditor') && !isAdminParsed ? (
+        <></>
+      ) : (
+        <div className='w-full flex justify-center'>
+          <button
+            className='btn btn-accent'
+            onClick={() => {
+              const dialog = document.getElementById(
+                'create_role'
+              ) as HTMLDialogElement;
+              dialog.showModal();
+            }}
+          >
+            Create {role}
+          </button>
+        </div>
+      )}
 
       {/* Modal */}
       <dialog id='create_role' className='modal'>
         <div className='modal-box !overflow-y-auto !h-96'>
           <form method='dialog'>
-            <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
+            <button
+              ref={buttonCloseModal}
+              className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+            >
               <X className='w-4 h-4' />
             </button>
           </form>

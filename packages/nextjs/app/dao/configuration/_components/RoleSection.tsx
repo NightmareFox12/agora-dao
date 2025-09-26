@@ -31,17 +31,17 @@ export const RoleSection: React.FC = () => {
   });
 
   //Smart Contract
-  const { data: isUser } = useScaffoldReadContract({
+  const { data: isAdmin } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'is_user',
+    functionName: 'is_admin_role',
     args: [address],
     contractAddress: daoAddress,
-    // watch: false,
+    watch: false,
   });
 
-  const { data: isMember } = useScaffoldReadContract({
+  const { data: isManagerRole } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'is_member',
+    functionName: 'is_manager_role',
     contractAddress: daoAddress,
     args: [address],
     watch: false,
@@ -91,8 +91,8 @@ export const RoleSection: React.FC = () => {
     });
 
   //parsedData
-  const isMemberParsed = isMember as any as boolean | undefined;
-  const isUserParsed = isUser as any as boolean | undefined;
+  const isAdminParsed = isAdmin as any as boolean | undefined;
+  const isManagerRoleParsed = isManagerRole as any as boolean | undefined;
 
   //effects
   useEffect(() => {
@@ -103,10 +103,9 @@ export const RoleSection: React.FC = () => {
 
   if (
     address === undefined ||
-    isUserParsed === undefined ||
-    isMemberParsed === undefined ||
-    isUserParsed ||
-    isMemberParsed === false
+    isAdminParsed === undefined ||
+    isManagerRoleParsed === undefined ||
+    (isAdminParsed === false && isManagerRoleParsed === false)
   ) {
     return (
       <section className='h-screen sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 gap-6'>
@@ -176,7 +175,7 @@ export const RoleSection: React.FC = () => {
           </div>
 
           {/* Cards */}
-          <article className='h-screen grid grid-cols-1 md:grid-cols-2 gap-6'>
+          <article className=' grid grid-cols-1 md:grid-cols-2 gap-6'>
             {/* Role Manager card */}
             <RoleCard
               title='Role Manager'

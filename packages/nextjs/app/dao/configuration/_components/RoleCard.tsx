@@ -34,10 +34,17 @@ export const RoleCard: React.FC<RoleCardProps> = ({
               role,
             })
           }
-          className='card bg-base-200 w-full border border-gradient shadow-sm cursor-pointer hover:scale-[1.03] transition-all delay-75'
+          className='card bg-base-200 w-full border border-gradient shadow-sm cursor-pointer hover:scale-[1.03] transition-all delay-75 h-52'
         >
           <div className='card-body'>
-            <h2 className='card-title'>{title}</h2>
+            <div className='flex justify-between items-center'>
+              <h2 className='card-title'>{title}</h2>
+              {(role === 'Role Manager' || role === 'Auditor') && (
+                <span className='badge badge-secondary badge-sm mb-1'>
+                  Only Admin
+                </span>
+              )}
+            </div>
             <p className='mb-0'>{description}</p>
             <div className='flex items-center gap-2'>
               <Users className='w-5 h-5' />

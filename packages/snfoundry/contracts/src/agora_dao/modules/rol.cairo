@@ -252,7 +252,6 @@ pub fn _create_user_role(ref self: ContractState, new_user: ContractAddress) {
 pub fn _get_all_manager_role(
     self: @ContractState, caller: ContractAddress,
 ) -> Array<ContractAddress> {
-    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
     let mut res: Array<ContractAddress> = ArrayTrait::new();
 
     let mut i: u16 = 0;
@@ -266,7 +265,7 @@ pub fn _get_all_manager_role(
 pub fn _get_all_auditor_role(
     self: @ContractState, caller: ContractAddress,
 ) -> Array<ContractAddress> {
-    assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+    // assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
     let mut res: Array<ContractAddress> = ArrayTrait::new();
 
     let mut i: u16 = 0;
