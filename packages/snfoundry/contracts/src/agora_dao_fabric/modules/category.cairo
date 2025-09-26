@@ -1,18 +1,10 @@
 use OwnableComponent::InternalTrait;
 use openzeppelin_access::ownable::OwnableComponent;
-use starknet::ContractAddress;
 use starknet::storage::{
     StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
     StoragePointerWriteAccess,
 };
-use super::AgoraDaoFabric::ContractState;
-
-pub fn _add_user(ref self: ContractState, caller: ContractAddress) {
-    if (!self.users.read(caller)) {
-        self.users.write(caller, true);
-        self.user_counter.write(self.user_counter.read() + 1);
-    }
-}
+use super::super::contract::AgoraDaoFabric::ContractState;
 
 pub fn _add_category(ref self: ContractState, category: ByteArray) {
     let mut category_counter = self.category_counter.read();
@@ -29,4 +21,16 @@ pub fn _add_category(ref self: ContractState, category: ByteArray) {
 
     self.categories.write(category_counter, category);
     self.category_counter.write(category_counter + 1);
+}
+
+
+pub fn _get_all_categories(self: @ContractState) -> Array<ByteArray> {
+    let mut res: Array<ByteArray> = ArrayTrait::new();
+    let mut i: u16 = 0;
+
+    while i != self.category_counter.read() {
+        res.append(self.categories.read(i));
+        i += 1;
+    }
+    res
 }

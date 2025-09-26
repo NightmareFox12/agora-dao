@@ -1,5 +1,5 @@
 use starknet::storage::StoragePointerReadAccess;
-use super::AgoraDaoFabric::ContractState;
+use super::super::contract::AgoraDaoFabric::ContractState;
 
 pub fn create_dao_validation(
     ref self: ContractState, name: ByteArray, description: ByteArray, category_ID: u16,
