@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x387fe4dfd3faba9a039a373f5d4aa6fae87da99050b5cc328d858d5f2a1e408",
+        "0x413e60adc6c25ce5ab6d20360bda995055e82abc881871e18f05839d73520f",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x210c013218551fb5db32e59782536ca04f27e6983ae403e8d05bb662cf90f72",
+        "0x33df409c676b324ac779891275d206cc2a334fa19da20d81ce2c99821e570a7",
     },
     AgoraDao: {
       address:
-        "0x3d55e5c427053b31ca16c9ff8e0f70f859dd0c6fbaddc3b510ed57496173060",
+        "0x371dbc6cefe676e909276aa3ac2732eb88b510f53b150d8ca9ce612367ce834",
       abi: [
         {
           type: "impl",
@@ -498,7 +498,12 @@ const deployedContracts = {
             {
               type: "function",
               name: "manager_role_counter",
-              inputs: [],
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::integer::u16",
@@ -509,7 +514,12 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_manager_role",
-              inputs: [],
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
@@ -1017,7 +1027,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x691a8819bf21ac5b127c9292701a797dbff13bb5789118243ea1651dc30dab3",
+        "0x32a14106893320f4b0ebc6117bc2b9a57625c636ef9aea31d51033a66820335",
     },
   },
   sepolia: {
@@ -1514,7 +1524,12 @@ const deployedContracts = {
             {
               type: "function",
               name: "manager_role_counter",
-              inputs: [],
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::integer::u16",
@@ -1525,7 +1540,12 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_manager_role",
-              inputs: [],
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",

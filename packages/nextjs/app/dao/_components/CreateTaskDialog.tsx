@@ -477,8 +477,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 };
 
-//TODO: arreglar lo del task_manager role, eliminar lo del rol admin y poner rol manager card
-
 //TODO: el role manager puede modificar los roles de usuario,crea tarea y crea propuesta. y solo eliminar 3 veces por dia
 
 //TODO: crear una card de eventos para que se vea que esta hciendo el task manager y asi el admin pueda eliminiarlo en caso que se vuelva asesino
@@ -500,3 +498,5 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 //TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
 //TODO: inventarme la de la vaina de acceso para daos privadas
 //TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
+
+// TODO: mejorar la tabla y el modal de crear rol para que sea general y pueda cambiar segun el rol que se abre en vez de crear 4 tablas y 4 modales de agregar rol para una cosa que es lo mismo we
