@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
@@ -93,6 +93,13 @@ export const RoleSection: React.FC = () => {
   //parsedData
   const isMemberParsed = isMember as any as boolean | undefined;
   const isUserParsed = isUser as any as boolean | undefined;
+
+  //effects
+  useEffect(() => {
+    if (showData.showTable) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showData.showTable]);
 
   if (
     address === undefined ||

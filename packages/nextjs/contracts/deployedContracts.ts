@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x5300fea3631c9c944ba1c68f8edd6138ddad8c7dc5ab3ed8bc5b5ef3d883143",
+        "0x79a81b19bba503a7c67570ff8fd6f8e234cb6eb94df388b88ebf6829349c18f",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x7dbec5b84ead19be9259236bdd30b759cd20439bf7ae349afac9c15f56f6727",
+        "0x79f92e1d7bc28dd9b45975673d141d337f7539b2d9f189ed07ae86825cfefa6",
     },
     AgoraDao: {
       address:
-        "0x2805a3d9b190dcce071d6b5d57b8513ee98e02eb0c5209f8b371894b2bbf553",
+        "0x4a4f361ec0a002295e861be6f2bccb1398618da661051116a27c501333ea6f",
       abi: [
         {
           type: "impl",
@@ -494,6 +494,38 @@ const deployedContracts = {
               ],
               outputs: [],
               state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "is_admin_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
             },
             {
               type: "function",
@@ -1043,7 +1075,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x659826facab2cc04673ad82ecfab6258a3718281ba1dd89d31629b0c7c5163a",
+        "0x4de1c0e905972e47d98a4663ee96f0970f6ccf79629153e31dd5d94e8ba8260",
     },
   },
   sepolia: {
@@ -1536,6 +1568,38 @@ const deployedContracts = {
               ],
               outputs: [],
               state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "is_admin_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
             },
             {
               type: "function",

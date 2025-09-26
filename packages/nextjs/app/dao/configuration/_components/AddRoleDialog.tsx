@@ -39,6 +39,33 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
     })),
   });
 
+  const { sendAsync: createTaskRole } = useScaffoldMultiWriteContract({
+    calls: addressInputs.map((addr) => ({
+      contractName: 'AgoraDao',
+      functionName: 'create_task_creator_role',
+      args: [addr] as const,
+      contractAddress: daoAddress,
+    })),
+  });
+
+  const { sendAsync: createProposalRole } = useScaffoldMultiWriteContract({
+    calls: addressInputs.map((addr) => ({
+      contractName: 'AgoraDao',
+      functionName: 'create_proposal_creator_role',
+      args: [addr] as const,
+      contractAddress: daoAddress,
+    })),
+  });
+
+  const { sendAsync: createUserRole } = useScaffoldMultiWriteContract({
+    calls: addressInputs.map((addr) => ({
+      contractName: 'AgoraDao',
+      functionName: 'create_user_role',
+      args: [addr] as const,
+      contractAddress: daoAddress,
+    })),
+  });
+
   //functions
   const handlePlusClick = () => {
     setAddressInputs([...addressInputs, '']);
@@ -68,13 +95,18 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
         case 'Auditor':
           await createAuditorRole();
           setAddressInputs(['']);
-
           break;
         case 'Task Creator':
+          await createTaskRole();
+          setAddressInputs(['']);
           break;
         case 'Propossal Creator':
+          await createProposalRole();
+          setAddressInputs(['']);
           break;
         case 'User':
+          await createUserRole();
+          setAddressInputs(['']);
           break;
       }
     } catch (err) {

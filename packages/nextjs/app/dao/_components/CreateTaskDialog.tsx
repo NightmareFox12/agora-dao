@@ -477,6 +477,8 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 };
 
+//TODO: poner el dialog a funcionar con todos los roles y hacer verfiicaciones para evitar que coloque la addres con que esta conectado.
+
 //TODO: el role manager puede modificar los roles de usuario,crea tarea y crea propuesta. y solo eliminar 3 veces por dia
 
 //TODO: crear una card de eventos para que se vea que esta hciendo el task manager y asi el admin pueda eliminiarlo en caso que se vuelva asesino

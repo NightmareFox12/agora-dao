@@ -13,36 +13,37 @@ export const AdminModal: React.FC = () => {
   const router = useRouter();
 
   //Smart contract
-  const { data: isMember } = useScaffoldReadContract({
+  const { data: isAdmin } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'is_member',
+    functionName: 'is_admin_role',
     args: [address],
     contractAddress: daoAddress,
     watch: false,
   });
 
-  const { data: isUser } = useScaffoldReadContract({
+  const { data: isManagerRole } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'is_user',
+    functionName: 'is_manager_role',
     args: [address],
     contractAddress: daoAddress,
     watch: false,
   });
 
   //memos
-  const parsedUser = useMemo(() => {
-    return isUser as any as boolean | undefined;
-  }, [isUser]);
+  const parsedAdmin = useMemo(() => {
+    return isAdmin as any as boolean | undefined;
+  }, [isAdmin]);
 
-  const parsedMember = useMemo(() => {
-    return isMember as any as boolean | undefined;
-  }, [isMember]);
+  const parsedManagerRole = useMemo(() => {
+    return isManagerRole as any as boolean | undefined;
+  }, [isManagerRole]);
 
   const showModal =
     !isConnected ||
-    (parsedMember === undefined && parsedUser === undefined) ||
-    parsedMember === false ||
-    parsedUser;
+    (parsedAdmin === undefined && parsedManagerRole === undefined) ||
+    !parsedAdmin ||
+    !parsedManagerRole;
+
   return (
     showModal && (
       <dialog open onClose={(e) => e.preventDefault()} className='modal'>

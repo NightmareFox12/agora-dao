@@ -1,1 +1,1 @@
-pub const CLASS_HASH: felt252 = 0x659826facab2cc04673ad82ecfab6258a3718281ba1dd89d31629b0c7c5163a;
+pub const CLASS_HASH: felt252 = 0x4afdc2f8bdf22cc9074b0a1741b10bd1be3b70dc62bf13b502696e7dba13afe;

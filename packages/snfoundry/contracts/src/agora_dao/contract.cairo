@@ -25,6 +25,9 @@ pub trait IAgoraDao<TContractState> {
     fn create_user_role(ref self: TContractState, user: ContractAddress);
 
     // --- READ ROLES ---
+    fn is_admin_role(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_manager_role(self: @TContractState, caller: ContractAddress) -> bool;
+
     fn manager_role_counter(self: @TContractState, caller: ContractAddress) -> u16;
     fn get_all_manager_role(
         self: @TContractState, caller: ContractAddress,
@@ -68,7 +71,7 @@ pub mod AgoraDao {
         _create_auditor_role, _create_role_manager_role, _get_all_auditor_role,
         _get_all_manager_role,
     };
-    use super::roles::{ADMIN_ROLE, USER_ROLE};
+    use super::roles::{ADMIN_ROLE, ROLE_MANAGER_ROLE, USER_ROLE};
     use super::structs::Task;
     use super::task::{
         _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
@@ -196,6 +199,14 @@ pub mod AgoraDao {
         fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
         // --- READ ROLES ---
+        fn is_admin_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(ADMIN_ROLE, caller)
+        }
+
+        fn is_manager_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(ROLE_MANAGER_ROLE, caller)
+        }
+
         fn manager_role_counter(self: @ContractState, caller: ContractAddress) -> u16 {
             self.manager_role_counter.read()
         }
