@@ -26,11 +26,10 @@ pub trait IAgoraDao<TContractState> {
 
     // --- READ ROLES ---
     fn manager_role_counter(self: @TContractState) -> u16;
+    fn get_all_manager_role(self: @TContractState) -> Array<ContractAddress>;
 
     // --- READ STATES ---
     fn member_counter(self: @TContractState) -> u16;
-    // fn user_counter(self: @TContractState) -> u16;
-    // fn fabric(self: @TContractState) -> ContractAddress;
     fn auditor_role_counter(self: @TContractState) -> u16;
     fn task_creator_role_counter(self: @TContractState) -> u16;
     fn proposal_creator_role_counter(self: @TContractState) -> u16;
@@ -60,7 +59,7 @@ pub mod AgoraDao {
 
     //imports
     use super::events::{RoleCreated, TaskCreated, UserJoined};
-    use super::rol::_create_role_manager_role;
+    use super::rol::{_create_role_manager_role, _get_all_manager_role};
     use super::roles::{ADMIN_ROLE, USER_ROLE};
     use super::structs::Task;
     use super::task::{
@@ -186,10 +185,16 @@ pub mod AgoraDao {
 
         fn create_user_role(ref self: ContractState, user: ContractAddress) {}
 
-        // --- READ STATES ---
+        // --- READ ROLES ---
         fn manager_role_counter(self: @ContractState) -> u16 {
             self.manager_role_counter.read()
         }
+
+        fn get_all_manager_role(self: @ContractState) -> Array<ContractAddress> {
+            _get_all_manager_role(self)
+        }
+
+        // --- READ STATES ---
 
         fn member_counter(self: @ContractState) -> u16 {
             self.member_counter.read()

@@ -14,6 +14,7 @@ use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::events::RoleCreated;
 use crate::agora_dao::core::roles::{ADMIN_ROLE, ROLE_MANAGER_ROLE};
 
+// --- WRITE FUNCTIONS ---
 pub fn _create_role_manager_role(ref self: ContractState, new_role_manager: ContractAddress) {
     let caller = get_caller_address();
 
@@ -62,4 +63,17 @@ pub fn _create_role_manager_role(ref self: ContractState, new_role_manager: Cont
                 role_ID: self.manager_role_counter.read() - 1,
             },
         );
+}
+
+
+// --- READ FUNCTIONS ---
+pub fn _get_all_manager_role(self: @ContractState) -> Array<ContractAddress> {
+    let mut res: Array<ContractAddress> = ArrayTrait::new();
+
+    let mut i: u16 = 0;
+    while i != self.manager_role_counter.read() {
+        res.append(self.role_manager_roles.read(i));
+        i += 1;
+    }
+    res
 }
