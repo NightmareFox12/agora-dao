@@ -1,6 +1,6 @@
 'use client';
 
-import { Minus, Plus, UserRoundPen, X } from 'lucide-react';
+import { Loader, Minus, Plus, UserRoundPen, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { AddressInput } from '~~/components/scaffold-stark';
 import { useScaffoldMultiWriteContract } from '~~/hooks/scaffold-stark/useScaffoldMultiWriteContract';
@@ -18,12 +18,22 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
 }) => {
   //states
   const [addressInputs, setAddressInputs] = useState<string[]>(['']);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
 
   //Smart Contract
-  const { sendAsync } = useScaffoldMultiWriteContract({
+  const { sendAsync: createRoleManager } = useScaffoldMultiWriteContract({
     calls: addressInputs.map((addr) => ({
       contractName: 'AgoraDao',
       functionName: 'create_role_manager_role',
+      args: [addr] as const,
+      contractAddress: daoAddress,
+    })),
+  });
+
+  const { sendAsync: createAuditorRole } = useScaffoldMultiWriteContract({
+    calls: addressInputs.map((addr) => ({
+      contractName: 'AgoraDao',
+      functionName: 'create_auditor_role',
       args: [addr] as const,
       contractAddress: daoAddress,
     })),
@@ -48,11 +58,29 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
   };
 
   const handleSubmit = async () => {
+    setSubmitLoading(true);
     try {
-      await sendAsync();
+      switch (role) {
+        case 'Role Manager':
+          await createRoleManager();
+          setAddressInputs(['']);
+          break;
+        case 'Auditor':
+          await createAuditorRole();
+          setAddressInputs(['']);
+
+          break;
+        case 'Task Creator':
+          break;
+        case 'Propossal Creator':
+          break;
+        case 'User':
+          break;
+      }
     } catch (err) {
       console.log(err);
     } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -118,12 +146,24 @@ export const AddRoleDialog: React.FC<AddRoleDialogProps> = ({
               </button>
             </div>
             <button
-              disabled={addressInputs.every((addr) => addr.trim() === '')}
+              disabled={
+                addressInputs.every((addr) => addr.trim() === '') ||
+                submitLoading
+              }
               onClick={handleSubmit}
               className='btn btn-accent'
             >
-              <UserRoundPen className='w-4 h-4' />
-              {addressInputs.length > 1 ? 'Create Roles' : 'Create Rol'}
+              {submitLoading ? (
+                <>
+                  <Loader className='w-4 h-4 animate-spin' />
+                  Creating Role...
+                </>
+              ) : (
+                <>
+                  <UserRoundPen className='w-4 h-4' />
+                  {addressInputs.length > 1 ? 'Create Roles' : 'Create Rol'}
+                </>
+              )}
             </button>
           </div>
         </div>

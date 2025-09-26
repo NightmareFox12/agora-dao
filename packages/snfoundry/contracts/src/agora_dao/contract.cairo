@@ -99,7 +99,7 @@ pub mod AgoraDao {
         //Role counters
         pub manager_role_counter: u16,
         pub auditor_role_counter: u16,
-        pub task_creator__role_counter: u16,
+        pub task_creator_role_counter: u16,
         pub proposal_creator_role_counter: u16,
         pub user_role_counter: u16,
         //Mappings
@@ -222,7 +222,7 @@ pub mod AgoraDao {
         }
 
         fn task_creator_role_counter(self: @ContractState) -> u16 {
-            self.task_creator__role_counter.read()
+            self.task_creator_role_counter.read()
         }
 
         fn proposal_creator_role_counter(self: @ContractState) -> u16 {

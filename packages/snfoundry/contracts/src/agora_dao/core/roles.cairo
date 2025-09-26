@@ -13,7 +13,7 @@ pub const AUDITOR_ROLE: felt252 = selector!("AUDITOR_ROLE");
 pub const TASK_CREATOR_ROLE: felt252 = selector!("TASK_CREATOR_ROLE");
 
 // Autoriza la creación de propuestas y votaciones dentro del sistema.
-pub const PROPOSSAL_CREATOR_ROLE: felt252 = selector!("PROPOSSAL_CREATOR_ROLE");
+pub const PROPOSAL_CREATOR_ROLE: felt252 = selector!("PROPOSSAL_CREATOR_ROLE");
 
 // Rol base de los participantes. Pueden aceptar tareas y participar en votaciones.
 pub const USER_ROLE: felt252 = selector!("USER_ROLE");
