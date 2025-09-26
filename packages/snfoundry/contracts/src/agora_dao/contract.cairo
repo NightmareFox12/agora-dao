@@ -1,10 +1,11 @@
-mod constants;
+
 mod enums;
 mod events;
 mod functions;
 mod roles;
 mod structs;
 mod validations;
+
 
 //interface depends
 use starknet::ContractAddress;
@@ -287,6 +288,8 @@ pub mod AgoraDao {
             let caller = get_caller_address();
 
             assert!(self.accesscontrol.has_role(ADMIN_ROLE, caller), "only admin");
+
+            assert!(caller != new_role_manager,"Admin cannot be the same as new role manager");
 
             //verify manager role exist
             let manager_role_counter = self.manager_role_counter.read();
