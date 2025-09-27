@@ -4,14 +4,16 @@ use starknet::storage::{
     StoragePointerWriteAccess,
 };
 use starknet::syscalls::deploy_syscall;
-use starknet::{ClassHash, get_block_timestamp, get_caller_address, get_contract_address};
+use starknet::{
+    ClassHash, ContractAddress, get_block_timestamp, get_caller_address, get_contract_address,
+};
+use crate::agora_dao_fabric::contract::AgoraDaoFabric::ContractState;
+use crate::agora_dao_fabric::core::constants::CLASS_HASH;
 
 //imports
 use crate::agora_dao_fabric::core::events::DaoCreated;
 use crate::agora_dao_fabric::core::structs::Dao;
 use crate::agora_dao_fabric::core::validations::create_dao_validation;
-use crate::agora_dao_fabric::contract::AgoraDaoFabric::ContractState;
-use crate::agora_dao_fabric::core::constants::CLASS_HASH;
 
 pub fn _create_dao(
     ref self: ContractState,
@@ -21,7 +23,7 @@ pub fn _create_dao(
     image_URI: ByteArray,
     is_public: bool,
 ) {
-    let caller = get_caller_address();
+    let caller: ContractAddress = get_caller_address();
 
     //validations
     create_dao_validation(ref self, name.clone(), description.clone(), category_ID);
@@ -41,7 +43,7 @@ pub fn _create_dao(
 
     //store dao
     let newDao: Dao = Dao {
-        dao_ID: self.dao_counter.read(),
+        dao_id: self.dao_counter.read(),
         creator: caller,
         name: name.clone(),
         description: description,
@@ -52,7 +54,7 @@ pub fn _create_dao(
         creation_timestamp: get_block_timestamp(),
     };
 
-    self.emit(DaoCreated { dao_ID: self.dao_counter.read(), name: name });
+    self.emit(DaoCreated { dao_id: self.dao_counter.read(), name: name });
 
     self.daos.write(self.dao_counter.read(), newDao);
     self.dao_counter.write(self.dao_counter.read() + 1);

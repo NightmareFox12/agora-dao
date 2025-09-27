@@ -2,7 +2,7 @@ use starknet::ContractAddress;
 
 #[derive(Drop, Serde,starknet::Store)]
 pub struct Dao {
-    pub dao_ID: u16,
+    pub dao_id: u16,
     pub creator: ContractAddress,
     pub dao_address: ContractAddress,
     pub name: ByteArray,

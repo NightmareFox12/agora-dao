@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x7d1b480f49933e961737808ab98550a94a59a464c2b696f093372efd01afedc",
+        "0x13fdbadeb4c83395fe8760908822f99fac1f4fd05cff24a6f5aaa2cf1a4f86c",
       abi: [
         {
           type: "impl",
@@ -52,7 +52,7 @@ const deployedContracts = {
           name: "contracts::agora_dao_fabric::core::structs::Dao",
           members: [
             {
-              name: "dao_ID",
+              name: "dao_id",
               type: "core::integer::u16",
             },
             {
@@ -190,7 +190,7 @@ const deployedContracts = {
           kind: "struct",
           members: [
             {
-              name: "dao_ID",
+              name: "dao_id",
               type: "core::integer::u16",
               kind: "key",
             },
@@ -271,16 +271,30 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0xef1d4ef80f5f3abe7e6774952385ccdcdab2a61e8832ce207c9ce9d90a5fea",
+        "0x27d30a75b5d664e709443750e06464521b9003dda7b06adca82488701e40e8",
     },
     AgoraDao: {
       address:
-        "0x1575b3b971f39641aa94f7b356889d7f1f335e5a987e7631df1a429ac4b808b",
+        "0x1b14e62049e5099e80accb699896c918215e8c77165709c9437ea71a52e7780",
       abi: [
         {
           type: "impl",
           name: "AgoraDaoImpl",
           interface_name: "contracts::agora_dao::contract::IAgoraDao",
+        },
+        {
+          type: "enum",
+          name: "core::bool",
+          variants: [
+            {
+              name: "False",
+              type: "()",
+            },
+            {
+              name: "True",
+              type: "()",
+            },
+          ],
         },
         {
           type: "struct",
@@ -311,20 +325,6 @@ const deployedContracts = {
             {
               name: "high",
               type: "core::integer::u128",
-            },
-          ],
-        },
-        {
-          type: "enum",
-          name: "core::bool",
-          variants: [
-            {
-              name: "False",
-              type: "()",
-            },
-            {
-              name: "True",
-              type: "()",
             },
           ],
         },
@@ -423,35 +423,30 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "create_task",
-              inputs: [
+              name: "member_counter",
+              inputs: [],
+              outputs: [
                 {
-                  name: "title",
-                  type: "core::byte_array::ByteArray",
-                },
-                {
-                  name: "description",
-                  type: "core::byte_array::ByteArray",
-                },
-                {
-                  name: "category_ID",
                   type: "core::integer::u16",
-                },
-                {
-                  name: "difficulty_ID",
-                  type: "core::integer::u16",
-                },
-                {
-                  name: "amount",
-                  type: "core::integer::u256",
-                },
-                {
-                  name: "deadline",
-                  type: "core::integer::u64",
                 },
               ],
-              outputs: [],
-              state_mutability: "external",
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_member",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
             },
             {
               type: "function",
@@ -627,6 +622,50 @@ const deployedContracts = {
             },
             {
               type: "function",
+              name: "auditor_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "task_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "proposal_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "user_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
               name: "get_all_manager_role",
               inputs: [
                 {
@@ -707,87 +746,55 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "member_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "auditor_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "task_creator_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "proposal_creator_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "user_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "is_user",
+              name: "create_task",
               inputs: [
                 {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
+                  name: "title",
+                  type: "core::byte_array::ByteArray",
                 },
-              ],
-              outputs: [
                 {
-                  type: "core::bool",
+                  name: "description",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "category_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "difficulty_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "amount",
+                  type: "core::integer::u256",
+                },
+                {
+                  name: "deadline",
+                  type: "core::integer::u64",
                 },
               ],
-              state_mutability: "view",
+              outputs: [],
+              state_mutability: "external",
             },
             {
               type: "function",
-              name: "is_member",
+              name: "accepted_task",
               inputs: [
                 {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
+                  name: "task_id",
+                  type: "core::integer::u16",
                 },
               ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "get_available_tasks",
+              inputs: [],
               outputs: [
                 {
-                  type: "core::bool",
+                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
                 },
               ],
               state_mutability: "view",
@@ -810,17 +817,6 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "get_available_tasks",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
                 },
               ],
               state_mutability: "view",
@@ -1227,7 +1223,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x8168a7cce584e14e485ac85451581de42dd6854b80eaa034ab3c04b25a8326",
+        "0x2ae13d26efc8c00af75bd7a14240778aa082744446c64419792e0a2251925e2",
     },
   },
   sepolia: {
@@ -1278,7 +1274,7 @@ const deployedContracts = {
           name: "contracts::agora_dao_fabric::core::structs::Dao",
           members: [
             {
-              name: "dao_ID",
+              name: "dao_id",
               type: "core::integer::u16",
             },
             {
@@ -1416,7 +1412,7 @@ const deployedContracts = {
           kind: "struct",
           members: [
             {
-              name: "dao_ID",
+              name: "dao_id",
               type: "core::integer::u16",
               kind: "key",
             },
@@ -1509,6 +1505,20 @@ const deployedContracts = {
           interface_name: "contracts::agora_dao::contract::IAgoraDao",
         },
         {
+          type: "enum",
+          name: "core::bool",
+          variants: [
+            {
+              name: "False",
+              type: "()",
+            },
+            {
+              name: "True",
+              type: "()",
+            },
+          ],
+        },
+        {
           type: "struct",
           name: "core::byte_array::ByteArray",
           members: [
@@ -1537,20 +1547,6 @@ const deployedContracts = {
             {
               name: "high",
               type: "core::integer::u128",
-            },
-          ],
-        },
-        {
-          type: "enum",
-          name: "core::bool",
-          variants: [
-            {
-              name: "False",
-              type: "()",
-            },
-            {
-              name: "True",
-              type: "()",
             },
           ],
         },
@@ -1649,35 +1645,30 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "create_task",
-              inputs: [
+              name: "member_counter",
+              inputs: [],
+              outputs: [
                 {
-                  name: "title",
-                  type: "core::byte_array::ByteArray",
-                },
-                {
-                  name: "description",
-                  type: "core::byte_array::ByteArray",
-                },
-                {
-                  name: "category_ID",
                   type: "core::integer::u16",
-                },
-                {
-                  name: "difficulty_ID",
-                  type: "core::integer::u16",
-                },
-                {
-                  name: "amount",
-                  type: "core::integer::u256",
-                },
-                {
-                  name: "deadline",
-                  type: "core::integer::u64",
                 },
               ],
-              outputs: [],
-              state_mutability: "external",
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_member",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
             },
             {
               type: "function",
@@ -1853,6 +1844,50 @@ const deployedContracts = {
             },
             {
               type: "function",
+              name: "auditor_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "task_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "proposal_creator_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "user_role_counter",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u16",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
               name: "get_all_manager_role",
               inputs: [
                 {
@@ -1933,87 +1968,55 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "member_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "auditor_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "task_creator_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "proposal_creator_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "user_role_counter",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::integer::u16",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "is_user",
+              name: "create_task",
               inputs: [
                 {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
+                  name: "title",
+                  type: "core::byte_array::ByteArray",
                 },
-              ],
-              outputs: [
                 {
-                  type: "core::bool",
+                  name: "description",
+                  type: "core::byte_array::ByteArray",
+                },
+                {
+                  name: "category_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "difficulty_ID",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "amount",
+                  type: "core::integer::u256",
+                },
+                {
+                  name: "deadline",
+                  type: "core::integer::u64",
                 },
               ],
-              state_mutability: "view",
+              outputs: [],
+              state_mutability: "external",
             },
             {
               type: "function",
-              name: "is_member",
+              name: "accepted_task",
               inputs: [
                 {
-                  name: "caller",
-                  type: "core::starknet::contract_address::ContractAddress",
+                  name: "task_id",
+                  type: "core::integer::u16",
                 },
               ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "get_available_tasks",
+              inputs: [],
               outputs: [
                 {
-                  type: "core::bool",
+                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
                 },
               ],
               state_mutability: "view",
@@ -2036,17 +2039,6 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
-                },
-              ],
-              state_mutability: "view",
-            },
-            {
-              type: "function",
-              name: "get_available_tasks",
-              inputs: [],
-              outputs: [
-                {
-                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
                 },
               ],
               state_mutability: "view",

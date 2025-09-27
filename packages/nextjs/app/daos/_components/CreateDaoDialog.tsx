@@ -168,7 +168,7 @@ export const CreateDaoDialog: React.FC = () => {
       </div>
 
       <dialog ref={dialogRef} id='create_dao_modal' className='modal'>
-        <div className='modal-box sm:w-6/12 sm:!max-w-3xl md:w-6/12 md:!max-w-5xl max-h-[80dvh] !overflow-y-visible'>
+        <div className='modal-box !w-11/12 sm:!w-6/12 sm:!max-w-3xl md:!w-6/12 md:!max-w-5xl !max-h-[80dvh] !overflow-y-visible'>
           <button
             disabled={submitLoading}
             onClick={() => dialogRef.current?.close()}
@@ -394,13 +394,13 @@ export const CreateDaoDialog: React.FC = () => {
             </fieldset> */}
 
             {/* Action Buttons */}
-            <div className='modal-action justify-center'>
-              <div>
+            <div className='modal-action flex justify-center'>
+              <div className='flex gap-2 md:gap-4'>
                 <button
                   type='button'
                   onClick={() => daoForm.reset()}
                   disabled={submitLoading}
-                  className='btn btn-error mr-6'
+                  className='btn btn-error'
                 >
                   <Trash className='w-4 h-4' />
                   Clear all
