@@ -77,9 +77,9 @@ export const TableRole: React.FC<TableRoleProps> = ({
         <thead>
           <tr>
             <th>
-              <label>
+              {/* <label>
                 <input type='checkbox' className='checkbox' />
-              </label>
+              </label> */}
             </th>
             <th className='text-center'>Address</th>
           </tr>
@@ -92,9 +92,10 @@ export const TableRole: React.FC<TableRoleProps> = ({
             return (
               <tr key={y}>
                 <th>
-                  <label>
+                  {/* <label>
                     <input type='checkbox' className='checkbox' />
-                  </label>
+                  </label> */}
+                  {y + 1}
                 </th>
 
                 <td className='flex justify-center'>
