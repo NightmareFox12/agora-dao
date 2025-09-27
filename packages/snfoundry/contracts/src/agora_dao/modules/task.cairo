@@ -15,7 +15,7 @@ use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
 use crate::agora_dao::core::events::{TaskAccepted, TaskCreated};
-use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE};
+use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE, USER_ROLE};
 use crate::agora_dao::core::structs::Task;
 use crate::agora_dao::core::validations::_create_task_validation;
 
@@ -120,6 +120,11 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     let current_time: u64 = get_block_timestamp();
     let mut task: Task = self.tasks.read(task_id);
 
+    assert!(
+        self.accesscontrol.has_role(USER_ROLE, caller)
+            || self.accesscontrol.has_role(ADMIN_ROLE, caller),
+        "role no cumplided",
+    );
     assert!(task.title.len() > 0, "Task does not exist");
     assert!(task.status == TaskStatus::OPEN, "Task is not open");
     assert!(task.accepted_by.is_none(), "Task already accepted");

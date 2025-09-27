@@ -80,7 +80,6 @@ export const DaoGrid: React.FC = () => {
         <article className='container px-2 sm:px-2 md:max-w-6xl mx-auto py-8'>
           <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
             {filterDaos.map((dao) => {
-              console.log(dao)
               const x = dao as unknown as IDao;
 
               if (address === undefined) return;
