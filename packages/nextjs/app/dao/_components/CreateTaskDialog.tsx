@@ -292,7 +292,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
             <textarea
               {...taskForm.register('description')}
               placeholder='e.g. I am developing a collection of NFTs with an educational focus, designed to teach basic concepts of blockchain and decentralization in a visual and accessible way. I am looking for a designer with creative sensibility and experience in digital illustration who wants to collaborate on the creation of the first prototypes. The idea is to combine art with pedagogy, so if you are interested in the intersection between design and education, this task is for you. Previous experience with NFTs is not necessary, but a desire to experiment and build something meaningful is.'
-              className='textarea resize-none h-40 w-full bg-base-300'
+              className='textarea resize-none h-42 w-full bg-base-300'
             />
             <div className='flex justify-between'>
               {taskForm.formState.errors.description ? (
@@ -496,7 +496,7 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
           {/* Action Buttons */}
           <div className='modal-action flex-col items-center'>
-            {(isAdminParsed === false || isTaskCreatorParsed === false) && (
+            {isAdminParsed === false && isTaskCreatorParsed === false && (
               <p className='my-1 text-error text-sm font-semibold'>
                 Only Admin or Task Creator.
               </p>
@@ -546,17 +546,13 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   );
 };
 
-//TODO: poner el dialog a funcionar con todos los roles y hacer verfiicaciones para evitar que coloque la addres con que esta conectado.
-
 //TODO: el role manager puede modificar los roles de usuario,crea tarea y crea propuesta. y solo eliminar 3 veces por dia
 
-//TODO: crear una card de eventos para que se vea que esta hciendo el task manager y asi el admin pueda eliminiarlo en caso que se vuelva asesino
+//TODO:  el admin pueda eliminar el task_manager en caso que se vuelva asesino
 
 //TODO: hacer verificaciones especiales si el rol tiene aceptada una tarea o creo una y esta en progreso. porque si se le afecta el rol hay que tener eso en cuenta
 
 //TODO: agregar un modal de primera vez para decirle que vaya a editar los permisos
-
-//TODO: luego de subir mi primer tarea hacer lo de los roles para que no todos puedan subir tareas
 
 //TODO: en config establecer lo de los roles con graficas y data
 
@@ -569,5 +565,3 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 //TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
 //TODO: inventarme la de la vaina de acceso para daos privadas
 //TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
-
-// TODO: mejorar la tabla y el modal de crear rol para que sea general y pueda cambiar segun el rol que se abre en vez de crear 4 tablas y 4 modales de agregar rol para una cosa que es lo mismo we
