@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x75fde0f84193c9c934976f62aeb5bc29e62836ad31881dae79f1d242ed82eca",
+        "0x2b5736e101eae5e3530fb89814a1fad879a1ee375b22539750e177722cc0fcf",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x4f25f689822273f0823e9736bd8dbf909abbc4edf5f1c3de3ea30d528116caa",
+        "0x1d749beb95b95c153a5c202ab60540547a8f87c30f64c884f496421d564e64f",
     },
     AgoraDao: {
       address:
-        "0x3294842f07a454a1b9f829a5a92afeb4add813eacead5b9fecf2baab6e96ed",
+        "0x42875c6e30a79f4a0ecb8e7b9950cf8e95eb2b29cc0e49497e96b5e89193211",
       abi: [
         {
           type: "impl",
@@ -514,6 +514,70 @@ const deployedContracts = {
             {
               type: "function",
               name: "is_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_auditor_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_task_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_proposal_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_user_role",
               inputs: [
                 {
                   name: "caller",
@@ -1123,7 +1187,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x13e0003c81cea0d02f0914e4b4d29ff9dc974b401ea5431f73135ce1e298b38",
+        "0x6578ce03f682fe6f411b92b10aafe0d1c612668fc2313517a62fa13fc1106f",
     },
   },
   sepolia: {
@@ -1636,6 +1700,70 @@ const deployedContracts = {
             {
               type: "function",
               name: "is_manager_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_auditor_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_task_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_proposal_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::bool",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "is_user_role",
               inputs: [
                 {
                   name: "caller",

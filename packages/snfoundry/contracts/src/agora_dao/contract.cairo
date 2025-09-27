@@ -27,6 +27,10 @@ pub trait IAgoraDao<TContractState> {
     // --- READ ROLES ---
     fn is_admin_role(self: @TContractState, caller: ContractAddress) -> bool;
     fn is_manager_role(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_auditor_role(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_task_creator_role(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_proposal_creator_role(self: @TContractState, caller: ContractAddress) -> bool;
+    fn is_user_role(self: @TContractState, caller: ContractAddress) -> bool;
 
     fn manager_role_counter(self: @TContractState, caller: ContractAddress) -> u16;
     fn get_all_manager_role(
@@ -63,6 +67,7 @@ pub trait IAgoraDao<TContractState> {
 pub mod AgoraDao {
     //OpenZeppelin imports
     use openzeppelin_access::accesscontrol::AccessControlComponent;
+    use openzeppelin_access::accesscontrol::interface::IAccessControl;
     use openzeppelin_introspection::src5::SRC5Component;
     use starknet::ContractAddress;
 
@@ -76,11 +81,14 @@ pub mod AgoraDao {
     //imports
     use super::events::{RoleCreated, TaskCreated, UserJoined};
     use super::rol::{
-        _create_auditor_role, _create_role_manager_role, _get_all_auditor_role,
-        _get_all_manager_role, _get_all_proposal_creator_role, _get_all_task_creator_role,
-        _get_all_user_role,
+        _create_auditor_role, _create_proposal_creator_role, _create_role_manager_role,
+        _create_task_creator_role, _create_user_role, _get_all_auditor_role, _get_all_manager_role,
+        _get_all_proposal_creator_role, _get_all_task_creator_role, _get_all_user_role,
     };
-    use super::roles::{ADMIN_ROLE, ROLE_MANAGER_ROLE, USER_ROLE};
+    use super::roles::{
+        ADMIN_ROLE, AUDITOR_ROLE, PROPOSAL_CREATOR_ROLE, ROLE_MANAGER_ROLE, TASK_CREATOR_ROLE,
+        USER_ROLE,
+    };
     use super::structs::Task;
     use super::task::{
         _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
@@ -199,13 +207,19 @@ pub mod AgoraDao {
             _create_auditor_role(ref self, auditor)
         }
 
-        fn create_task_creator_role(ref self: ContractState, task_creator: ContractAddress) {}
+        fn create_task_creator_role(ref self: ContractState, task_creator: ContractAddress) {
+            _create_task_creator_role(ref self, task_creator)
+        }
 
         fn create_proposal_creator_role(
             ref self: ContractState, proposal_creator: ContractAddress,
-        ) {}
+        ) {
+            _create_proposal_creator_role(ref self, proposal_creator)
+        }
 
-        fn create_user_role(ref self: ContractState, user: ContractAddress) {}
+        fn create_user_role(ref self: ContractState, user: ContractAddress) {
+            _create_user_role(ref self, user)
+        }
 
         // --- READ ROLES ---
         fn is_admin_role(self: @ContractState, caller: ContractAddress) -> bool {
@@ -214,6 +228,22 @@ pub mod AgoraDao {
 
         fn is_manager_role(self: @ContractState, caller: ContractAddress) -> bool {
             self.has_role(ROLE_MANAGER_ROLE, caller)
+        }
+
+        fn is_auditor_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(AUDITOR_ROLE, caller)
+        }
+
+        fn is_task_creator_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(TASK_CREATOR_ROLE, caller)
+        }
+
+        fn is_proposal_creator_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(PROPOSAL_CREATOR_ROLE, caller)
+        }
+
+        fn is_user_role(self: @ContractState, caller: ContractAddress) -> bool {
+            self.has_role(USER_ROLE, caller)
         }
 
         fn manager_role_counter(self: @ContractState, caller: ContractAddress) -> u16 {

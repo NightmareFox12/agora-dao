@@ -1,6 +1,13 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader, Pen, Trash, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -127,6 +134,22 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
   };
 
   //Smart contract
+  const { data: isAdmin } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_admin_role',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
+  const { data: isTaskCreator } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'is_task_creator_role',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
   const { value: userBalance, isLoading: userBalanceLoading } =
     useScaffoldStrkBalance({
       address,
@@ -168,6 +191,17 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
       functionName: 'get_task_difficulties',
       contractAddress: daoAddress,
     });
+
+  //parsed data
+  const isAdminParsed = useMemo(
+    () => isAdmin as any as boolean | undefined,
+    [isAdmin]
+  );
+
+  const isTaskCreatorParsed = useMemo(
+    () => isTaskCreator as any as boolean | undefined,
+    [isTaskCreator]
+  );
 
   //effects
   useEffect(() => {
@@ -437,7 +471,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               from being stuck)
             </div>
           </details>
-
           <details className='collapse collapse-arrow bg-base-300 border'>
             <summary className='collapse-title font-semibold'>
               Who can create tasks?
@@ -448,12 +481,12 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               authorized to create new tasks:
               <br />
               <br />
-              - Admin: This role is assigned only to the DAO creator/owner
-              and grants full permissions across the platform.
-              <br />- **Task Creator:** Users explicitly assigned this role by
-              an Admin or a Roles Manager user. This allows teams and key
-              members to contribute to the task backlog without having full
-              Admin rights.
+              - Admin: This role is assigned only to the DAO creator/owner and
+              grants full permissions across the platform.
+              <br />- Task Creator: Users explicitly assigned this role by an
+              Admin or a Roles Manager user. This allows teams and key members
+              to contribute to the task backlog without having full Admin
+              rights.
               <br />
               <br />
               If you need to create a task but do not have one of these roles,
@@ -462,42 +495,50 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
           </details>
 
           {/* Action Buttons */}
-          <div className='modal-action justify-center'>
-            <div>
-              <button
-                type='button'
-                onClick={() => taskForm.reset()}
-                disabled={submitLoading}
-                className='btn btn-error mr-6'
-              >
-                <Trash className='w-4 h-4' />
-                Clear all
-              </button>
+          <div className='modal-action flex-col items-center'>
+            {(isAdminParsed === false || isTaskCreatorParsed === false) && (
+              <p className='my-1 text-error text-sm font-semibold'>
+                Only Admin or Task Creator.
+              </p>
+            )}
 
-              <button
-                type='submit'
-                disabled={
-                  taskCategoriesLoading ||
-                  taskDifficultiesLoading ||
-                  taskForm.formState.isSubmitting ||
-                  userBalanceLoading ||
-                  submitLoading ||
-                  !taskForm.formState.isValid
-                }
-                className='btn btn-accent'
-              >
-                {submitLoading ? (
-                  <>
-                    <Loader className='w-4 h-4 animate-spin' />
-                    Creating DAO
-                  </>
-                ) : (
-                  <>
-                    <Pen className='w-4 h-4' /> Create Task
-                  </>
-                )}
-              </button>
-            </div>
+            {(isAdminParsed === true || isTaskCreatorParsed === true) && (
+              <div>
+                <button
+                  type='button'
+                  onClick={() => taskForm.reset()}
+                  disabled={submitLoading}
+                  className='btn btn-error mr-6'
+                >
+                  <Trash className='w-4 h-4' />
+                  Clear all
+                </button>
+
+                <button
+                  type='submit'
+                  disabled={
+                    taskCategoriesLoading ||
+                    taskDifficultiesLoading ||
+                    taskForm.formState.isSubmitting ||
+                    userBalanceLoading ||
+                    submitLoading ||
+                    !taskForm.formState.isValid
+                  }
+                  className='btn btn-accent'
+                >
+                  {submitLoading ? (
+                    <>
+                      <Loader className='w-4 h-4 animate-spin' />
+                      Creating Task...
+                    </>
+                  ) : (
+                    <>
+                      <Pen className='w-4 h-4' /> Create Task
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </form>
       </div>
