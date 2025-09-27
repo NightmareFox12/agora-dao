@@ -46,5 +46,5 @@ pub fn _join_dao(ref self: ContractState) {
     self.user_role_counter.write(user_role_counter + 1);
 
     //emit event
-    self.emit(UserJoined { user: caller, user_ID: member_id });
+    self.emit(UserJoined { user: caller, user_id: member_id });
 }

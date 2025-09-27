@@ -8,13 +8,13 @@ use starknet::storage::{
     StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
     StoragePointerWriteAccess,
 };
-use starknet::{ContractAddress, get_caller_address, get_contract_address};
+use starknet::{ContractAddress, get_block_timestamp, get_caller_address, get_contract_address};
 
 //imports
 use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
-use crate::agora_dao::core::events::TaskCreated;
+use crate::agora_dao::core::events::{TaskAccepted, TaskCreated};
 use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE};
 use crate::agora_dao::core::structs::Task;
 use crate::agora_dao::core::validations::_create_task_validation;
@@ -65,6 +65,7 @@ pub fn _create_task(
                 reward: amount,
                 deadline: deadline,
                 status: TaskStatus::OPEN,
+                accepted_by: Option::None,
             },
         );
 
@@ -73,7 +74,7 @@ pub fn _create_task(
         .emit(
             TaskCreated {
                 creator: caller,
-                task_ID: task_id,
+                task_id: task_id,
                 title: title,
                 category: self.task_categories.read(category_ID),
                 reward: amount,
@@ -113,6 +114,25 @@ pub fn _add_task_difficulty(ref self: ContractState, difficulty: ByteArray) {
     self.task_difficulties.write(difficulty_counter, difficulty);
     self.task_difficulty_counter.write(difficulty_counter + 1);
 }
+
+pub fn _accept_task(ref self: ContractState, task_id: u16) {
+    let caller: ContractAddress = get_caller_address();
+    let current_time: u64 = get_block_timestamp();
+    let mut task: Task = self.tasks.read(task_id);
+
+    assert!(task.title.len() > 0, "Task does not exist");
+    assert!(task.status == TaskStatus::OPEN, "Task is not open");
+    assert!(task.accepted_by.is_none(), "Task already accepted");
+    assert!(task.creator != caller, "Task creator cannot accept their own task");
+    assert!(current_time <= task.deadline, "Task deadline has passed");
+
+    task.accepted_by = Some(caller);
+    task.status = TaskStatus::IN_PROGRESS;
+    self.tasks.write(task_id, task);
+
+    self.emit(TaskAccepted { task_id: task_id, accepted_by: caller })
+}
+
 
 // --- READ FUNCTIONS ---
 pub fn _get_task_categories(self: @ContractState) -> Array<ByteArray> {

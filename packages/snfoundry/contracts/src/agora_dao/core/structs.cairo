@@ -1,7 +1,6 @@
 use starknet::ContractAddress;
 use super::enums::TaskStatus;
 
-
 #[derive(Drop, Serde, Clone, starknet::Store)]
 pub struct Task {
     pub task_id: u16,
@@ -13,4 +12,5 @@ pub struct Task {
     pub reward: u256,
     pub deadline: u64,
     pub status: TaskStatus,
+    pub accepted_by: Option<ContractAddress>,
 }

@@ -79,7 +79,7 @@ pub mod AgoraDao {
     use super::dao::_join_dao;
 
     //imports
-    use super::events::{RoleCreated, TaskCreated, UserJoined};
+    use super::events::{RoleCreated, TaskAccepted, TaskCreated, UserJoined};
     use super::rol::{
         _create_auditor_role, _create_proposal_creator_role, _create_role_manager_role,
         _create_task_creator_role, _create_user_role, _get_all_auditor_role, _get_all_manager_role,
@@ -145,6 +145,7 @@ pub mod AgoraDao {
         UserJoined: UserJoined,
         TaskCreated: TaskCreated,
         RoleCreated: RoleCreated,
+        TaskAccepted: TaskAccepted,
         #[flat]
         AccessControlEvent: AccessControlComponent::Event,
         #[flat]

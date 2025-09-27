@@ -15,7 +15,7 @@ pub fn _emit_create_role(
     self
         .emit(
             RoleCreated {
-                assigned_by: caller, assigned_to: new_role, role_name: role_name, role_ID: counter,
+                assigned_by: caller, assigned_to: new_role, role_name: role_name, role_id: counter,
             },
         );
 }

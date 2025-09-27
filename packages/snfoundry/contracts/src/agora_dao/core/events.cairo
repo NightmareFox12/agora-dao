@@ -4,7 +4,7 @@ use starknet::ContractAddress;
 pub struct UserJoined {
     #[key]
     pub user: ContractAddress,
-    pub user_ID: u16,
+    pub user_id: u16,
 }
 
 #[derive(Drop, starknet::Event)]
@@ -12,7 +12,7 @@ pub struct TaskCreated {
     #[key]
     pub creator: ContractAddress,
     #[key]
-    pub task_ID: u16,
+    pub task_id: u16,
     pub title: ByteArray,
     pub category: ByteArray,
     pub reward: u256,
@@ -27,5 +27,13 @@ pub struct RoleCreated {
     pub assigned_to: ContractAddress,
     #[key]
     pub role_name: felt252,
-    pub role_ID: u16,
+    pub role_id: u16,
+}
+
+#[derive(Drop, starknet::Event)]
+pub struct TaskAccepted {
+    #[key]
+    pub task_id: u16,
+    #[key]
+    pub accepted_by: ContractAddress,
 }

@@ -3,13 +3,15 @@ import { Check, Info } from 'lucide-react';
 import React from 'react';
 import { num } from 'starknet';
 import { Address } from '~~/components/scaffold-stark/Address';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { ITask } from '~~/types/task';
 
 type TaskCardProps = {
   task: ITask;
+  daoAddress: string;
 };
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({ task, daoAddress }) => {
   //parsed data
   const parsedAddress = num.toHex(task.creator);
   const status = task.status.activeVariant();
@@ -18,11 +20,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     .slice(0, 10)
     .replace(/-/g, '/');
 
+  //Smart contract
+  const { data: totalCounter } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'auditor_role_counter',
+    args: ['0xd8da6bf26964af9d7eed9e03e53415d37aa9604'],
+    contractAddress: daoAddress,
+  });
+
   //functions
   const showModal = () => {
     const modal = document.getElementById('modal_info') as HTMLDialogElement;
     modal.showModal();
   };
+
+  const handleAcceptTask = () => {};
 
   return (
     <>
@@ -41,7 +53,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           </div>
 
           <div className='flex justify-center mt-5'>
-            <button className='btn btn-accent btn-sm'>
+            <button
+              className='btn btn-accent btn-sm'
+              onClick={handleAcceptTask}
+            >
               <Check className='w-4 h-4' />
               Accept task
             </button>

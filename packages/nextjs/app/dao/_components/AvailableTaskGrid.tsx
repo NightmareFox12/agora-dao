@@ -53,7 +53,7 @@ export const AvailableTaskGrid: React.FC = () => {
         availableTasks.map((x, y) => {
           const task = x as unknown as ITask;
 
-          return <TaskCard key={y} task={task} />;
+          return <TaskCard key={y} task={task} daoAddress={daoAddress} />;
         })
       )}
     </section>
