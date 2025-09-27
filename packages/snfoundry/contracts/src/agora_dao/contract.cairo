@@ -35,6 +35,14 @@ pub trait IAgoraDao<TContractState> {
     fn get_all_auditor_role(
         self: @TContractState, caller: ContractAddress,
     ) -> Array<ContractAddress>;
+    fn get_all_task_creator_role(
+        self: @TContractState, caller: ContractAddress,
+    ) -> Array<ContractAddress>;
+    fn get_all_proposal_creator_role(
+        self: @TContractState, caller: ContractAddress,
+    ) -> Array<ContractAddress>;
+    fn get_all_user_role(self: @TContractState, caller: ContractAddress) -> Array<ContractAddress>;
+
 
     // --- READ STATES ---
     fn member_counter(self: @TContractState) -> u16;
@@ -69,7 +77,8 @@ pub mod AgoraDao {
     use super::events::{RoleCreated, TaskCreated, UserJoined};
     use super::rol::{
         _create_auditor_role, _create_role_manager_role, _get_all_auditor_role,
-        _get_all_manager_role,
+        _get_all_manager_role, _get_all_proposal_creator_role, _get_all_task_creator_role,
+        _get_all_user_role,
     };
     use super::roles::{ADMIN_ROLE, ROLE_MANAGER_ROLE, USER_ROLE};
     use super::structs::Task;
@@ -221,6 +230,24 @@ pub mod AgoraDao {
             self: @ContractState, caller: ContractAddress,
         ) -> Array<ContractAddress> {
             _get_all_auditor_role(self, caller)
+        }
+
+        fn get_all_task_creator_role(
+            self: @ContractState, caller: ContractAddress,
+        ) -> Array<ContractAddress> {
+            _get_all_task_creator_role(self, caller)
+        }
+
+        fn get_all_proposal_creator_role(
+            self: @ContractState, caller: ContractAddress,
+        ) -> Array<ContractAddress> {
+            _get_all_proposal_creator_role(self, caller)
+        }
+
+        fn get_all_user_role(
+            self: @ContractState, caller: ContractAddress,
+        ) -> Array<ContractAddress> {
+            _get_all_user_role(self, caller)
         }
 
         // --- READ STATES ---

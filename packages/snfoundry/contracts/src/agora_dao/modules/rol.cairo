@@ -253,9 +253,10 @@ pub fn _get_all_manager_role(
     self: @ContractState, caller: ContractAddress,
 ) -> Array<ContractAddress> {
     let mut res: Array<ContractAddress> = ArrayTrait::new();
-
     let mut i: u16 = 0;
-    while i != self.manager_role_counter.read() {
+
+    let manager_role_counter: u16 = self.manager_role_counter.read();
+    while i != manager_role_counter {
         res.append(self.role_manager_roles.read(i));
         i += 1;
     }
@@ -266,10 +267,51 @@ pub fn _get_all_auditor_role(
     self: @ContractState, caller: ContractAddress,
 ) -> Array<ContractAddress> {
     let mut res: Array<ContractAddress> = ArrayTrait::new();
-
     let mut i: u16 = 0;
-    while i != self.auditor_role_counter.read() {
+
+    let auditor_role_counter: u16 = self.auditor_role_counter.read();
+    while i != auditor_role_counter {
         res.append(self.auditor_roles.read(i));
+        i += 1;
+    }
+    res
+}
+
+pub fn _get_all_task_creator_role(
+    self: @ContractState, caller: ContractAddress,
+) -> Array<ContractAddress> {
+    let mut res: Array<ContractAddress> = ArrayTrait::new();
+    let mut i: u16 = 0;
+
+    let task_creator_role_counter: u16 = self.task_creator_role_counter.read();
+    while i != task_creator_role_counter {
+        res.append(self.task_creator_roles.read(i));
+        i += 1;
+    }
+    res
+}
+
+pub fn _get_all_proposal_creator_role(
+    self: @ContractState, caller: ContractAddress,
+) -> Array<ContractAddress> {
+    let mut res: Array<ContractAddress> = ArrayTrait::new();
+    let mut i: u16 = 0;
+
+    let proposal_creator_counter: u16 = self.proposal_creator_role_counter.read();
+    while i != proposal_creator_counter {
+        res.append(self.proposal_creator_roles.read(i));
+        i += 1;
+    }
+    res
+}
+
+pub fn _get_all_user_role(self: @ContractState, caller: ContractAddress) -> Array<ContractAddress> {
+    let mut res: Array<ContractAddress> = ArrayTrait::new();
+    let mut i: u16 = 0;
+
+    let user_role_counter: u16 = self.user_role_counter.read();
+    while i != user_role_counter {
+        res.append(self.user_roles.read(i));
         i += 1;
     }
     res

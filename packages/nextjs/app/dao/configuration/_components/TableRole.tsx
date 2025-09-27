@@ -25,17 +25,25 @@ const useTableData = (
     watch: false,
   });
 
-  const { data: adminData3 } = useScaffoldReadContract({
+  const { data: allTaskCreator } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'user_role_counter',
+    functionName: 'get_all_task_creator_role',
     args: [address],
     contractAddress: daoAddress,
     watch: false,
   });
 
-  const { data: adminData4 } = useScaffoldReadContract({
+  const { data: AllProposalCreator } = useScaffoldReadContract({
     contractName: 'AgoraDao',
-    functionName: 'user_role_counter',
+    functionName: 'get_all_proposal_creator_role',
+    args: [address],
+    contractAddress: daoAddress,
+    watch: false,
+  });
+
+  const { data: AllUser } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_all_user_role',
     args: [address],
     contractAddress: daoAddress,
     watch: false,
@@ -47,11 +55,11 @@ const useTableData = (
     case 'Auditor':
       return allAuditor;
     case 'Task Creator':
-      return adminData3;
+      return allTaskCreator;
     case 'Propossal Creator':
-      return adminData4;
+      return AllProposalCreator;
     case 'User':
-      return adminData4;
+      return AllUser;
     default:
       return [];
   }

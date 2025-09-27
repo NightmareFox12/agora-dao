@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x217c475a55e9b5f6d3911b4d42a097ce5f04cf5411c85773e0c2b8ba33a029b",
+        "0x4f3015cb0186a3f2469f8948fe6c24da16f8ee20610d2a6fc41242bc9339a97",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x1f6691a640ffb3fb5bb4a1d43bd1d7ee58e488e18ef6e7f6b7f68afb6d5cf9c",
+        "0x4f25f689822273f0823e9736bd8dbf909abbc4edf5f1c3de3ea30d528116caa",
     },
     AgoraDao: {
       address:
-        "0x6e8c5450171f7030ca4c62248323f5fdb6424bac7367b050f01bba9239ac73",
+        "0x54447156ca636c304928597d10b16e38eda96f7fd5f24e75d6e21bf773b4b70",
       abi: [
         {
           type: "impl",
@@ -562,6 +562,54 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_auditor_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_task_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_proposal_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_user_role",
               inputs: [
                 {
                   name: "caller",
@@ -1075,7 +1123,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x20897ef6085cec06ff3fb29c787f0e3801370b72159b2571ba056905771d190",
+        "0x13e0003c81cea0d02f0914e4b4d29ff9dc974b401ea5431f73135ce1e298b38",
     },
   },
   sepolia: {
@@ -1636,6 +1684,54 @@ const deployedContracts = {
             {
               type: "function",
               name: "get_all_auditor_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_task_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_proposal_creator_role",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_all_user_role",
               inputs: [
                 {
                   name: "caller",
