@@ -10,7 +10,7 @@ const TaskPage: NextPage = async () => {
     <section>
       <TaskClientController />
 
-      <div className='w-full flex justify-center'>
+      <div>
         <div className='tabs tabs-lift flex justify-center'>
           <label className='tab'>
             <input type='radio' name='my_tabs_4' defaultChecked />

@@ -34,12 +34,8 @@ pub fn _create_task(
         ref self, title.clone(), description.clone(), category_ID, difficulty_ID, amount, deadline,
     );
 
-    let caller = get_caller_address();
+    let caller: ContractAddress = get_caller_address();
 
-    //TODO: crear una super funcion para verificar el rol/roles
-    //TODO: lo que se me ocurrio a futuro es poner condicionales para darle permisos a los
-    //roles. por ejemplo: que el admin pueda elegir si los usuarios pueden crear tareas
-    //(true/false)
     assert!(
         self.accesscontrol.has_role(ADMIN_ROLE, caller)
             || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
@@ -48,7 +44,9 @@ pub fn _create_task(
 
     //transfer
     let strk_contract_address: ContractAddress = FELT_STRK_CONTRACT.try_into().unwrap();
-    let strk_dispatcher = IERC20Dispatcher { contract_address: strk_contract_address };
+    let strk_dispatcher: IERC20Dispatcher = IERC20Dispatcher {
+        contract_address: strk_contract_address,
+    };
     strk_dispatcher.transfer_from(caller, get_contract_address(), amount);
 
     //save task
@@ -69,6 +67,7 @@ pub fn _create_task(
                 status: TaskStatus::OPEN,
             },
         );
+
     //emit event
     self
         .emit(
@@ -88,7 +87,7 @@ pub fn _create_task(
 pub fn _add_task_category(ref self: ContractState, category: ByteArray) {
     assert!(category.len() > 0, "category name must not be empty");
 
-    let mut category_counter = self.task_category_counter.read();
+    let mut category_counter: u16 = self.task_category_counter.read();
     let mut i: u16 = 0;
 
     while i != category_counter {
@@ -103,7 +102,7 @@ pub fn _add_task_category(ref self: ContractState, category: ByteArray) {
 pub fn _add_task_difficulty(ref self: ContractState, difficulty: ByteArray) {
     assert!(difficulty.len() > 0, "difficulty name must not be empty");
 
-    let mut difficulty_counter = self.task_difficulty_counter.read();
+    let mut difficulty_counter: u16 = self.task_difficulty_counter.read();
     let mut i: u16 = 0;
 
     while i != difficulty_counter {
