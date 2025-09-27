@@ -1,5 +1,5 @@
 export interface IDao {
-  dao_ID: bigint;
+  dao_id: bigint;
   dao_address: bigint;
   creator: bigint;
   name: string;

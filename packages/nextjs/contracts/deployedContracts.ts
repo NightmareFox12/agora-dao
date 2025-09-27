@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x2c740c23654e67e471e7404b2b18fe3229d1cacf2d395667526ab7030ea4f06",
+        "0x7d1b480f49933e961737808ab98550a94a59a464c2b696f093372efd01afedc",
       abi: [
         {
           type: "impl",
@@ -275,7 +275,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x62c191d0de1f5b01b1902b87c9c699ac592ed108611a1d0d6ba9dc6fffdb189",
+        "0x1575b3b971f39641aa94f7b356889d7f1f335e5a987e7631df1a429ac4b808b",
       abi: [
         {
           type: "impl",
@@ -351,6 +351,20 @@ const deployedContracts = {
           ],
         },
         {
+          type: "enum",
+          name: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
+          variants: [
+            {
+              name: "Some",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "None",
+              type: "()",
+            },
+          ],
+        },
+        {
           type: "struct",
           name: "contracts::agora_dao::core::structs::Task",
           members: [
@@ -389,6 +403,10 @@ const deployedContracts = {
             {
               name: "status",
               type: "contracts::agora_dao::core::enums::TaskStatus",
+            },
+            {
+              name: "accepted_by",
+              type: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
             },
           ],
         },
@@ -957,7 +975,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "user_ID",
+              name: "user_id",
               type: "core::integer::u16",
               kind: "data",
             },
@@ -974,7 +992,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "task_ID",
+              name: "task_id",
               type: "core::integer::u16",
               kind: "key",
             },
@@ -1021,9 +1039,26 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "role_ID",
+              name: "role_id",
               type: "core::integer::u16",
               kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao::core::events::TaskAccepted",
+          kind: "struct",
+          members: [
+            {
+              name: "task_id",
+              type: "core::integer::u16",
+              kind: "key",
+            },
+            {
+              name: "accepted_by",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
             },
           ],
         },
@@ -1174,6 +1209,11 @@ const deployedContracts = {
               kind: "nested",
             },
             {
+              name: "TaskAccepted",
+              type: "contracts::agora_dao::core::events::TaskAccepted",
+              kind: "nested",
+            },
+            {
               name: "AccessControlEvent",
               type: "openzeppelin_access::accesscontrol::accesscontrol::AccessControlComponent::Event",
               kind: "flat",
@@ -1187,7 +1227,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x6578ce03f682fe6f411b92b10aafe0d1c612668fc2313517a62fa13fc1106f",
+        "0x8168a7cce584e14e485ac85451581de42dd6854b80eaa034ab3c04b25a8326",
     },
   },
   sepolia: {
@@ -1537,6 +1577,20 @@ const deployedContracts = {
           ],
         },
         {
+          type: "enum",
+          name: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
+          variants: [
+            {
+              name: "Some",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+            {
+              name: "None",
+              type: "()",
+            },
+          ],
+        },
+        {
           type: "struct",
           name: "contracts::agora_dao::core::structs::Task",
           members: [
@@ -1575,6 +1629,10 @@ const deployedContracts = {
             {
               name: "status",
               type: "contracts::agora_dao::core::enums::TaskStatus",
+            },
+            {
+              name: "accepted_by",
+              type: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
             },
           ],
         },
@@ -2143,7 +2201,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "user_ID",
+              name: "user_id",
               type: "core::integer::u16",
               kind: "data",
             },
@@ -2160,7 +2218,7 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "task_ID",
+              name: "task_id",
               type: "core::integer::u16",
               kind: "key",
             },
@@ -2207,9 +2265,26 @@ const deployedContracts = {
               kind: "key",
             },
             {
-              name: "role_ID",
+              name: "role_id",
               type: "core::integer::u16",
               kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::agora_dao::core::events::TaskAccepted",
+          kind: "struct",
+          members: [
+            {
+              name: "task_id",
+              type: "core::integer::u16",
+              kind: "key",
+            },
+            {
+              name: "accepted_by",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "key",
             },
           ],
         },
@@ -2357,6 +2432,11 @@ const deployedContracts = {
             {
               name: "RoleCreated",
               type: "contracts::agora_dao::core::events::RoleCreated",
+              kind: "nested",
+            },
+            {
+              name: "TaskAccepted",
+              type: "contracts::agora_dao::core::events::TaskAccepted",
               kind: "nested",
             },
             {

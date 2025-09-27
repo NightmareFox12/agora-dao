@@ -85,8 +85,8 @@ export const DaoGrid: React.FC = () => {
               if (address === undefined) return;
               return (
                 <DaoCard
-                  key={x.dao_ID}
-                  daoID={x.dao_ID}
+                  key={x.dao_id}
+                  daoID={x.dao_id}
                   daoAddress={num.toHex(x.dao_address)}
                   creatorAddress={num.toHex(x.creator)}
                   userAddress={num.cleanHex(address.toString())}

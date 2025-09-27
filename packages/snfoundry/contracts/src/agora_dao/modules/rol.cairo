@@ -6,7 +6,9 @@ use starknet::storage::{
     StorageMapReadAccess, StorageMapWriteAccess, StoragePointerReadAccess,
     StoragePointerWriteAccess,
 };
+use starknet::syscalls::call_contract_syscall;
 use starknet::{ContractAddress, get_caller_address};
+
 
 //imports
 use crate::agora_dao::contract::AgoraDao::ContractState;
@@ -213,7 +215,7 @@ pub fn _create_user_role(ref self: ContractState, new_user: ContractAddress) {
     );
     assert!(caller != new_user, "Caller and new task creator must be different");
 
-    //verify manager role exist
+    //verify user role exist
     let user_role_counter: u16 = self.user_role_counter.read();
     let mut i: u16 = 0;
 
@@ -227,7 +229,6 @@ pub fn _create_user_role(ref self: ContractState, new_user: ContractAddress) {
 
     let empty_contract: ContractAddress = TryInto::try_into(0x0).unwrap();
 
-    //save role manager
     while j != user_role_counter {
         if (self.user_roles.read(j) == empty_contract) {
             empty_space = true;
@@ -237,6 +238,27 @@ pub fn _create_user_role(ref self: ContractState, new_user: ContractAddress) {
     }
 
     self.accesscontrol._grant_role(USER_ROLE, new_user);
+
+    //add member into counter
+    let member_id: u16 = self.member_counter.read();
+    self.members.write(member_id, caller);
+    self.member_counter.write(member_id + 1);
+
+    //save user into fabric
+    let sel: felt252 = selector!("add_user");
+    let calldata: Span<felt252> = [caller.into()].span();
+    if let Ok(_r) =
+        call_contract_syscall(self.fabric.read(), selector!("add_user"), [caller.into()].span()) {}
+
+    match call_contract_syscall(self.fabric.read(), sel, calldata) {
+        Ok(_) => {},
+        Err(e) => { panic!("fabric.add_user failed: {:?}", e); },
+    }
+
+    let res: Result<Span<felt252>> = call_contract_syscall(self.fabric.read(), sel, calldata);
+
+    //show err
+    assert!(!res.is_err(), "fabric.add_user failed: {:?}", res.unwrap_err());
 
     if (empty_space) {
         self.user_roles.write(j, new_user);

@@ -5,17 +5,12 @@ use super::modules::{dao, rol, task};
 
 #[starknet::interface]
 pub trait IAgoraDao<TContractState> {
-    // --- WRITE FUNCTIONS ---
+    // --- WRITE DAO ---
     fn join_dao(ref self: TContractState);
-    fn create_task(
-        ref self: TContractState,
-        title: ByteArray,
-        description: ByteArray,
-        category_ID: u16,
-        difficulty_ID: u16,
-        amount: u256,
-        deadline: u64,
-    );
+
+    // --- READ DAO ---
+    fn member_counter(self: @TContractState) -> u16;
+    fn is_member(self: @TContractState, caller: ContractAddress) -> bool;
 
     // --- WRITE ROLES ---
     fn create_role_manager_role(ref self: TContractState, new_role_manager: ContractAddress);
@@ -33,6 +28,11 @@ pub trait IAgoraDao<TContractState> {
     fn is_user_role(self: @TContractState, caller: ContractAddress) -> bool;
 
     fn manager_role_counter(self: @TContractState, caller: ContractAddress) -> u16;
+    fn auditor_role_counter(self: @TContractState) -> u16;
+    fn task_creator_role_counter(self: @TContractState) -> u16;
+    fn proposal_creator_role_counter(self: @TContractState) -> u16;
+    fn user_role_counter(self: @TContractState) -> u16;
+
     fn get_all_manager_role(
         self: @TContractState, caller: ContractAddress,
     ) -> Array<ContractAddress>;
@@ -47,20 +47,23 @@ pub trait IAgoraDao<TContractState> {
     ) -> Array<ContractAddress>;
     fn get_all_user_role(self: @TContractState, caller: ContractAddress) -> Array<ContractAddress>;
 
+    // --- WRITE TASKS ---
+    fn create_task(
+        ref self: TContractState,
+        title: ByteArray,
+        description: ByteArray,
+        category_ID: u16,
+        difficulty_ID: u16,
+        amount: u256,
+        deadline: u64,
+    );
 
-    // --- READ STATES ---
-    fn member_counter(self: @TContractState) -> u16;
-    fn auditor_role_counter(self: @TContractState) -> u16;
-    fn task_creator_role_counter(self: @TContractState) -> u16;
-    fn proposal_creator_role_counter(self: @TContractState) -> u16;
-    fn user_role_counter(self: @TContractState) -> u16;
+    fn accepted_task(ref self: TContractState, task_id: u16);
 
-    // --- READ FUNCTIONS ---
-    fn is_user(self: @TContractState, caller: ContractAddress) -> bool;
-    fn is_member(self: @TContractState, caller: ContractAddress) -> bool;
+    // --- READ TASKS ---
+    fn get_available_tasks(self: @TContractState) -> Array<Task>;
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
-    fn get_available_tasks(self: @TContractState) -> Array<Task>;
 }
 
 #[starknet::contract]
@@ -91,7 +94,7 @@ pub mod AgoraDao {
     };
     use super::structs::Task;
     use super::task::{
-        _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
+        _accept_task, _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
         _get_task_categories, _get_task_difficulties,
     };
 
@@ -187,16 +190,22 @@ pub mod AgoraDao {
             _join_dao(ref self)
         }
 
-        fn create_task(
-            ref self: ContractState,
-            title: ByteArray,
-            description: ByteArray,
-            category_ID: u16,
-            difficulty_ID: u16,
-            amount: u256,
-            deadline: u64,
-        ) {
-            _create_task(ref self, title, description, category_ID, difficulty_ID, amount, deadline)
+        // --- READ DAO ---
+        fn member_counter(self: @ContractState) -> u16 {
+            self.member_counter.read()
+        }
+
+        fn is_member(self: @ContractState, caller: ContractAddress) -> bool {
+            let mut i: u16 = 0;
+            let member_counter: u16 = self.member_counter.read();
+
+            while i != member_counter {
+                if self.members.read(i) == caller {
+                    return true;
+                }
+                i += 1;
+            }
+            false
         }
 
         // --- WRITE ROLES ---
@@ -251,6 +260,22 @@ pub mod AgoraDao {
             self.manager_role_counter.read()
         }
 
+        fn auditor_role_counter(self: @ContractState) -> u16 {
+            self.auditor_role_counter.read()
+        }
+
+        fn task_creator_role_counter(self: @ContractState) -> u16 {
+            self.task_creator_role_counter.read()
+        }
+
+        fn proposal_creator_role_counter(self: @ContractState) -> u16 {
+            self.proposal_creator_role_counter.read()
+        }
+
+        fn user_role_counter(self: @ContractState) -> u16 {
+            self.user_role_counter.read()
+        }
+
         fn get_all_manager_role(
             self: @ContractState, caller: ContractAddress,
         ) -> Array<ContractAddress> {
@@ -281,45 +306,25 @@ pub mod AgoraDao {
             _get_all_user_role(self, caller)
         }
 
-        // --- READ STATES ---
-        fn member_counter(self: @ContractState) -> u16 {
-            self.member_counter.read()
+
+        // --- WRITE TASKS ---
+        fn create_task(
+            ref self: ContractState,
+            title: ByteArray,
+            description: ByteArray,
+            category_ID: u16,
+            difficulty_ID: u16,
+            amount: u256,
+            deadline: u64,
+        ) {
+            _create_task(ref self, title, description, category_ID, difficulty_ID, amount, deadline)
         }
 
-        fn auditor_role_counter(self: @ContractState) -> u16 {
-            self.auditor_role_counter.read()
+        fn accepted_task(ref self: ContractState, task_id: u16) {
+            _accept_task(ref self, task_id)
         }
 
-        fn task_creator_role_counter(self: @ContractState) -> u16 {
-            self.task_creator_role_counter.read()
-        }
-
-        fn proposal_creator_role_counter(self: @ContractState) -> u16 {
-            self.proposal_creator_role_counter.read()
-        }
-
-        fn user_role_counter(self: @ContractState) -> u16 {
-            self.user_role_counter.read()
-        }
-
-        // --- READ FUNCTIONS ---
-        fn is_member(self: @ContractState, caller: ContractAddress) -> bool {
-            let mut i: u16 = 0;
-            let member_counter: u16 = self.member_counter.read();
-
-            while i != member_counter {
-                if self.members.read(i) == caller {
-                    return true;
-                }
-                i += 1;
-            }
-            false
-        }
-
-        fn is_user(self: @ContractState, caller: ContractAddress) -> bool {
-            self.has_role(USER_ROLE, caller)
-        }
-
+        // --- READ TASKS ---
         fn get_task_categories(self: @ContractState) -> Array<ByteArray> {
             _get_task_categories(self)
         }

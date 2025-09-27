@@ -1,3 +1,4 @@
+use starknet::ContractAddress;
 use openzeppelin_access::accesscontrol::AccessControlComponent::{
     AccessControlCamelImpl, AccessControlWithDelayImpl, InternalImpl,
 };
@@ -13,19 +14,19 @@ use crate::agora_dao::core::events::UserJoined;
 use crate::agora_dao::core::roles::{ADMIN_ROLE, USER_ROLE};
 
 pub fn _join_dao(ref self: ContractState) {
-    let caller = get_caller_address();
+    let caller: ContractAddress = get_caller_address();
 
     assert!(!self.accesscontrol.has_role(USER_ROLE, get_caller_address()), "User already joined");
     assert!(!self.accesscontrol.has_role(ADMIN_ROLE, get_caller_address()), "Creator cannot join");
 
     //add member into counter
-    let member_id = self.member_counter.read();
+    let member_id: u16 = self.member_counter.read();
     self.members.write(member_id, caller);
     self.member_counter.write(member_id + 1);
 
     //save user into fabric
-    let sel = selector!("add_user");
-    let calldata = [caller.into()].span();
+    let sel: felt252 = selector!("add_user");
+    let calldata: Span<felt252> = [caller.into()].span();
     if let Ok(_r) =
         call_contract_syscall(self.fabric.read(), selector!("add_user"), [caller.into()].span()) {}
 
@@ -34,7 +35,7 @@ pub fn _join_dao(ref self: ContractState) {
         Err(e) => { panic!("fabric.add_user failed: {:?}", e); },
     }
 
-    let res = call_contract_syscall(self.fabric.read(), sel, calldata);
+    let res: Result<Span<felt252>> = call_contract_syscall(self.fabric.read(), sel, calldata);
 
     //show err
     assert!(!res.is_err(), "fabric.add_user failed: {:?}", res.unwrap_err());
