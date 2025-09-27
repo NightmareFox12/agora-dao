@@ -15,7 +15,7 @@ use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
 use crate::agora_dao::core::events::TaskCreated;
-use crate::agora_dao::core::roles::{ADMIN_ROLE, AUDITOR_ROLE, TASK_CREATOR_ROLE};
+use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE};
 use crate::agora_dao::core::structs::Task;
 use crate::agora_dao::core::validations::_create_task_validation;
 
@@ -42,7 +42,6 @@ pub fn _create_task(
     //(true/false)
     assert!(
         self.accesscontrol.has_role(ADMIN_ROLE, caller)
-            || self.accesscontrol.has_role(AUDITOR_ROLE, caller)
             || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
         "role no cumplided",
     );
@@ -53,7 +52,7 @@ pub fn _create_task(
     strk_dispatcher.transfer_from(caller, get_contract_address(), amount);
 
     //save task
-    let task_id = self.task_counter.read();
+    let task_id: u16 = self.task_counter.read();
     self
         .tasks
         .write(

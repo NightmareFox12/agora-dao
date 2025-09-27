@@ -1,3 +1,4 @@
+import { Frown } from 'lucide-react';
 import { useMemo } from 'react';
 import { hash, num, shortString } from 'starknet';
 import { Address } from '~~/components/scaffold-stark';
@@ -46,56 +47,66 @@ export const LastChangesDialog: React.FC<LastChangesDialogProps> = ({
     <dialog id='last_changes' className='modal'>
       <div className='modal-box !w-11/12 !max-w-5xl'>
         <h3 className='font-bold text-lg'>Check the last changes</h3>
-        <p className='py-4'>Press ESC key or click outside to close</p>
+        <p className='py-2'>
+          View the latest changes and modifications applied to system roles in
+          this log table.
+        </p>
 
-        <div className='overflow-x-auto'>
-          <table className='table table-zebra'>
-            {/* head */}
-            <thead>
-              <tr>
-                <th></th>
-                <th>Role</th>
-                <th>Assigned By</th>
-                <th>Assigned To</th>
-              </tr>
-            </thead>
-            <tbody>
-              {parsedEvent.map((x, y) => {
-                const decodedName = roleMap[num.toHex(x.parsedArgs.role_name)];
+        {parsedEvent.length === 0 ? (
+          <div className='flex flex-col justify-center items-center'>
+            <p className='font-semibold'>No data</p>
+            <Frown className='w-20 h-20' />
+          </div>
+        ) : (
+          <div className='overflow-x-auto'>
+            <table className='table table-zebra'>
+              {/* head */}
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Role</th>
+                  <th>Assigned By</th>
+                  <th>Assigned To</th>
+                </tr>
+              </thead>
+              <tbody>
+                {parsedEvent.map((x, y) => {
+                  const decodedName =
+                    roleMap[num.toHex(x.parsedArgs.role_name)];
 
-                return (
-                  <tr key={y}>
-                    {/* <th>{x.parsedArgs.role_ID}</th> */}
-                    <th>{y}</th>
-                    <td>
-                      <span className='badge badge-accent badge-sm'>
-                        {decodedName}
-                      </span>
-                    </td>
-                    <td>
-                      <Address
-                        address={
-                          num.cleanHex(
-                            x.parsedArgs.assigned_by
-                          ) as `0x${string}`
-                        }
-                      />
-                    </td>
-                    <td>
-                      <Address
-                        address={
-                          num.cleanHex(
-                            x.parsedArgs.assigned_to
-                          ) as `0x${string}`
-                        }
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                  return (
+                    <tr key={y}>
+                      <th>{y}</th>
+                      <td>
+                        <span className='badge badge-accent badge-sm'>
+                          {decodedName}
+                        </span>
+                      </td>
+                      <td>
+                        <Address
+                          address={
+                            num.cleanHex(
+                              x.parsedArgs.assigned_by
+                            ) as `0x${string}`
+                          }
+                        />
+                      </td>
+                      <td>
+                        <Address
+                          address={
+                            num.cleanHex(
+                              x.parsedArgs.assigned_to
+                            ) as `0x${string}`
+                          }
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
       <form method='dialog' className='modal-backdrop'>
         <button>close</button>

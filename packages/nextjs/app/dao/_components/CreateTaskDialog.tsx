@@ -430,6 +430,34 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               - The task is completed and approved
               <br />- The deadline expires without execution (you will be able
               to recover your funds)
+              <br />- The task is canceled by the creator, provided no one has
+              accepted it yet (you will be able to recover your funds)
+              <br />- If no deadline is set, the creator can reclaim the funds
+              after 60 days of inactivity by the assigned user (to prevent tasks
+              from being stuck)
+            </div>
+          </details>
+
+          <details className='collapse collapse-arrow bg-base-300 border'>
+            <summary className='collapse-title font-semibold'>
+              Who can create tasks?
+            </summary>
+            <div className='collapse-content text-sm'>
+              Task creation is a privileged action, restricted to ensure
+              platform security and quality. Only the following users are
+              authorized to create new tasks:
+              <br />
+              <br />
+              - Admin: This role is assigned only to the DAO creator/owner
+              and grants full permissions across the platform.
+              <br />- **Task Creator:** Users explicitly assigned this role by
+              an Admin or a Roles Manager user. This allows teams and key
+              members to contribute to the task backlog without having full
+              Admin rights.
+              <br />
+              <br />
+              If you need to create a task but do not have one of these roles,
+              please contact your DAO Admin.
             </div>
           </details>
 

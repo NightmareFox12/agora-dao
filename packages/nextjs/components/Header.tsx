@@ -47,7 +47,7 @@ export const HeaderMenuLinks = () => {
   useEffect(() => {
     setIsDark(theme === 'dark');
   }, [theme]);
-  
+
   return (
     <>
       {menuLinks.map(({ label, href, icon }) => {
@@ -141,17 +141,13 @@ export const Header = () => {
           >
             <Bars3Icon className='h-1/2' />
           </label>
-          {isDrawerOpen && (
-            <ul
-              tabIndex={0}
-              className='menu menu-compact dropdown-content mt-3 p-2 shadow-sm rounded-box w-52 bg-base-100'
-              onClick={() => {
-                setIsDrawerOpen(false);
-              }}
-            >
-              <HeaderMenuLinks />
-            </ul>
-          )}
+
+          <ul
+            tabIndex={0}
+            className='dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm'
+          >
+            <HeaderMenuLinks />
+          </ul>
         </div>
         <Link
           href='/'
