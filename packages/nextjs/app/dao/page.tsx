@@ -5,18 +5,18 @@ import { FilePen, FolderOpen } from 'lucide-react';
 import { TaskClientController } from './_components/TaskClientController';
 import { TaskGrid } from './_components/TaskGrid';
 
-const TaskPage: NextPage = async () => {
-  //components
-  const TaskTabSection = ({
-    tabName,
-  }: {
-    tabName: 'available' | 'created' | 'accepted';
-  }) => (
-    <div className='tab-content bg-base-100 border-base-300 p-6'>
-      <TaskGrid tabName={tabName} />
-    </div>
-  );
+//components
+const TaskTabSection = ({
+  tabName,
+}: {
+  tabName: 'available' | 'created' | 'accepted';
+}) => (
+  <div className='tab-content bg-base-100 border-base-300 p-6'>
+    <TaskGrid tabName={tabName} />
+  </div>
+);
 
+const TaskPage: NextPage = () => {
   return (
     <section>
       <TaskClientController />

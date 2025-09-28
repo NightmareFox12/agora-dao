@@ -7,13 +7,6 @@ import { TaskCard } from './TaskCard';
 import { ITask } from '~~/types/task';
 import { LoadingCards } from './LoadingCard';
 
-const priorityColors = {
-  low: 'bg-blue-100 text-blue-800 border-blue-200',
-  medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  high: 'bg-orange-100 text-orange-800 border-orange-200',
-  critical: 'bg-red-100 text-red-800 border-red-200',
-};
-
 const statusColors = {
   pending: 'bg-gray-100 text-gray-800 border-gray-200',
   'in-progress': 'bg-blue-100 text-blue-800 border-blue-200',
@@ -43,7 +36,6 @@ export const TaskGrid: React.FC<TaskGridProps> = ({ tabName }) => {
       ) : (
         availableTasks.map((x, y) => {
           const task = x as unknown as ITask;
-
           return <TaskCard key={y} task={task} daoAddress={daoAddress} />;
         })
       )}

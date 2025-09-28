@@ -6,7 +6,7 @@ export interface ITask {
   title: string;
   description: string;
   category: string;
-  difficulty: string;
+  difficulty: 'TRIVIAL' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   reward: bigint;
   deadline: bigint;
   status: CairoCustomEnum;

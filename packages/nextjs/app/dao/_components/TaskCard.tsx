@@ -8,6 +8,62 @@ import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWri
 import { useAccount } from '~~/hooks/useAccount';
 import { ITask } from '~~/types/task';
 
+const difficultyColors = {
+  ['TRIVIAL']: 'bg-blue-200 text-blue-800 border-blue-200',
+  ['LOW']: 'bg-blue-100 text-blue-800 border-blue-200',
+  ['MEDIUM']: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  ['HIGH']: 'bg-orange-100 text-orange-800 border-orange-200',
+  ['CRITICAL']: 'bg-red-100 text-red-800 border-red-200',
+};
+
+//Components
+type TaskInfoDialogProps = {
+  task: ITask;
+  parsedDate: string;
+  parsedCreatorAddress: `0x${string}`;
+  parsedUserAddress: string;
+  handleAcceptTask: () => Promise<void>;
+};
+
+const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
+  task,
+  parsedDate,
+  parsedCreatorAddress,
+  parsedUserAddress,
+  handleAcceptTask,
+}) => (
+  <dialog id={`modal_info_${task.task_id}`} className='modal'>
+    <div className='modal-box'>
+      <h3 className='font-bold text-lg'>{task.title}</h3>
+      <p className='py-1'>{task.description}</p>
+
+      <div>
+        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
+        <p className='my-1'>Deadline: {parsedDate}</p>
+        <p className='my-1'>Creator:</p>
+        <Address address={parsedCreatorAddress} />
+      </div>
+
+      <div className='flex justify-center mt-5'>
+        <button
+          onClick={handleAcceptTask}
+          disabled={
+            parsedCreatorAddress === parsedUserAddress ||
+            task.status.activeVariant() === 'OPEN'
+          }
+          className='btn btn-accent btn-sm'
+        >
+          <Check className='w-4 h-4' />
+          Accept task
+        </button>
+      </div>
+    </div>
+    <form method='dialog' className='modal-backdrop'>
+      <button>Close</button>
+    </form>
+  </dialog>
+);
+
 type TaskCardProps = {
   task: ITask;
   daoAddress: string;
@@ -41,8 +97,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, daoAddress }) => {
   });
 
   //functions
-  const showModal = () => {
-    const modal = document.getElementById('modal_info') as HTMLDialogElement;
+  const showModal = (id: string) => {
+    const modal = document.getElementById(id) as HTMLDialogElement;
     modal.showModal();
   };
 
@@ -57,44 +113,35 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, daoAddress }) => {
   return (
     <>
       {/* Modal */}
-      <dialog id='modal_info' className='modal'>
-        <div className='modal-box'>
-          <h3 className='font-bold text-lg'>{task.title}</h3>
-          <p className='py-1'>{task.description}</p>
-
-          <div>
-            <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
-            <p className='my-1'>Deadline: {parsedDate}</p>
-            <p className='my-1'>Creator:</p>
-            <Address address={parsedCreatorAddress as `0x${string}`} />
-          </div>
-
-          <div className='flex justify-center mt-5'>
-            <button
-              onClick={handleAcceptTask}
-              disabled={parsedCreatorAddress === parsedUserAddress}
-              className='btn btn-accent btn-sm'
-            >
-              <Check className='w-4 h-4' />
-              Accept task
-            </button>
-          </div>
-        </div>
-        <form method='dialog' className='modal-backdrop'>
-          <button>Close</button>
-        </form>
-      </dialog>
+      <TaskInfoDialog
+        task={task}
+        parsedDate={parsedDate}
+        parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
+        parsedUserAddress={parsedUserAddress}
+        handleAcceptTask={handleAcceptTask}
+      />
 
       {/* Card */}
       <article className='card bg-base-200 shadow-sm border border-gradient'>
         <div className='card-body'>
-          <h2 className='card-title break-all'>{task.title}</h2>
-          <div className='badge badge-warning badge-sm'>{status}</div>
+          <div className='flex justify-between'>
+            <h2 className='card-title break-all'>{task.title}</h2>
+            <span
+              className={`badge badge-warning badge-sm ${difficultyColors[task.difficulty]}`}
+            >
+              {task.difficulty}
+            </span>
+          </div>
+
+          <span className='badge badge-warning badge-sm'>{status}</span>
           <p className='my-1 break-all line-clamp-3'>{task.description}</p>
           <Address address={parsedCreatorAddress as `0x${string}`} />
           <p className='my-0 font-bold'>{formatEther(task.reward)} STRK</p>
           <div className='card-actions justify-center'>
-            <button onClick={showModal} className='btn btn-accent'>
+            <button
+              onClick={() => showModal(`modal_info_${task.task_id}`)}
+              className='btn btn-accent'
+            >
               <Info className='w-4 h-4' />
               Info
             </button>
