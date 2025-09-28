@@ -138,8 +138,35 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     self.emit(TaskAccepted { task_id: task_id, accepted_by: caller })
 }
 
-
 // --- READ FUNCTIONS ---
+pub fn _get_available_tasks(self: @ContractState) -> Array<Task> {
+    let mut res: Array<Task> = ArrayTrait::new();
+    let mut i: u16 = 0;
+    let task_counter: u16 = self.task_counter.read();
+
+    while i != task_counter {
+        if self.tasks.read(i).status == TaskStatus::OPEN {
+            res.append(self.tasks.read(i));
+        }
+        i += 1;
+    }
+    res
+}
+
+pub fn _get_created_task(self: @ContractState, caller: ContractAddress) -> Array<Task> {
+    let mut res: Array<Task> = ArrayTrait::new();
+    let mut i: u16 = 0;
+    let task_counter: u16 = self.task_counter.read();
+
+    while i != task_counter {
+        if self.tasks.read(i).creator == caller {
+            res.append(self.tasks.read(i));
+        }
+        i += 1;
+    }
+    res
+}
+
 pub fn _get_task_categories(self: @ContractState) -> Array<ByteArray> {
     let mut res: Array<ByteArray> = ArrayTrait::new();
     let mut i: u16 = 0;
@@ -162,16 +189,3 @@ pub fn _get_task_difficulties(self: @ContractState) -> Array<ByteArray> {
     res
 }
 
-pub fn _get_available_tasks(self: @ContractState) -> Array<Task> {
-    let mut res: Array<Task> = ArrayTrait::new();
-    let mut i: u16 = 0;
-    let task_counter: u16 = self.task_counter.read();
-
-    while i != task_counter {
-        if self.tasks.read(i).status == TaskStatus::OPEN {
-            res.append(self.tasks.read(i));
-        }
-        i += 1;
-    }
-    res
-}

@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x3d777b499ecaeffdf8b561a19706ebd272a634455ad040c59eb02b7bbebaf19",
+        "0x36c1acc278171a85478fe2786c0649121210eb16b488077a5bc50dfd3d3ebaf",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x127e3aac3dc892a6067e79411f0e095f88614ab5019d648619880f1470a9adf",
+        "0x5b3627a5b031d106c1ce303d401bfec3c425adb6f9efb47c1c2ace5d301c0dd",
     },
     AgoraDao: {
       address:
-        "0x4ca54924f0af67190cc5d316aaf736de63627eb315f7bad7ed5ca8f347cc50a",
+        "0x4d675568d4f43eb395e315d20e857098091b07a148d644b0c0400f81341b89c",
       abi: [
         {
           type: "impl",
@@ -801,6 +801,22 @@ const deployedContracts = {
             },
             {
               type: "function",
+              name: "get_created_tasks",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [
+                {
+                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
               name: "get_task_categories",
               inputs: [],
               outputs: [
@@ -1223,7 +1239,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x3efd2dc65503bdb4fc0a25f127c46958a261aa047ff950f832ba86ab35601df",
+        "0x710383e1a5e802b93e3883d985dfa1e5821c27b112a0a4a31cff9cb3a0adbc9",
     },
   },
   sepolia: {
@@ -2014,6 +2030,22 @@ const deployedContracts = {
               type: "function",
               name: "get_available_tasks",
               inputs: [],
+              outputs: [
+                {
+                  type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_created_tasks",
+              inputs: [
+                {
+                  name: "caller",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
               outputs: [
                 {
                   type: "core::array::Array::<contracts::agora_dao::core::structs::Task>",
