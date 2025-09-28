@@ -1,14 +1,11 @@
 'use client';
 
-import { CalendarDays, Coins, Info, User } from 'lucide-react';
 import React from 'react';
-import { Address } from '~~/components/scaffold-stark';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
-import { CairoCustomEnum, num } from 'starknet';
-import { formatEther } from 'ethers';
 import { useDaoState } from '~~/services/store/dao';
 import { TaskCard } from './TaskCard';
 import { ITask } from '~~/types/task';
+import { LoadingCards } from './LoadingCard';
 
 const priorityColors = {
   low: 'bg-blue-100 text-blue-800 border-blue-200',
@@ -24,7 +21,11 @@ const statusColors = {
   completed: 'bg-green-100 text-green-800 border-green-200',
 };
 
-export const AvailableTaskGrid: React.FC = () => {
+type TaskGridProps = {
+  tabName: 'available' | 'created' | 'accepted';
+};
+
+export const TaskGrid: React.FC<TaskGridProps> = ({ tabName }) => {
   const { daoAddress } = useDaoState();
 
   //Smart Contract
@@ -34,16 +35,6 @@ export const AvailableTaskGrid: React.FC = () => {
       functionName: 'get_available_tasks',
       contractAddress: daoAddress,
     });
-
-  //components
-  const LoadingCards = () => {
-    const arr = new Array(9).fill(0);
-    return arr.map((_, y) => (
-      <div key={y + '-loading'} className='flex justify-center items-center'>
-        <div className='h-56 w-[300px] max-w-[400px] skeleton bg-primary' />
-      </div>
-    ));
-  };
 
   return (
     <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

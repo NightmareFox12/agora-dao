@@ -1,41 +1,48 @@
 'use server';
 
 import { NextPage } from 'next';
-import { AvailableTaskGrid } from './_components/AvailableTaskGrid';
-import { FolderOpen } from 'lucide-react';
+import { FilePen, FolderOpen } from 'lucide-react';
 import { TaskClientController } from './_components/TaskClientController';
+import { TaskGrid } from './_components/TaskGrid';
 
 const TaskPage: NextPage = async () => {
+  //components
+  const TaskTabSection = ({
+    tabName,
+  }: {
+    tabName: 'available' | 'created' | 'accepted';
+  }) => (
+    <div className='tab-content bg-base-100 border-base-300 p-6'>
+      <TaskGrid tabName={tabName} />
+    </div>
+  );
+
   return (
     <section>
       <TaskClientController />
 
+      {/* Tabs */}
       <div>
         <div className='tabs tabs-lift flex justify-center'>
           <label className='tab'>
-            <input type='radio' name='my_tabs_4' defaultChecked />
+            <input type='radio' name='task_section' defaultChecked />
             <FolderOpen className='size-4 me-2' />
             Available
           </label>
-          <div className='tab-content bg-base-100 border-base-300 p-6'>
-            <AvailableTaskGrid />
-          </div>
+          <TaskTabSection tabName='available' />
 
           <label className='tab'>
-            <input type='radio' name='my_tabs_4' />
+            <input type='radio' name='task_section' />
+            <FilePen className='size-4 me-2' />
             Created
           </label>
-          <div className='tab-content bg-base-100 border-base-300 p-6'>
-            Tab content 2
-          </div>
+          <TaskTabSection tabName='created' />
 
           <label className='tab'>
-            <input type='radio' name='my_tabs_4' />
+            <input type='radio' name='task_section' />
             Accepted
           </label>
-          <div className='tab-content bg-base-100 border-base-300 p-6'>
-            Tab content 3
-          </div>
+          <TaskTabSection tabName='accepted' />
         </div>
       </div>
     </section>

@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x7eb3b69aad87e64bcfa6f27c2a36c6f5180125d8b7e7f314c2762715378d13d",
+        "0x3d777b499ecaeffdf8b561a19706ebd272a634455ad040c59eb02b7bbebaf19",
       abi: [
         {
           type: "impl",
@@ -275,7 +275,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x3ce03d5ceb980e254de70a2d725cf599b052d4ac93372e4c0e769973ec06404",
+        "0x4ca54924f0af67190cc5d316aaf736de63627eb315f7bad7ed5ca8f347cc50a",
       abi: [
         {
           type: "impl",
