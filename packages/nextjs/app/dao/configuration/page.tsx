@@ -3,7 +3,7 @@
 import { NextPage } from 'next';
 import { RoleSection } from './_components/RoleSection';
 import { ConfigurationClientController } from './_components/ConfigurationClientController';
-import { ChartNoAxesColumn, ChartNoAxesCombined, Shield } from 'lucide-react';
+import { ChartNoAxesCombined, Shield } from 'lucide-react';
 
 const ConfigurationPage: NextPage = async () => {
   return (
