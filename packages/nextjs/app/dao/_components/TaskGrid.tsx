@@ -36,8 +36,11 @@ const AvailableTasks = ({ daoAddress }: { daoAddress: string }) => {
       {availableTasksLoading || availableTasks === undefined ? (
         <LoadingCards />
       ) : parsedAvailableTasks.length === 0 ? (
-        <div className='col-span-full text-center '>
+        <div className='col-span-full text-center h-screen'>
           No available tasks at the moment.
+          <div className='col-span-full flex justify-center mt-2'>
+            <Frown className='size-20' />
+          </div>
         </div>
       ) : (
         parsedAvailableTasks.map((x, y) => {
@@ -86,7 +89,7 @@ const CreatedTasks = ({
         </div>
       ) : (
         parsedAvailableTasks.map((x, y) => {
-          const task = x as unknown as ITask;
+          const task = x as any as ITask;
           return <TaskCard key={y} task={task} daoAddress={daoAddress} />;
         })
       )}
