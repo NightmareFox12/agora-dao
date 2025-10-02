@@ -55,6 +55,7 @@ const AvailableTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
               task={x}
               daoAddress={daoAddress}
               userAddress={userAddress}
+              type='available'
             />
           );
         })
@@ -87,7 +88,7 @@ const AcceptedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
       ) : parsedAvailableTasks.length === 0 ? (
         <div className='h-screen col-span-full'>
           <p className='col-span-full text-center'>
-            You have not created any tasks yet.
+            You have not accepted any tasks yet.
           </p>
           <div className='col-span-full flex justify-center'>
             <Frown className='size-20' />
@@ -102,6 +103,7 @@ const AcceptedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
               task={task}
               daoAddress={daoAddress}
               userAddress={userAddress}
+              type='accepted'
             />
           );
         })
@@ -120,7 +122,7 @@ const CreatedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
       contractAddress: daoAddress,
     });
 
-  const parsedAvailableTasks = useMemo(() => {
+  const parsedCreatedTasks = useMemo(() => {
     if (createdTasks === undefined) return [];
     return createdTasks as any as ITask[];
   }, [createdTasks]);
@@ -131,7 +133,7 @@ const CreatedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
       createdTasks === undefined ||
       userAddress === undefined ? (
         <LoadingCards />
-      ) : parsedAvailableTasks.length === 0 ? (
+      ) : parsedCreatedTasks.length === 0 ? (
         <div className='h-screen col-span-full'>
           <p className='col-span-full text-center'>
             You have not created any tasks yet.
@@ -141,7 +143,7 @@ const CreatedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
           </div>
         </div>
       ) : (
-        parsedAvailableTasks.map((x, y) => {
+        parsedCreatedTasks.map((x, y) => {
           const task = x as any as ITask;
           return (
             <TaskCard
@@ -149,6 +151,7 @@ const CreatedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
               task={task}
               daoAddress={daoAddress}
               userAddress={userAddress}
+              type='created'
             />
           );
         })

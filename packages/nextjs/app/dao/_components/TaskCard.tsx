@@ -32,7 +32,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
   parsedUserAddress,
   handleAcceptTask,
 }) => (
-  <dialog id={`modal_info_${task.task_id}`} className='modal'>
+  <dialog id={`modal_info`} className='modal'>
     <div className='modal-box'>
       <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
         {task.title}
@@ -70,6 +70,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
 
 type TaskCardProps = {
   task: ITask;
+  type: 'created' | 'accepted' | 'completed' | 'available';
   userAddress: string;
   daoAddress: string;
 };
@@ -139,7 +140,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           <p className='my-0 font-bold'>{formatEther(task.reward)} STRK</p>
           <div className='card-actions justify-center'>
             <button
-              onClick={() => showModal(`modal_info_${task.task_id}`)}
+              onClick={() => showModal(`modal_info`)}
               className='btn btn-accent'
             >
               <Info className='w-4 h-4' />
