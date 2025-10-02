@@ -12,18 +12,18 @@ import {
 import { useScaffoldEventHistory } from '~~/hooks/scaffold-stark/useScaffoldEventHistory';
 import { useDaoState } from '~~/services/store/dao';
 
-const chartConfig = {
-  tasks: {
-    label: 'Tasks',
-    color: 'var(--chart-1)',
-  },
-} satisfies ChartConfig;
-
 type StaticsTaskChartProps = {
   type: 'created' | 'finished';
 };
 
 export const StaticsTaskChart: React.FC<StaticsTaskChartProps> = ({ type }) => {
+  const chartConfig = {
+    tasks: {
+      label: 'Tasks',
+      color: type === 'created' ? 'var(--chart-1)' : 'var(--chart-3)',
+    },
+  } satisfies ChartConfig;
+
   const { daoAddress } = useDaoState();
 
   const { data: taskCreated, isLoading } = useScaffoldEventHistory({
@@ -83,9 +83,9 @@ export const StaticsTaskChart: React.FC<StaticsTaskChartProps> = ({ type }) => {
   }, [isLoading, taskCreated]);
 
   return (
-    <>
+    <div style={{ width: '100%', height: '200px' }}>
       <ChartContainer config={chartConfig}>
-        <BarChart accessibilityLayer data={chartData}>
+        <BarChart accessibilityLayer data={chartData} width={500} height={200}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey='day'
@@ -106,6 +106,6 @@ export const StaticsTaskChart: React.FC<StaticsTaskChartProps> = ({ type }) => {
           <Bar dataKey='tasks' fill='var(--color-tasks)' radius={8} />
         </BarChart>
       </ChartContainer>
-    </>
+    </div>
   );
 };

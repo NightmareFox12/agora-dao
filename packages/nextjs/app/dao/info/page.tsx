@@ -16,7 +16,7 @@ const InfoPage: NextPage = () => {
 
             <div className='tabs tabs-lift justify-center'>
               <label className='tab'>
-                <input type='radio' name='my_tabs_4' />
+                <input type='radio' name='tasks' defaultChecked />
                 <FilePlus2 className='size-4 mr-0.5' />
                 Created
               </label>
@@ -24,15 +24,19 @@ const InfoPage: NextPage = () => {
                 <p className='text-center'>
                   Summary of tasks proposed for this week
                 </p>
+
                 <StaticsTaskChart type='created' />
               </div>
 
               <label className='tab'>
-                <input type='radio' name='my_tabs_4' defaultChecked />
+                <input type='radio' name='tasks' />
                 <FileCheck2 className='size-4 mr-0.5' />
                 Finished
               </label>
               <div className='tab-content bg-base-100 border-base-300'>
+                <p className='text-center'>
+                  Summary of tasks completed for this week.
+                </p>
                 <StaticsTaskChart type='finished' />
               </div>
             </div>
