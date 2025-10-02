@@ -3,9 +3,7 @@ import { Check, Info } from 'lucide-react';
 import React from 'react';
 import { num } from 'starknet';
 import { Address } from '~~/components/scaffold-stark/Address';
-import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
-import { useAccount } from '~~/hooks/useAccount';
 import { ITask } from '~~/types/task';
 
 const difficultyColors = {
@@ -72,47 +70,69 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
   task,
   parsedDate,
   parsedCreatorAddress,
+}) => {
+  const acceptedAddress = task.accepted_by.unwrap();
+
+  return (
+    <dialog id={`modal_accepted_${task.task_id}`} className='modal'>
+      <div className='modal-box'>
+        <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
+          {task.title}
+        </h3>
+        <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
+          {task.description}
+        </p>
+        <div>
+          <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
+          <p className='my-1'>Deadline: {parsedDate}</p>
+          <p className='my-1'>Creator:</p>
+          <Address address={parsedCreatorAddress} />
+          {acceptedAddress !== undefined && (
+            <>
+              <p className='my-1'>Accepted By:</p>
+              <Address
+                address={num.toHex(acceptedAddress.toString()) as `0x${string}`}
+              />
+            </>
+          )}
+        </div>
+      </div>
+      <form method='dialog' className='modal-backdrop'>
+        <button>Close</button>
+      </form>
+    </dialog>
+  );
+};
+
+const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
+  task,
+  parsedDate,
+  parsedCreatorAddress,
   parsedUserAddress,
   handleAcceptTask,
-}) => (
-  <dialog id={`modal_accepted_${task.task_id}`} className='modal'>
-    <div className='modal-box'>
-      <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
-        {task.title}
-      </h3>
-      <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
-        {task.description}
-      </p>
-
-
-      <div>
-        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
-        <p className='my-1'>Deadline: {parsedDate}</p>
-        <p className='my-1'>Creator:</p>
-        <Address address={parsedCreatorAddress} />
-        <p className='my-1'>Accepted By: {task.accepted_by.unwrap()?.toString()}</p>
-        {/* <Address address={ as `0x${string}`} /> */}
+}) => {
+  return (
+    <dialog id={`modal_finish_${task.task_id}`} className='modal'>
+      <div className='modal-box'>
+        <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
+          {task.title}
+        </h3>
+        <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
+          {task.description}
+        </p>
+        <div>
+          <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
+          <p className='my-1'>Deadline: {parsedDate}</p>
+          <p className='my-1'>Creator:</p>
+          <Address address={parsedCreatorAddress} />
+        </div>
       </div>
-
-      {/* <div className='flex justify-center mt-5'>
-        <button
-          onClick={handleAcceptTask}
-          disabled={
-            parsedCreatorAddress === parsedUserAddress ||
-            task.status.activeVariant() !== 'OPEN'
-          }
-          className='btn btn-accent btn-sm'
-        >
-          <Check className='w-4 h-4' />
-          Accept task
-        </button>
-      </div> */}
-    </div>
-    <form method='dialog' className='modal-backdrop'>
-      <button>Close</button>
-    </form>
-  </dialog>
-);
+      <form method='dialog' className='modal-backdrop'>
+        <button>Close</button>
+      </form>
+    </dialog>
+  );
+};
 
 type TaskCardProps = {
   task: ITask;
@@ -159,12 +179,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
-  console.log(task)
-
   return (
     <>
       {/* Modal */}
-
       {type === 'available' && (
         <TaskInfoDialog
           task={task}
@@ -189,8 +206,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
           <span className='badge badge-warning badge-sm'>{status}</span>
           <p className='my-1 break-all line-clamp-3'>{task.description}</p>
+
+          <p className='text-sm my-0'>Create by:</p>
           <Address address={parsedCreatorAddress as `0x${string}`} />
           <p className='my-0 font-bold'>{formatEther(task.reward)} STRK</p>
+
           <div className='card-actions justify-center'>
             {type === 'available' && (
               <button
@@ -204,6 +224,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
             {type === 'accepted' && (
               <>
+                {/* Modals */}
                 <TaskAcceptedDialog
                   task={task}
                   parsedDate={parsedDate}
@@ -212,8 +233,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   handleAcceptTask={handleAcceptTask}
                 />
 
+                <FinishTaskDialog
+                  task={task}
+                  parsedDate={parsedDate}
+                  parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
+                  parsedUserAddress={parsedUserAddress}
+                  handleAcceptTask={handleAcceptTask}
+                />
+
                 <button
-                  // onClick={() => showModal(`modal_accepted_${task.task_id}`)}
                   onClick={() => showModal(`modal_accepted_${task.task_id}`)}
                   className='btn btn-accent'
                 >
@@ -222,11 +250,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 </button>
 
                 <button
-                  onClick={() => showModal(`modal_info`)}
-                  className='btn btn-accent'
+                  onClick={() => showModal(`modal_finish_${task.task_id}`)}
+                  className='btn btn-success'
                 >
-                  <Info className='w-4 h-4' />
-                  Info
+                  <Check className='w-4 h-4' />
+                  Finish Task
                 </button>
               </>
             )}
