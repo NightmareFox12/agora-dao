@@ -2,8 +2,8 @@
 
 import { NextPage } from 'next';
 import { InfoClientController } from './_components/InfoClientController';
-import { Prueba } from './Prueba';
-import { FilePlus2 } from 'lucide-react';
+import { FileCheck2, FilePlus2 } from 'lucide-react';
+import { StaticsTaskChart } from './_components/StaticsTaskChart';
 
 const InfoPage: NextPage = () => {
   return (
@@ -14,7 +14,6 @@ const InfoPage: NextPage = () => {
           <div className='card-body'>
             <h2 className='card-title'>Statistics Task</h2>
 
-            {/* name of each tab group should be unique */}
             <div className='tabs tabs-lift justify-center'>
               <label className='tab'>
                 <input type='radio' name='my_tabs_4' />
@@ -22,24 +21,20 @@ const InfoPage: NextPage = () => {
                 Created
               </label>
               <div className='tab-content bg-base-100 border-base-300'>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
+                <p className='text-center'>
+                  Summary of tasks proposed for this week
                 </p>
-                <Prueba />
+                <StaticsTaskChart type='created' />
               </div>
 
               <label className='tab'>
                 <input type='radio' name='my_tabs_4' defaultChecked />
-                Laugh
+                <FileCheck2 className='size-4 mr-0.5' />
+                Finished
               </label>
               <div className='tab-content bg-base-100 border-base-300'>
-                Tab content 2
+                <StaticsTaskChart type='finished' />
               </div>
-            </div>
-            {/* <Prueba /> */}
-            <div className='card-actions justify-end'>
-              <button className='btn btn-primary'>Buy Now</button>
             </div>
           </div>
         </div>
@@ -51,9 +46,6 @@ const InfoPage: NextPage = () => {
               A card component has a figure, a body part, and inside body there
               are title and actions parts
             </p>
-            <div className='card-actions justify-end'>
-              <button className='btn btn-primary'>Buy Now</button>
-            </div>
           </div>
         </div>
       </div>

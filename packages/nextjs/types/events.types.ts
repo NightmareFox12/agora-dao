@@ -1,4 +1,4 @@
-type BaseEvent = {
+export type BaseEvent = {
   block: {
     block_hash: string;
     timestamp: number;
