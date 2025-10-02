@@ -104,6 +104,7 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
   );
 };
 
+//TODO: aqui hacer lo del form de la URL para entregar la tarea y luego marcar la tarea para que sea verifica por el creador y un auditor para pagarle al user
 const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   task,
   parsedDate,
