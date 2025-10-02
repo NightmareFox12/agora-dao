@@ -62,6 +62,7 @@ pub trait IAgoraDao<TContractState> {
 
     // --- READ TASKS ---
     fn get_available_tasks(self: @TContractState) -> Array<Task>;
+    fn get_accepted_tasks(self: @TContractState, caller: ContractAddress) -> Array<Task>;
     fn get_created_tasks(self: @TContractState, caller: ContractAddress) -> Array<Task>;
 
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
@@ -96,8 +97,8 @@ pub mod AgoraDao {
     };
     use super::structs::Task;
     use super::task::{
-        _accept_task, _add_task_category, _add_task_difficulty, _create_task, _get_available_tasks,
-        _get_created_task, _get_task_categories, _get_task_difficulties,
+        _accept_task, _add_task_category, _add_task_difficulty, _create_task, _get_accepted_tasks,
+        _get_available_tasks, _get_created_task, _get_task_categories, _get_task_difficulties,
     };
 
     //components
@@ -332,6 +333,9 @@ pub mod AgoraDao {
 
         fn get_created_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
             _get_created_task(self, caller)
+        }
+        fn get_accepted_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
+            _get_accepted_tasks(self, caller)
         }
 
         fn get_task_difficulties(self: @ContractState) -> Array<ByteArray> {

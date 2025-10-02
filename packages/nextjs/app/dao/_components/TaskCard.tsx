@@ -34,8 +34,12 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
 }) => (
   <dialog id={`modal_info_${task.task_id}`} className='modal'>
     <div className='modal-box'>
-      <h3 className='font-bold text-lg'>{task.title}</h3>
-      <p className='py-1'>{task.description}</p>
+      <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
+        {task.title}
+      </h3>
+      <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
+        {task.description}
+      </p>
 
       <div>
         <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
@@ -49,7 +53,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
           onClick={handleAcceptTask}
           disabled={
             parsedCreatorAddress === parsedUserAddress ||
-            task.status.activeVariant() === 'OPEN'
+            task.status.activeVariant() !== 'OPEN'
           }
           className='btn btn-accent btn-sm'
         >
@@ -66,12 +70,15 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
 
 type TaskCardProps = {
   task: ITask;
+  userAddress: string;
   daoAddress: string;
 };
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task, daoAddress }) => {
-  const { address: userAddress } = useAccount();
-
+export const TaskCard: React.FC<TaskCardProps> = ({
+  task,
+  userAddress,
+  daoAddress,
+}) => {
   //parsed data
   const parsedCreatorAddress = num.toHex(task.creator);
   const parsedUserAddress = num.cleanHex(userAddress as string);
@@ -86,13 +93,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, daoAddress }) => {
     contractName: 'AgoraDao',
     functionName: 'accepted_task',
     args: [task.task_id],
-    contractAddress: daoAddress,
-  });
-
-  const { data: totalCounter } = useScaffoldReadContract({
-    contractName: 'AgoraDao',
-    functionName: 'auditor_role_counter',
-    args: ['0xd8da6bf26964af9d7eed9e03e53415d37aa9604'],
     contractAddress: daoAddress,
   });
 

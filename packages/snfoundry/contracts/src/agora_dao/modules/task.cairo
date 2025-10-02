@@ -153,6 +153,21 @@ pub fn _get_available_tasks(self: @ContractState) -> Array<Task> {
     res
 }
 
+pub fn _get_accepted_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
+    let mut res: Array<Task> = ArrayTrait::new();
+    let mut i: u16 = 0;
+    let task_counter: u16 = self.task_counter.read();
+
+    while i != task_counter {
+        if self.tasks.read(i).status == TaskStatus::IN_PROGRESS
+            && self.tasks.read(i).accepted_by.unwrap() == caller {
+            res.append(self.tasks.read(i));
+        }
+        i += 1;
+    }
+    res
+}
+
 pub fn _get_created_task(self: @ContractState, caller: ContractAddress) -> Array<Task> {
     let mut res: Array<Task> = ArrayTrait::new();
     let mut i: u16 = 0;

@@ -33,16 +33,16 @@ const TaskPage: NextPage = () => {
 
           <label className='tab'>
             <input type='radio' name='task_section' />
+            Accepted
+          </label>
+          <TaskTabSection tabName='accepted' />
+
+          <label className='tab'>
+            <input type='radio' name='task_section' />
             <FilePen className='size-4 me-2' />
             Created
           </label>
           <TaskTabSection tabName='created' />
-
-          <label className='tab'>
-            <input type='radio' name='task_section' />
-            Accepted
-          </label>
-          <TaskTabSection tabName='accepted' />
         </div>
       </div>
     </section>
