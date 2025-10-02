@@ -32,7 +32,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
   parsedUserAddress,
   handleAcceptTask,
 }) => (
-  <dialog id={`modal_info`} className='modal'>
+  <dialog id={`modal_info_${task.task_id}`} className='modal'>
     <div className='modal-box'>
       <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
         {task.title}
@@ -68,6 +68,52 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
   </dialog>
 );
 
+const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
+  task,
+  parsedDate,
+  parsedCreatorAddress,
+  parsedUserAddress,
+  handleAcceptTask,
+}) => (
+  <dialog id={`modal_accepted_${task.task_id}`} className='modal'>
+    <div className='modal-box'>
+      <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
+        {task.title}
+      </h3>
+      <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
+        {task.description}
+      </p>
+
+
+      <div>
+        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
+        <p className='my-1'>Deadline: {parsedDate}</p>
+        <p className='my-1'>Creator:</p>
+        <Address address={parsedCreatorAddress} />
+        <p className='my-1'>Accepted By: {task.accepted_by.unwrap()?.toString()}</p>
+        {/* <Address address={ as `0x${string}`} /> */}
+      </div>
+
+      {/* <div className='flex justify-center mt-5'>
+        <button
+          onClick={handleAcceptTask}
+          disabled={
+            parsedCreatorAddress === parsedUserAddress ||
+            task.status.activeVariant() !== 'OPEN'
+          }
+          className='btn btn-accent btn-sm'
+        >
+          <Check className='w-4 h-4' />
+          Accept task
+        </button>
+      </div> */}
+    </div>
+    <form method='dialog' className='modal-backdrop'>
+      <button>Close</button>
+    </form>
+  </dialog>
+);
+
 type TaskCardProps = {
   task: ITask;
   type: 'created' | 'accepted' | 'completed' | 'available';
@@ -79,6 +125,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   task,
   userAddress,
   daoAddress,
+  type,
 }) => {
   //parsed data
   const parsedCreatorAddress = num.toHex(task.creator);
@@ -100,6 +147,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   //functions
   const showModal = (id: string) => {
     const modal = document.getElementById(id) as HTMLDialogElement;
+
     modal.showModal();
   };
 
@@ -111,16 +159,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
+  console.log(task)
+
   return (
     <>
       {/* Modal */}
-      <TaskInfoDialog
-        task={task}
-        parsedDate={parsedDate}
-        parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
-        parsedUserAddress={parsedUserAddress}
-        handleAcceptTask={handleAcceptTask}
-      />
+
+      {type === 'available' && (
+        <TaskInfoDialog
+          task={task}
+          parsedDate={parsedDate}
+          parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
+          parsedUserAddress={parsedUserAddress}
+          handleAcceptTask={handleAcceptTask}
+        />
+      )}
 
       {/* Card */}
       <article className='card bg-base-200 shadow-sm border border-gradient'>
@@ -139,13 +192,44 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           <Address address={parsedCreatorAddress as `0x${string}`} />
           <p className='my-0 font-bold'>{formatEther(task.reward)} STRK</p>
           <div className='card-actions justify-center'>
-            <button
-              onClick={() => showModal(`modal_info`)}
-              className='btn btn-accent'
-            >
-              <Info className='w-4 h-4' />
-              Info
-            </button>
+            {type === 'available' && (
+              <button
+                onClick={() => showModal(`modal_info_${task.task_id}`)}
+                className='btn btn-accent'
+              >
+                <Info className='w-4 h-4' />
+                Info
+              </button>
+            )}
+
+            {type === 'accepted' && (
+              <>
+                <TaskAcceptedDialog
+                  task={task}
+                  parsedDate={parsedDate}
+                  parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
+                  parsedUserAddress={parsedUserAddress}
+                  handleAcceptTask={handleAcceptTask}
+                />
+
+                <button
+                  // onClick={() => showModal(`modal_accepted_${task.task_id}`)}
+                  onClick={() => showModal(`modal_accepted_${task.task_id}`)}
+                  className='btn btn-accent'
+                >
+                  <Info className='w-4 h-4' />
+                  Info
+                </button>
+
+                <button
+                  onClick={() => showModal(`modal_info`)}
+                  className='btn btn-accent'
+                >
+                  <Info className='w-4 h-4' />
+                  Info
+                </button>
+              </>
+            )}
           </div>
         </div>
       </article>

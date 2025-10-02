@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useDaoState } from '~~/services/store/dao';
 import { TaskCard } from './TaskCard';
@@ -8,6 +8,7 @@ import { ITask } from '~~/types/task';
 import { LoadingCards } from './LoadingCard';
 import { useAccount } from '~~/hooks/useAccount';
 import { Frown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const statusColors = {
   pending: 'bg-gray-100 text-gray-800 border-gray-200',
@@ -66,26 +67,26 @@ const AvailableTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
 
 const AcceptedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
   //Smart Contract
-  const { data: createdTasks, isLoading: createdTasksLoading } =
+  const { data: acceptedTask, isLoading: acceptedTaskLoading } =
     useScaffoldReadContract({
       contractName: 'AgoraDao',
-      functionName: 'get_created_tasks',
+      functionName: 'get_accepted_tasks',
       args: [userAddress],
       contractAddress: daoAddress,
     });
 
-  const parsedAvailableTasks = useMemo(() => {
-    if (createdTasks === undefined) return [];
-    return createdTasks as any as ITask[];
-  }, [createdTasks]);
+  const parsedAcceptedTasks = useMemo(() => {
+    if (acceptedTask === undefined) return [];
+    return acceptedTask as any as ITask[];
+  }, [acceptedTask]);
 
   return (
     <>
-      {createdTasksLoading ||
-      createdTasks === undefined ||
+      {acceptedTaskLoading ||
+      acceptedTask === undefined ||
       userAddress === undefined ? (
         <LoadingCards />
-      ) : parsedAvailableTasks.length === 0 ? (
+      ) : parsedAcceptedTasks.length === 0 ? (
         <div className='h-screen col-span-full'>
           <p className='col-span-full text-center'>
             You have not accepted any tasks yet.
@@ -95,7 +96,7 @@ const AcceptedTasks: React.FC<TasksProps> = ({ daoAddress, userAddress }) => {
           </div>
         </div>
       ) : (
-        parsedAvailableTasks.map((x, y) => {
+        parsedAcceptedTasks.map((x, y) => {
           const task = x as any as ITask;
           return (
             <TaskCard
@@ -168,26 +169,25 @@ export const TaskGrid: React.FC<TaskGridProps> = ({ tabName }) => {
   const { daoAddress } = useDaoState();
   const { address } = useAccount();
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (address === undefined) router.push('/');
+  }, [address, router]);
+
   return (
-    <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-      {tabName === 'available' && (
-        <AvailableTasks
-          daoAddress={daoAddress}
-          userAddress={address as `0x${string}`}
-        />
-      )}
-      {tabName === 'accepted' && (
-        <AcceptedTasks
-          daoAddress={daoAddress}
-          userAddress={address as `0x${string}`}
-        />
-      )}
-      {tabName === 'created' && (
-        <CreatedTasks
-          daoAddress={daoAddress}
-          userAddress={address as `0x${string}`}
-        />
-      )}
-    </section>
+    address !== undefined && (
+      <section className='sm:px-2 lg:px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+        {tabName === 'available' && (
+          <AvailableTasks daoAddress={daoAddress} userAddress={address} />
+        )}
+        {tabName === 'accepted' && (
+          <AcceptedTasks daoAddress={daoAddress} userAddress={address} />
+        )}
+        {tabName === 'created' && (
+          <CreatedTasks daoAddress={daoAddress} userAddress={address} />
+        )}
+      </section>
+    )
   );
 };

@@ -9,14 +9,17 @@ import { useAccount } from '~~/hooks/useAccount';
 import { CustomConnectButton } from '~~/components/scaffold-stark/CustomConnectButton';
 import DecryptedText from '~~/components/ui/DecryptedText';
 import RotatingText from '~~/components/ui/RotatingText';
+import { useHeaderState } from '~~/services/store/header';
 
 export const HeroSection: React.FC = () => {
   const { isConnected } = useAccount();
+  const { setShowHeader } = useHeaderState();
   const router = useRouter();
 
   useEffect(() => {
+    setShowHeader(false);
     if (isConnected) router.push('/daos');
-  }, [isConnected, router]);
+  }, [isConnected, router, setShowHeader]);
 
   return (
     <section className='py-20 px-4 relative z-10'>

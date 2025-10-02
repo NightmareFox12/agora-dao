@@ -1,4 +1,4 @@
-import { CairoCustomEnum } from 'starknet';
+import { BigNumberish, CairoCustomEnum, CairoOption } from 'starknet';
 
 export interface ITask {
   task_id: bigint;
@@ -10,4 +10,5 @@ export interface ITask {
   reward: bigint;
   deadline: bigint;
   status: CairoCustomEnum;
+  accepted_by: CairoOption<BigNumberish>;
 }

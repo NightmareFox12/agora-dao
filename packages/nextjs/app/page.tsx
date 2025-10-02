@@ -1,3 +1,5 @@
+'use server';
+
 import { NextPage } from 'next';
 import { Suspense } from 'react';
 import { ParticlesBackground } from './_components/ParticleBackground';
@@ -330,7 +332,6 @@ const LandingPage: NextPage = () => {
       </footer> */}
     </section>
   );
-
 };
 
 export default LandingPage;
