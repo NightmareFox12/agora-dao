@@ -1,6 +1,6 @@
 import { formatEther } from 'ethers';
 import { Check, Info } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { num } from 'starknet';
 import { Address } from '~~/components/scaffold-stark/Address';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
@@ -112,6 +112,8 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   parsedUserAddress,
   handleAcceptTask,
 }) => {
+  const [submissionUrl, setSubmissionUrl] = useState<string>('');
+
   return (
     <dialog id={`modal_finish_${task.task_id}`} className='modal'>
       <div className='modal-box'>
