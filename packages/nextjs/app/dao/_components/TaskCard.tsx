@@ -1,5 +1,5 @@
 import { formatEther } from 'ethers';
-import { Check, Info } from 'lucide-react';
+import { Check, Info, Loader } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { num } from 'starknet';
 import { InputBase } from '~~/components/scaffold-stark';
@@ -205,11 +205,21 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
 
         <div className='flex justify-center mt-5'>
           <button
-            disabled={submissionUrl.length < 3}
+            disabled={submissionUrl.length < 3 || isLoading}
             onClick={submitProof}
             className='btn btn-accent'
           >
-            Send proof
+            {isLoading ? (
+              <>
+                <Loader className='w-4 h-4 animate-spin' />
+                Loading...
+              </>
+            ) : (
+              <>
+                <Check className='w-4 h-4' />
+                Send proof
+              </>
+            )}
           </button>
         </div>
       </div>

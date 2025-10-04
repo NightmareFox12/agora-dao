@@ -493,6 +493,28 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
               please contact your DAO Admin.
             </div>
           </details>
+          <details className='collapse collapse-arrow bg-base-300 border'>
+            <summary className='collapse-title font-semibold'>
+              How is the task delivered?
+            </summary>
+            <div className='collapse-content text-sm'>
+              Once a user completes a task, they must submit a link to the final
+              result. This link should point to the location where the requested
+              work can be reviewed by the task creator. Examples include:
+              <br />
+              <br />
+              - A GitHub repository for code-based projects
+              <br />- A Figma file for design tasks
+              <br />- A Google Docs or Notion page for documentation or writing
+              <br />- Any other platform or file-sharing service relevant to the
+              task type
+              <br />
+              <br />
+              The task creator will then review the submission and approve it if
+              it meets the requirements. Only after approval will the reward be
+              released from the smart contract.
+            </div>
+          </details>
 
           {/* Action Buttons */}
           <div className='modal-action flex-col items-center'>
@@ -554,8 +576,6 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 
 //TODO: agregar un modal de primera vez para decirle que vaya a editar los permisos
 
-//TODO: en config establecer lo de los roles con graficas y data
-
 //TODO: poder quitar rol si eres admin
 
 //TODO: pensar en lo del contacto. LA IA me dice que puedo crear un campo para que agreguen el correo o crear en la tarea un apartado para reaccionar y enviar mensajes al creador asi mantener todo descentralizado
@@ -563,7 +583,3 @@ export const CreateTaskDialog: React.FC<CreateTaskDialogProps> = ({
 //TODO: pinnata eliminacion tambien,si el usuario rechaza la metamask
 //TODO: inventarme la de la vaina de acceso para daos privadas
 //TODO: en el header poner el nombre de mi dao actual. Tambien que puedas customizar el color del header de mi dao... o mejor dicho, el color primario (o agregar a premium)
-
-//TODO: arreglar el modal de task details para que la description no se salga
-
-//TODO: crear la seccion para las tasks aceptadas 

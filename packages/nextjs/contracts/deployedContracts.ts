@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x29167863bb36c56b65ad7450289b2a110ed36877655ea40db29d6b24d1fba82",
+        "0x4716bc1e4789b138fc0131037628ebf0b398e8fea1316ede133820ab35777d0",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x5be126a085edc12d78e780d21016d3db38eccd39b254422ecd856fd73b2bca",
+        "0x7d6fdf7177a153d02777fcecd83b69ee4b3efefbd27eb3cbf3a61b51ba728ec",
     },
     AgoraDao: {
       address:
-        "0x1a3a71cdc34636dd3c2da5bdac688faec10e27caeaf76f1a3417d6a12714da9",
+        "0x1afecc02d1734d585849599e1869a9c975915d4d532b15c7ecee6a726d98426",
       abi: [
         {
           type: "impl",
@@ -346,6 +346,10 @@ const deployedContracts = {
             },
             {
               name: "COMPLETED",
+              type: "()",
+            },
+            {
+              name: "VERIFIED",
               type: "()",
             },
           ],
@@ -1298,7 +1302,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x71f6f90da00989ba0dbab85a68eb79d51b2da0d1716d0bdaf7bf5b61b955a89",
+        "0x3c719fc5b63e5e0a0cc7cb9eafd618ef965d79a038fb1f972d4c62b781f6acc",
     },
   },
   sepolia: {
@@ -1643,6 +1647,10 @@ const deployedContracts = {
             },
             {
               name: "COMPLETED",
+              type: "()",
+            },
+            {
+              name: "VERIFIED",
               type: "()",
             },
           ],
