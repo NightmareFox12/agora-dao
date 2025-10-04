@@ -1,9 +1,11 @@
 import { formatEther } from 'ethers';
 import { Check, Info } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { num } from 'starknet';
 import { InputBase } from '~~/components/scaffold-stark';
 import { Address } from '~~/components/scaffold-stark/Address';
+import RotatingText from '~~/components/ui/RotatingText';
+import Shuffle from '~~/components/ui/Shuffle';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
 import { ITask } from '~~/types/task';
 
@@ -16,6 +18,53 @@ const difficultyColors = {
 };
 
 //Components
+function CountdownTask({ deadline }: { deadline: string }) {
+  const [timeLeft, setTimeLeft] = useState('');
+
+  useEffect(() => {
+    const targetDate = new Date(deadline).getTime();
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        setTimeLeft('Expired');
+        clearInterval(interval);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+      setTimeLeft(`${days} days ${hours} hours ${minutes} minutes`);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [deadline]);
+
+  return (
+    <Shuffle
+      text={timeLeft}
+      shuffleDirection='right'
+      duration={0.35}
+      animationMode='evenodd'
+      shuffleTimes={1}
+      ease='power3.out'
+      stagger={0.03}
+      threshold={0.1}
+      triggerOnce={true}
+      triggerOnHover={true}
+      respectReducedMotion={true}
+      loop={true}
+      loopDelay={60000}
+      tag='span'
+      style={{ fontSize: '12px', textAlign: 'center' }}
+    />
+  );
+}
+
 type TaskInfoDialogProps = {
   task: ITask;
   parsedDate: string;
@@ -247,7 +296,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
           <p className='text-sm my-0'>Create by:</p>
           <Address address={parsedCreatorAddress as `0x${string}`} />
-          <p className='my-0 font-bold'>{formatEther(task.reward)} STRK</p>
+          <p className='text-sm my-0'>
+            Deadline:
+        
+          </p>
+              <CountdownTask
+              deadline={new Date(Number(task.deadline) * 1000).toISOString()}
+            />
+          <p className='text-sm my-0'>
+            Reward: <b>{formatEther(task.reward)} STRK</b>
+          </p>
 
           <div className='card-actions justify-center'>
             {type === 'available' && (

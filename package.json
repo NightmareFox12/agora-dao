@@ -29,7 +29,9 @@
     "verify": "yarn workspace @ss-2/snfoundry verify"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.1",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.543.0",
     "motion": "^12.23.12",
     "pinata": "^2.5.0",
