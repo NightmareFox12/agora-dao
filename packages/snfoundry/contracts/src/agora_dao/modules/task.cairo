@@ -14,10 +14,10 @@ use starknet::{ContractAddress, get_block_timestamp, get_caller_address, get_con
 use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
-use crate::agora_dao::core::events::{TaskAccepted, TaskCreated};
+use crate::agora_dao::core::events::{TaskAccepted, TaskCompleted, TaskCreated};
 use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE, USER_ROLE};
 use crate::agora_dao::core::structs::Task;
-use crate::agora_dao::core::validations::_create_task_validation;
+use crate::agora_dao::core::validations::{_accept_task_validation, _create_task_validation};
 
 
 // --- WRITE FUNCTIONS ---
@@ -120,16 +120,7 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     let current_time: u64 = get_block_timestamp();
     let mut task: Task = self.tasks.read(task_id);
 
-    assert!(
-        self.accesscontrol.has_role(USER_ROLE, caller)
-            || self.accesscontrol.has_role(ADMIN_ROLE, caller),
-        "role no cumplided",
-    );
-    assert!(task.title.len() > 0, "Task does not exist");
-    assert!(task.status == TaskStatus::OPEN, "Task is not open");
-    assert!(task.accepted_by.is_none(), "Task already accepted");
-    assert!(task.creator != caller, "Task creator cannot accept their own task");
-    assert!(current_time <= task.deadline, "Task deadline has passed");
+    _accept_task_validation(ref self, caller, task.clone(), current_time);
 
     task.accepted_by = Some(caller);
     task.status = TaskStatus::IN_PROGRESS;
@@ -147,11 +138,26 @@ pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
         "role no cumplided",
     );
     assert!(task_id <= self.task_counter.read(), "task does not exist");
-    assert!(proof.len() > 0,"Proof is required")
+    assert!(proof.len() > 0, "Proof is required");
 
-    //TODO: me falta agregar que la tarea este en EN PROGRESS
-    //TODO: me falta agregar que solo pueda subir la prueba el responsable de completar la tarea
-    //TODO: verificar que no haya pasado la fecha de vencimiento
+    let mut task: Task = self.tasks.read(task_id);
+
+    assert!(task.status == TaskStatus::IN_PROGRESS, "Task is not in progress");
+    assert!(task.accepted_by.unwrap() == caller, "
+    Task is not accepted by the caller");
+
+    if (task.deadline != 0 && get_block_timestamp() > task.deadline) {
+        task.status = TaskStatus::CANCELLED;
+
+        self.tasks.write(task_id, task.clone());
+
+        assert!(task.deadline >= get_block_timestamp(), "Task deadline has passed");
+    }
+
+    task.status = TaskStatus::COMPLETED;
+    self.tasks.write(task_id, task);
+
+    self.emit(TaskCompleted { task_id: task_id, completed_by: caller, proof: proof });
 }
 
 // --- READ FUNCTIONS ---

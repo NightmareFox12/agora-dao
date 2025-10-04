@@ -84,6 +84,7 @@ pub mod AgoraDao {
         StoragePointerWriteAccess,
     };
     use super::dao::_join_dao;
+    use super::events::TaskCompleted;
 
     //imports
     use super::events::{RoleCreated, TaskAccepted, TaskCreated, UserJoined};
@@ -154,6 +155,7 @@ pub mod AgoraDao {
         TaskCreated: TaskCreated,
         RoleCreated: RoleCreated,
         TaskAccepted: TaskAccepted,
+        TaskCompleted: TaskCompleted,
         #[flat]
         AccessControlEvent: AccessControlComponent::Event,
         #[flat]
