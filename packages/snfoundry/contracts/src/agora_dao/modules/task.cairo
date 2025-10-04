@@ -15,7 +15,7 @@ use crate::agora_dao::contract::AgoraDao::ContractState;
 use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
 use crate::agora_dao::core::events::{TaskAccepted, TaskCompleted, TaskCreated};
-use crate::agora_dao::core::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE, USER_ROLE};
+use crate::agora_dao::core::roles::{ADMIN_ROLE, USER_ROLE};
 use crate::agora_dao::core::structs::Task;
 use crate::agora_dao::core::validations::{_accept_task_validation, _create_task_validation};
 
@@ -30,16 +30,17 @@ pub fn _create_task(
     amount: u256,
     deadline: u64,
 ) {
-    _create_task_validation(
-        ref self, title.clone(), description.clone(), category_ID, difficulty_ID, amount, deadline,
-    );
-
     let caller: ContractAddress = get_caller_address();
 
-    assert!(
-        self.accesscontrol.has_role(ADMIN_ROLE, caller)
-            || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
-        "role no cumplided",
+    _create_task_validation(
+        ref self,
+        caller,
+        title.clone(),
+        description.clone(),
+        category_ID,
+        difficulty_ID,
+        amount,
+        deadline,
     );
 
     //transfer
@@ -129,6 +130,8 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     self.emit(TaskAccepted { task_id: task_id, accepted_by: caller })
 }
 
+//TODO: probar que al completar me deje enviar el proof correctamente
+//TODO: crear un apartado en la UI para que los roles correspondientes puedan verificar el proof
 pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     let caller: ContractAddress = get_contract_address();
 

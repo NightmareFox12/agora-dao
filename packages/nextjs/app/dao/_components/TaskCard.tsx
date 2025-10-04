@@ -21,7 +21,7 @@ type TaskInfoDialogProps = {
   parsedDate: string;
   parsedCreatorAddress: `0x${string}`;
   parsedUserAddress: string;
-  handleAcceptTask: () => Promise<void>;
+  handleAcceptTask?: () => Promise<void>;
   handleSubmitProof?: (proof: string) => Promise<void>;
 };
 
@@ -153,6 +153,7 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
         <div className='flex justify-center mt-5'>
           <button
             disabled={submissionUrl.length < 3}
+            onClick={submitProof}
             className='btn btn-accent'
           >
             Send proof
@@ -280,7 +281,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   parsedDate={parsedDate}
                   parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
                   parsedUserAddress={parsedUserAddress}
-                  handleAcceptTask={handleAcceptTask}
                 />
 
                 <FinishTaskDialog
@@ -288,7 +288,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   parsedDate={parsedDate}
                   parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
                   parsedUserAddress={parsedUserAddress}
-                  handleAcceptTask={handleAcceptTask}
+                  handleSubmitProof={handleSubmitProof}
                 />
 
                 <button

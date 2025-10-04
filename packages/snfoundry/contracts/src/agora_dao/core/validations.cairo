@@ -9,11 +9,12 @@ use starknet::{ContractAddress, get_block_timestamp};
 //imports
 use crate::agora_dao::contract::AgoraDao::ContractState;
 use super::enums::TaskStatus;
-use super::roles::{ADMIN_ROLE, USER_ROLE};
+use super::roles::{ADMIN_ROLE, TASK_CREATOR_ROLE, USER_ROLE};
 use super::structs::Task;
 
 pub fn _create_task_validation(
     ref self: ContractState,
+    caller: ContractAddress,
     title: ByteArray,
     description: ByteArray,
     category_ID: u16,
@@ -31,6 +32,12 @@ pub fn _create_task_validation(
     assert!(amount > 0, "Amount must be greater than 0");
 
     assert!(deadline == 0 || deadline > get_block_timestamp(), "Deadline must be in the future");
+
+    assert!(
+        self.accesscontrol.has_role(ADMIN_ROLE, caller)
+            || self.accesscontrol.has_role(TASK_CREATOR_ROLE, caller),
+        "role no cumplided",
+    );
 }
 
 pub fn _accept_task_validation(
