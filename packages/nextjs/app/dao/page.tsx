@@ -1,7 +1,7 @@
 'use server';
 
 import { NextPage } from 'next';
-import { FilePen, FolderOpen } from 'lucide-react';
+import { FileClock, FilePen, FolderOpen } from 'lucide-react';
 import { TaskClientController } from './_components/TaskClientController';
 import { TaskGrid } from './_components/TaskGrid';
 import {
@@ -37,7 +37,7 @@ const TaskPage: NextPage = () => {
           <TaskTabSection tabName='available' />
           <label className='tab'>
             <input type='radio' name='task_section' />
-            <FilePen className='size-4 me-2' />
+            <FileClock className='size-4 me-2' />
             Accepted
           </label>
           <TaskTabSection tabName='accepted' />
@@ -48,7 +48,6 @@ const TaskPage: NextPage = () => {
             Created
           </label>
           <TaskTabSection tabName='created' />
-          Verification required
         </div>
       </div>
     </section>
