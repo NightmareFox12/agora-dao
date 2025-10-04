@@ -136,7 +136,6 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
 pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     let caller: ContractAddress = get_contract_address();
 
-    // println!("caller: {}", caller.into());
     //! por alguna extrania razon esta verificacion funciona correctamente en aceptar tarea (un paso
     //! antes de esta) y aqui dice que no. Lo cual es muy raro
     // assert!(
@@ -153,7 +152,7 @@ pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     assert!(task.status == TaskStatus::IN_PROGRESS, "Task is not in progress");
     assert!(
         task.accepted_by == Some(caller), "
-    Task is not accepted by the caller {:?}", caller,
+    Task is not accepted by the caller {:?} {:?}", caller, task.accepted_by,
     );
 
     if (task.deadline != 0 && get_block_timestamp() > task.deadline) {
