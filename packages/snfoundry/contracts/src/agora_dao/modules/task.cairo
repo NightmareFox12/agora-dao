@@ -131,7 +131,6 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     self.emit(TaskAccepted { task_id: task_id, accepted_by: caller })
 }
 
-//TODO: probar que al completar me deje enviar el proof correctamente
 //TODO: crear un apartado en la UI para que los roles correspondientes puedan verificar el proof
 pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     let caller: ContractAddress = get_caller_address();
