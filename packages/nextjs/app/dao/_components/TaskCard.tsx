@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { num } from 'starknet';
 import { InputBase } from '~~/components/scaffold-stark';
 import { Address } from '~~/components/scaffold-stark/Address';
-import RotatingText from '~~/components/ui/RotatingText';
 import Shuffle from '~~/components/ui/Shuffle';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
 import { ITask } from '~~/types/task';
@@ -45,23 +44,25 @@ function CountdownTask({ deadline }: { deadline: string }) {
   }, [deadline]);
 
   return (
-    <Shuffle
-      text={timeLeft}
-      shuffleDirection='right'
-      duration={0.35}
-      animationMode='evenodd'
-      shuffleTimes={1}
-      ease='power3.out'
-      stagger={0.03}
-      threshold={0.1}
-      triggerOnce={true}
-      triggerOnHover={true}
-      respectReducedMotion={true}
-      loop={true}
-      loopDelay={60000}
-      tag='span'
-      style={{ fontSize: '12px', textAlign: 'center' }}
-    />
+    <div className='bg-accent p-3 flex justify-center rounded-2xl'>
+      <Shuffle
+        text={timeLeft}
+        shuffleDirection='right'
+        duration={0.35}
+        animationMode='evenodd'
+        shuffleTimes={1}
+        ease='power3.out'
+        stagger={0.03}
+        threshold={0.1}
+        triggerOnce={true}
+        triggerOnHover={true}
+        respectReducedMotion={true}
+        loop={true}
+        loopDelay={60000}
+        tag='span'
+        style={{ fontSize: '12px', textAlign: 'center' }}
+      />
+    </div>
   );
 }
 
@@ -91,10 +92,10 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
       </p>
 
       <div>
-        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
         <p className='my-1'>Deadline: {parsedDate}</p>
         <p className='my-1'>Creator:</p>
         <Address address={parsedCreatorAddress} />
+        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
       </div>
 
       <div className='flex justify-center mt-5'>
@@ -134,7 +135,6 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
           {task.description}
         </p>
         <div>
-          <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
           <p className='my-1'>Deadline: {parsedDate}</p>
           <p className='my-1'>Creator:</p>
           <Address address={parsedCreatorAddress} />
@@ -147,6 +147,7 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
             </>
           )}
         </div>
+        <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
       </div>
       <form method='dialog' className='modal-backdrop'>
         <button>Close</button>
@@ -192,8 +193,7 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
         <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
           After completing the task, please submit a proof of completion such as
           a GitHub link for code or a Figma link for design. Your submission
-          will be reviewed by the task creator and an auditor before the reward
-          is granted.
+          will be reviewed by the task creator before the reward is granted.
         </p>
 
         <InputBase
@@ -296,13 +296,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
           <p className='text-sm my-0'>Create by:</p>
           <Address address={parsedCreatorAddress as `0x${string}`} />
-          <p className='text-sm my-0'>
-            Deadline:
-        
-          </p>
-              <CountdownTask
-              deadline={new Date(Number(task.deadline) * 1000).toISOString()}
-            />
+          <p className='text-sm my-0'>Deadline:</p>
+          <CountdownTask
+            deadline={new Date(Number(task.deadline) * 1000).toISOString()}
+          />
           <p className='text-sm my-0'>
             Reward: <b>{formatEther(task.reward)} STRK</b>
           </p>
