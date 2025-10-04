@@ -22,7 +22,7 @@ type TaskInfoDialogProps = {
   parsedCreatorAddress: `0x${string}`;
   parsedUserAddress: string;
   handleAcceptTask?: () => Promise<void>;
-  handleSubmitProof?: (proof: string) => Promise<void>;
+  daoAddress?: string;
 };
 
 const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
@@ -109,20 +109,24 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
 //TODO: aqui hacer lo del form de la URL para entregar la tarea y luego marcar la tarea para que sea verifica por el creador y un auditor para pagarle al user
 const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   task,
-  parsedDate,
-  parsedCreatorAddress,
-  parsedUserAddress,
-  handleSubmitProof,
+  daoAddress,
 }) => {
   //states
   const [submissionUrl, setSubmissionUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { sendAsync } = useScaffoldWriteContract({
+    contractName: 'AgoraDao',
+    functionName: 'complete_task',
+    args: [task.task_id, submissionUrl],
+    contractAddress: daoAddress,
+  });
+
   //functions
   const submitProof = async () => {
     try {
       setIsLoading(true);
-      await handleSubmitProof?.(submissionUrl);
+      await sendAsync();
     } catch (err) {
       console.log(err);
     } finally {
@@ -198,28 +202,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     contractAddress: daoAddress,
   });
 
-  const { sendAsync: submitProofAsync } = useScaffoldWriteContract({
-    contractName: 'AgoraDao',
-    functionName: 'complete_task',
-    args: [task.task_id, ''],
-    contractAddress: daoAddress,
-  });
-
   //functions
   const showModal = (id: string) => {
     const modal = document.getElementById(id) as HTMLDialogElement;
 
     modal.showModal();
-  };
-
-  const handleSubmitProof = async (proof: string) => {
-    try {
-      await submitProofAsync({
-        args: [task.task_id, proof],
-      });
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const handleAcceptTask = async () => {
@@ -288,7 +275,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                   parsedDate={parsedDate}
                   parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
                   parsedUserAddress={parsedUserAddress}
-                  handleSubmitProof={handleSubmitProof}
+                  daoAddress={daoAddress}
                 />
 
                 <button

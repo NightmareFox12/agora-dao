@@ -46,7 +46,7 @@ pub fn _accept_task_validation(
     assert!(
         self.accesscontrol.has_role(USER_ROLE, caller)
             || self.accesscontrol.has_role(ADMIN_ROLE, caller),
-        "role no cumplided",
+        "Role no cumplided",
     );
     assert!(task.title.len() > 0, "Task does not exist");
     assert!(task.status == TaskStatus::OPEN, "Task is not open");

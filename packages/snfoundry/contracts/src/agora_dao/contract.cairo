@@ -342,6 +342,7 @@ pub mod AgoraDao {
         fn get_created_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
             _get_created_task(self, caller)
         }
+        
         fn get_accepted_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
             _get_accepted_tasks(self, caller)
         }

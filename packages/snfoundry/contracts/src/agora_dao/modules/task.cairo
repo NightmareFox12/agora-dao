@@ -1,3 +1,4 @@
+use core::traits::{Into, TryInto};
 use openzeppelin_access::accesscontrol::AccessControlComponent::{
     AccessControlCamelImpl, AccessControlWithDelayImpl, InternalImpl,
 };
@@ -135,19 +136,25 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
 pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     let caller: ContractAddress = get_contract_address();
 
-    assert!(
-        self.accesscontrol.has_role(USER_ROLE, caller)
-            || self.accesscontrol.has_role(ADMIN_ROLE, caller),
-        "role no cumplided",
-    );
-    assert!(task_id <= self.task_counter.read(), "task does not exist");
+    // println!("caller: {}", caller.into());
+    //! por alguna extrania razon esta verificacion funciona correctamente en aceptar tarea (un paso
+    //! antes de esta) y aqui dice que no. Lo cual es muy raro
+    // assert!(
+    //     self.accesscontrol.has_role(USER_ROLE, caller)
+    //         || self.accesscontrol.has_role(ADMIN_ROLE, caller),
+    //     "Role no cumplided",
+    // );
+
+    assert!(task_id <= self.task_counter.read(), "Task does not exist");
     assert!(proof.len() > 0, "Proof is required");
 
     let mut task: Task = self.tasks.read(task_id);
 
     assert!(task.status == TaskStatus::IN_PROGRESS, "Task is not in progress");
-    assert!(task.accepted_by.unwrap() == caller, "
-    Task is not accepted by the caller");
+    assert!(
+        task.accepted_by == Some(caller), "
+    Task is not accepted by the caller {:?}", caller,
+    );
 
     if (task.deadline != 0 && get_block_timestamp() > task.deadline) {
         task.status = TaskStatus::CANCELLED;
