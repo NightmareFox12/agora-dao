@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x3ba83da2504f20eaa42d1ec7865f9bd962f64d38126b47639da78d99373650d",
+        "0x2d54880fc3fc17f5a69946c1b6080b0b279230a61201c5c0a0c0968822b70e9",
       abi: [
         {
           type: "impl",
@@ -275,7 +275,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x7972e2ebcdf966cee3f645be85b480ab55c0968ab37a927d906cd7d2c29fa10",
+        "0x1ff929927b2f821509b5d0739d722f75614fa249dc4a3850eab263e4836bc1a",
       abi: [
         {
           type: "impl",
@@ -778,11 +778,27 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "accepted_task",
+              name: "accept_task",
               inputs: [
                 {
                   name: "task_id",
                   type: "core::integer::u16",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "complete_task",
+              inputs: [
+                {
+                  name: "task_id",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "proof",
+                  type: "core::byte_array::ByteArray",
                 },
               ],
               outputs: [],
@@ -1255,7 +1271,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x77137aa35debe3132ef8c8cb6216b0a38cebd82ceb6efded0f1888dfff8fcb3",
+        "0x63dd08f1aacdf4861c412ab448368e553843e1adb647c6d1f1133dc0ee30b94",
     },
   },
   sepolia: {
@@ -2032,11 +2048,27 @@ const deployedContracts = {
             },
             {
               type: "function",
-              name: "accepted_task",
+              name: "accept_task",
               inputs: [
                 {
                   name: "task_id",
                   type: "core::integer::u16",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "complete_task",
+              inputs: [
+                {
+                  name: "task_id",
+                  type: "core::integer::u16",
+                },
+                {
+                  name: "proof",
+                  type: "core::byte_array::ByteArray",
                 },
               ],
               outputs: [],

@@ -2,6 +2,7 @@ import { formatEther } from 'ethers';
 import { Check, Info } from 'lucide-react';
 import React, { useState } from 'react';
 import { num } from 'starknet';
+import { InputBase } from '~~/components/scaffold-stark';
 import { Address } from '~~/components/scaffold-stark/Address';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
 import { ITask } from '~~/types/task';
@@ -21,6 +22,7 @@ type TaskInfoDialogProps = {
   parsedCreatorAddress: `0x${string}`;
   parsedUserAddress: string;
   handleAcceptTask: () => Promise<void>;
+  handleSubmitProof?: (proof: string) => Promise<void>;
 };
 
 const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
@@ -110,26 +112,54 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   parsedDate,
   parsedCreatorAddress,
   parsedUserAddress,
-  handleAcceptTask,
+  handleSubmitProof,
 }) => {
+  //states
   const [submissionUrl, setSubmissionUrl] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  //functions
+  const submitProof = async () => {
+    try {
+      setIsLoading(true);
+      await handleSubmitProof?.(submissionUrl);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <dialog id={`modal_finish_${task.task_id}`} className='modal'>
       <div className='modal-box'>
         <h3 className='font-bold text-lg whitespace-pre-wrap break-words overflow-y-auto'>
-          {task.title}
+          Submit Your Proof for Review
         </h3>
         <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
-          {task.description}
+          After completing the task, please submit a proof of completion such as
+          a GitHub link for code or a Figma link for design. Your submission
+          will be reviewed by the task creator and an auditor before the reward
+          is granted.
         </p>
-        <div>
-          <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
-          <p className='my-1'>Deadline: {parsedDate}</p>
-          <p className='my-1'>Creator:</p>
-          <Address address={parsedCreatorAddress} />
+
+        <InputBase
+          name='url'
+          placeholder='URL proof'
+          value={submissionUrl}
+          onChange={setSubmissionUrl}
+        />
+
+        <div className='flex justify-center mt-5'>
+          <button
+            disabled={submissionUrl.length < 3}
+            className='btn btn-accent'
+          >
+            Send proof
+          </button>
         </div>
       </div>
+
       <form method='dialog' className='modal-backdrop'>
         <button>Close</button>
       </form>
@@ -162,8 +192,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   //Smart contract
   const { sendAsync } = useScaffoldWriteContract({
     contractName: 'AgoraDao',
-    functionName: 'accepted_task',
+    functionName: 'accept_task',
     args: [task.task_id],
+    contractAddress: daoAddress,
+  });
+
+  const { sendAsync: submitProofAsync } = useScaffoldWriteContract({
+    contractName: 'AgoraDao',
+    functionName: 'complete_task',
+    args: [task.task_id, ''],
     contractAddress: daoAddress,
   });
 
@@ -172,6 +209,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     const modal = document.getElementById(id) as HTMLDialogElement;
 
     modal.showModal();
+  };
+
+  const handleSubmitProof = async (proof: string) => {
+    try {
+      await submitProofAsync({
+        args: [task.task_id, proof],
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleAcceptTask = async () => {

@@ -58,7 +58,8 @@ pub trait IAgoraDao<TContractState> {
         deadline: u64,
     );
 
-    fn accepted_task(ref self: TContractState, task_id: u16);
+    fn accept_task(ref self: TContractState, task_id: u16);
+    fn complete_task(ref self: TContractState, task_id: u16, proof: ByteArray);
 
     // --- READ TASKS ---
     fn get_available_tasks(self: @TContractState) -> Array<Task>;
@@ -97,8 +98,9 @@ pub mod AgoraDao {
     };
     use super::structs::Task;
     use super::task::{
-        _accept_task, _add_task_category, _add_task_difficulty, _create_task, _get_accepted_tasks,
-        _get_available_tasks, _get_created_task, _get_task_categories, _get_task_difficulties,
+        _accept_task, _add_task_category, _add_task_difficulty, _complete_task, _create_task,
+        _get_accepted_tasks, _get_available_tasks, _get_created_task, _get_task_categories,
+        _get_task_difficulties,
     };
 
     //components
@@ -322,8 +324,12 @@ pub mod AgoraDao {
             _create_task(ref self, title, description, category_ID, difficulty_ID, amount, deadline)
         }
 
-        fn accepted_task(ref self: ContractState, task_id: u16) {
+        fn accept_task(ref self: ContractState, task_id: u16) {
             _accept_task(ref self, task_id)
+        }
+
+        fn complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
+            _complete_task(ref self, task_id, proof)
         }
 
         // --- READ TASKS ---

@@ -138,6 +138,22 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
     self.emit(TaskAccepted { task_id: task_id, accepted_by: caller })
 }
 
+pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
+    let caller: ContractAddress = get_contract_address();
+
+    assert!(
+        self.accesscontrol.has_role(USER_ROLE, caller)
+            || self.accesscontrol.has_role(ADMIN_ROLE, caller),
+        "role no cumplided",
+    );
+    assert!(task_id <= self.task_counter.read(), "task does not exist");
+    assert!(proof.len() > 0,"Proof is required")
+
+    //TODO: me falta agregar que la tarea este en EN PROGRESS
+    //TODO: me falta agregar que solo pueda subir la prueba el responsable de completar la tarea
+    //TODO: verificar que no haya pasado la fecha de vencimiento
+}
+
 // --- READ FUNCTIONS ---
 pub fn _get_available_tasks(self: @ContractState) -> Array<Task> {
     let mut res: Array<Task> = ArrayTrait::new();
