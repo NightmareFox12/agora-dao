@@ -1,4 +1,4 @@
-use core::traits::{Into, TryInto};
+use core::traits::TryInto;
 use openzeppelin_access::accesscontrol::AccessControlComponent::{
     AccessControlCamelImpl, AccessControlWithDelayImpl, InternalImpl,
 };
@@ -124,7 +124,7 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
 
     _accept_task_validation(ref self, caller, task.clone(), current_time);
 
-    task.accepted_by = Some(caller);
+    task.accepted_by = Option::Some(caller);
     task.status = TaskStatus::IN_PROGRESS;
     self.tasks.write(task_id, task);
 
@@ -134,16 +134,13 @@ pub fn _accept_task(ref self: ContractState, task_id: u16) {
 //TODO: probar que al completar me deje enviar el proof correctamente
 //TODO: crear un apartado en la UI para que los roles correspondientes puedan verificar el proof
 pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
-    let caller: ContractAddress = get_contract_address();
+    let caller: ContractAddress = get_caller_address();
 
-    //! por alguna extrania razon esta verificacion funciona correctamente en aceptar tarea (un paso
-    //! antes de esta) y aqui dice que no. Lo cual es muy raro
-    // assert!(
-    //     self.accesscontrol.has_role(USER_ROLE, caller)
-    //         || self.accesscontrol.has_role(ADMIN_ROLE, caller),
-    //     "Role no cumplided",
-    // );
-
+    assert!(
+        self.accesscontrol.has_role(USER_ROLE, caller)
+            || self.accesscontrol.has_role(ADMIN_ROLE, caller),
+        "Role no cumplided",
+    );
     assert!(task_id <= self.task_counter.read(), "Task does not exist");
     assert!(proof.len() > 0, "Proof is required");
 
@@ -152,12 +149,12 @@ pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
     assert!(task.status == TaskStatus::IN_PROGRESS, "Task is not in progress");
     assert!(
         task.accepted_by == Some(caller), "
-    Task is not accepted by the caller {:?} {:?}", caller, task.accepted_by,
+    Task is not accepted by the caller {:?}", caller,
     );
 
     if (task.deadline != 0 && get_block_timestamp() > task.deadline) {
+        //cancel task
         task.status = TaskStatus::CANCELLED;
-
         self.tasks.write(task_id, task.clone());
 
         assert!(task.deadline >= get_block_timestamp(), "Task deadline has passed");

@@ -51,6 +51,6 @@ pub fn _accept_task_validation(
     assert!(task.title.len() > 0, "Task does not exist");
     assert!(task.status == TaskStatus::OPEN, "Task is not open");
     assert!(task.accepted_by.is_none(), "Task already accepted");
-    assert!(task.creator == caller, "Task creator cannot accept their own task");
+    assert!(task.creator != caller, "Task creator cannot accept their own task caller");
     assert!(current_time <= task.deadline, "Task deadline has passed");
 }
