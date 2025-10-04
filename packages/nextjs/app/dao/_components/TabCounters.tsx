@@ -2,10 +2,11 @@
 
 import { useMemo } from 'react';
 import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
+import { useAccount } from '~~/hooks/useAccount';
 import { useDaoState } from '~~/services/store/dao';
 import { ITask } from '~~/types/task';
 
-export const AvailableSpanTaskCounter: React.FC = () => {
+export const AvailableTaskCounterSpan: React.FC = () => {
   const { daoAddress } = useDaoState();
 
   //smart contract
@@ -22,8 +23,34 @@ export const AvailableSpanTaskCounter: React.FC = () => {
 
   return (
     parsedAvailableTasks.length > 0 && (
-      <span className='badge bg-accent text-[12px] rounded-full px-2 mr-1'>
+      <span className='badge bg-accent text-[12px] rounded-full px-1.5 mr-1 flex items-center justify-center h-[20px]'>
         {parsedAvailableTasks.length}
+      </span>
+    )
+  );
+};
+
+export const CreatedTaskCounterSpan: React.FC = () => {
+  const { daoAddress } = useDaoState();
+  const { address } = useAccount();
+
+  //smart contract
+  const { data: createdTasks } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_created_tasks',
+    args: [address],
+    contractAddress: daoAddress,
+  });
+
+  const parsedCreatedTasks = useMemo(() => {
+    if (createdTasks === undefined) return [];
+    return createdTasks as any as ITask[];
+  }, [createdTasks]);
+
+  return (
+    parsedCreatedTasks.length > 0 && (
+      <span className='badge bg-accent text-[12px] rounded-full px-1.5 mr-1 flex items-center justify-center h-[20px]'>
+        {parsedCreatedTasks.length}
       </span>
     )
   );
