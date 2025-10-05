@@ -12,7 +12,7 @@ import { useTargetNetwork } from '~~/hooks/scaffold-stark/useTargetNetwork';
 import { devnet } from '@starknet-react/chains';
 import { SwitchTheme } from './SwitchTheme';
 import { useAccount, useNetwork, useProvider } from '@starknet-react/core';
-import { Bolt, Files, Info } from 'lucide-react';
+import { Bolt, Files, Info, LogOut } from 'lucide-react';
 
 type HeaderMenuLink = {
   label: string;
@@ -40,6 +40,11 @@ export const menuLinks: HeaderMenuLink[] = [
     label: 'Debug Contracts',
     href: '/debug',
     icon: <BugAntIcon className='h-4 w-4' />,
+  },
+  {
+    label: 'Log out',
+    href: '/dao/logout',
+    icon: <LogOut className='h-4 w-4' />,
   },
 ];
 

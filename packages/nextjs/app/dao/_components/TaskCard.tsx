@@ -18,7 +18,7 @@ const difficultyColors = {
 
 //Components
 function CountdownTask({ deadline }: { deadline: string }) {
-  const [timeLeft, setTimeLeft] = useState('');
+  const [timeLeft, setTimeLeft] = useState<string>('');
 
   useEffect(() => {
     const targetDate = new Date(deadline).getTime();
@@ -46,6 +46,7 @@ function CountdownTask({ deadline }: { deadline: string }) {
   return (
     <div className='bg-accent p-3 flex justify-center rounded-2xl'>
       <Shuffle
+        key={timeLeft}
         text={timeLeft}
         shuffleDirection='right'
         duration={0.35}
@@ -57,8 +58,6 @@ function CountdownTask({ deadline }: { deadline: string }) {
         triggerOnce={true}
         triggerOnHover={true}
         respectReducedMotion={true}
-        loop={true}
-        loopDelay={60000}
         tag='span'
         style={{ fontSize: '12px', textAlign: 'center' }}
       />
@@ -156,7 +155,6 @@ const TaskAcceptedDialog: React.FC<TaskInfoDialogProps> = ({
   );
 };
 
-//TODO: aqui hacer lo del form de la URL para entregar la tarea y luego marcar la tarea para que sea verifica por el creador y un auditor para pagarle al user
 const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   task,
   daoAddress,
