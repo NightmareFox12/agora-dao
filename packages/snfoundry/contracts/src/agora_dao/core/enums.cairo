@@ -5,5 +5,5 @@ pub enum TaskStatus {
     IN_PROGRESS,
     CANCELLED,
     COMPLETED,
-    VERIFIED
+    REVIEW
 }

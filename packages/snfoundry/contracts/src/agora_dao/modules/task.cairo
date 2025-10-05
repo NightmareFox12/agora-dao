@@ -17,7 +17,7 @@ use crate::agora_dao::core::constants::FELT_STRK_CONTRACT;
 use crate::agora_dao::core::enums::TaskStatus;
 use crate::agora_dao::core::events::{TaskAccepted, TaskCompleted, TaskCreated};
 use crate::agora_dao::core::roles::{ADMIN_ROLE, USER_ROLE};
-use crate::agora_dao::core::structs::Task;
+use crate::agora_dao::core::structs::{Task, TaskProof};
 use crate::agora_dao::core::validations::{_accept_task_validation, _create_task_validation};
 
 
@@ -158,8 +158,18 @@ pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
         assert!(task.deadline >= get_block_timestamp(), "Task deadline has passed");
     }
 
-    task.status = TaskStatus::COMPLETED;
+    let proof_counter: u16 = self.task_proof_counter.read();
+
+    //update task
+    task.status = TaskStatus::REVIEW;
     self.tasks.write(task_id, task);
+
+    //save proof
+    self
+        .task_proofs
+        .write(
+            proof_counter, TaskProof { task_id: task_id, proof: proof.clone(), need_fix: false },
+        );
 
     self.emit(TaskCompleted { task_id: task_id, completed_by: caller, proof: proof });
 }

@@ -104,7 +104,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
             parsedCreatorAddress === parsedUserAddress ||
             task.status.activeVariant() !== 'OPEN'
           }
-          className='btn btn-accent btn-sm'
+          className='btn btn-accent'
         >
           <Check className='w-4 h-4' />
           Accept task
@@ -229,9 +229,73 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   );
 };
 
+const ProofTaskDialog: React.FC<TaskInfoDialogProps> = ({
+  task,
+  daoAddress,
+}) => {
+  //states
+  const [submissionUrl, setSubmissionUrl] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { sendAsync } = useScaffoldWriteContract({
+    contractName: 'AgoraDao',
+    functionName: 'complete_task',
+    args: [task.task_id, submissionUrl],
+    contractAddress: daoAddress,
+  });
+
+  //functions
+  const approveSubmission = async () => {
+    try {
+      setIsLoading(true);
+      await sendAsync();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <dialog id={`modal_proof_${task.task_id}`} className='modal'>
+      <div className='modal-box'>
+        <h3 className='font-bold text-lg overflow-y-auto'>
+          Review of submitted test
+        </h3>
+        <p className='py-1 whitespace-pre-wrap break-words overflow-y-auto max-h-60'>
+          The user has submitted proof of completion for this task. You can
+          review it at the following link:
+        </p>
+
+        <div className='py-2 text-center'>
+          <a
+            href={submissionUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-blue-500 underline break-words'
+          >
+            Ver prueba enviada
+          </a>
+        </div>
+
+        <div className='flex justify-center mt-5'>
+          <button className='btn btn-success' onClick={approveSubmission}>
+            <Check className='w-4 h-4' />
+            Aprobar prueba
+          </button>
+        </div>
+      </div>
+
+      <form method='dialog' className='modal-backdrop'>
+        <button>Cerrar</button>
+      </form>
+    </dialog>
+  );
+};
+
 type TaskCardProps = {
   task: ITask;
-  type: 'created' | 'accepted' | 'completed' | 'available';
+  type: 'created' | 'accepted' | 'available';
   userAddress: string;
   daoAddress: string;
 };
@@ -355,6 +419,26 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 >
                   <Check className='w-4 h-4' />
                   Finish Task
+                </button>
+              </>
+            )}
+
+            {type === 'created' && status === 'COMPLETED' && (
+              <>
+                {/* Modals */}
+                <ProofTaskDialog
+                  task={task}
+                  parsedDate={parsedDate}
+                  parsedCreatorAddress={parsedCreatorAddress as `0x${string}`}
+                  parsedUserAddress={parsedUserAddress}
+                />
+
+                <button
+                  onClick={() => showModal(`modal_proof_${task.task_id}`)}
+                  className='btn btn-warning'
+                >
+                  <Info className='w-4 h-4' />
+                  Requires verification
                 </button>
               </>
             )}

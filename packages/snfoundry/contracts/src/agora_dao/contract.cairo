@@ -97,7 +97,7 @@ pub mod AgoraDao {
         ADMIN_ROLE, AUDITOR_ROLE, PROPOSAL_CREATOR_ROLE, ROLE_MANAGER_ROLE, TASK_CREATOR_ROLE,
         USER_ROLE,
     };
-    use super::structs::Task;
+    use super::structs::{Task, TaskProof};
     use super::task::{
         _accept_task, _add_task_category, _add_task_difficulty, _complete_task, _create_task,
         _get_accepted_tasks, _get_available_tasks, _get_created_task, _get_task_categories,
@@ -122,26 +122,31 @@ pub mod AgoraDao {
     struct Storage {
         pub fabric: ContractAddress,
         pub member_counter: u16,
-        pub task_counter: u16,
-        pub task_category_counter: u16,
-        pub task_difficulty_counter: u16,
         //Role counters
         pub manager_role_counter: u16,
         pub auditor_role_counter: u16,
         pub task_creator_role_counter: u16,
         pub proposal_creator_role_counter: u16,
         pub user_role_counter: u16,
+        //Task counters
+        pub task_counter: u16,
+        pub task_category_counter: u16,
+        pub task_difficulty_counter: u16,
+        pub task_proof_counter: u16,
         //Mappings
         pub members: Map<u16, ContractAddress>,
-        pub tasks: Map<u16, Task>,
-        pub task_categories: Map<u16, ByteArray>,
-        pub task_difficulties: Map<u16, ByteArray>,
         //Role Mappings
         pub role_manager_roles: Map<u16, ContractAddress>,
         pub auditor_roles: Map<u16, ContractAddress>,
         pub task_creator_roles: Map<u16, ContractAddress>,
         pub proposal_creator_roles: Map<u16, ContractAddress>,
         pub user_roles: Map<u16, ContractAddress>,
+        //Task Mappings
+        pub tasks: Map<u16, Task>,
+        pub task_categories: Map<u16, ByteArray>,
+        pub task_difficulties: Map<u16, ByteArray>,
+        pub task_proofs: Map<u16, TaskProof>,
+        //Component
         #[substorage(v0)]
         pub accesscontrol: AccessControlComponent::Storage,
         #[substorage(v0)]
@@ -342,7 +347,7 @@ pub mod AgoraDao {
         fn get_created_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
             _get_created_task(self, caller)
         }
-        
+
         fn get_accepted_tasks(self: @ContractState, caller: ContractAddress) -> Array<Task> {
             _get_accepted_tasks(self, caller)
         }

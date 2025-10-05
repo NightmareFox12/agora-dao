@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x32c3ae11efab04ccf87edbbf276244f4252678a8ad1e2f2bed469efd9084337",
+        "0x69a81413c18003987482e24e07b86a614b1372e49c4343ab8ac5f353a6eaa99",
       abi: [
         {
           type: "impl",
@@ -275,7 +275,7 @@ const deployedContracts = {
     },
     AgoraDao: {
       address:
-        "0x6f5617b1872b16d7efa524431bcbde9ab23e748e5b2393745ab51c4a70eda6a",
+        "0x33d9a58981e5cbb23ad8449f08e47380c7db7f36b04cd5e6d33ba5a9e877bf",
       abi: [
         {
           type: "impl",
@@ -349,7 +349,7 @@ const deployedContracts = {
               type: "()",
             },
             {
-              name: "VERIFIED",
+              name: "REVIEW",
               type: "()",
             },
           ],
@@ -1302,7 +1302,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x3c719fc5b63e5e0a0cc7cb9eafd618ef965d79a038fb1f972d4c62b781f6acc",
+        "0x600e4d519637dc759b3ebc1e7e5f121a1fef7cf5b7aeb31db3454ef4519ecea",
     },
   },
   sepolia: {
@@ -1650,7 +1650,7 @@ const deployedContracts = {
               type: "()",
             },
             {
-              name: "VERIFIED",
+              name: "REVIEW",
               type: "()",
             },
           ],
