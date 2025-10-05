@@ -1,11 +1,12 @@
 import { formatEther } from 'ethers';
 import { Check, Info, Loader } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { num } from 'starknet';
 import { InputBase } from '~~/components/scaffold-stark';
 import { Address } from '~~/components/scaffold-stark/Address';
 import Shuffle from '~~/components/ui/Shuffle';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-stark/useScaffoldReadContract';
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-stark/useScaffoldWriteContract';
 import { ITask } from '~~/types/task';
 
@@ -237,21 +238,30 @@ const ProofTaskDialog: React.FC<TaskInfoDialogProps> = ({
   daoAddress,
 }) => {
   //states
-  const [submissionUrl, setSubmissionUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { sendAsync } = useScaffoldWriteContract({
-    contractName: 'AgoraDao',
-    functionName: 'complete_task',
-    args: [task.task_id, submissionUrl],
-    contractAddress: daoAddress,
-  });
+  //smart contract
+
+  //parsedData
+  // const parsedProofUrl = useMemo(() => {
+  //   type Data = {
+  //     proof: string;
+  //     need_fix: boolean;
+  //   };
+  //   let data: Data = {
+  //     proof: '',
+  //     need_fix: false,
+  //   };
+  //   if (proofData === undefined) return data;
+  //   return proofData as any as Data;
+  // }, [proofData]);
+
+  // console.log(totalCounter);
 
   //functions
   const approveSubmission = async () => {
     try {
       setIsLoading(true);
-      await sendAsync();
     } catch (err) {
       console.log(err);
     } finally {
@@ -270,16 +280,16 @@ const ProofTaskDialog: React.FC<TaskInfoDialogProps> = ({
           review it at the following link:
         </p>
 
-        <div className='py-2 text-center'>
+        {/* <div className='py-2 text-center'>
           <a
-            href={submissionUrl}
+            href={parsedProofUrl?.proof?.toString() ?? '#'}
             target='_blank'
             rel='noopener noreferrer'
             className='text-blue-500 underline break-words'
           >
-            Ver prueba enviada
+            {parsedProofUrl?.proof.toString()}
           </a>
-        </div>
+        </div> */}
 
         <div className='flex justify-center mt-5'>
           <button className='btn btn-success' onClick={approveSubmission}>
@@ -325,6 +335,15 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     args: [task.task_id],
     contractAddress: daoAddress,
   });
+
+  const { data: proofData } = useScaffoldReadContract({
+    contractName: 'AgoraDao',
+    functionName: 'get_task_proof',
+    args: [task.task_id],
+    contractAddress: daoAddress,
+  });
+
+  console.log(proofData);
 
   //functions
   const showModal = (id: string) => {

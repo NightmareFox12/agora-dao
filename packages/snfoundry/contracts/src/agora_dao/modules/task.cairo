@@ -158,12 +158,12 @@ pub fn _complete_task(ref self: ContractState, task_id: u16, proof: ByteArray) {
         assert!(task.deadline >= get_block_timestamp(), "Task deadline has passed");
     }
 
+    //save proof
+    self.task_proofs.write(task_id, TaskProof { proof: proof.clone(), need_fix: false });
+
     //update task
     task.status = TaskStatus::REVIEW;
     self.tasks.write(task_id, task);
-
-    //save proof
-    self.task_proofs.write(task_id, TaskProof { proof: proof.clone(), need_fix: false });
 
     self.emit(TaskCompleted { task_id: task_id, completed_by: caller, proof: proof });
 }
