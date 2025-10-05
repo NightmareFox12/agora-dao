@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     AgoraDaoFabric: {
       address:
-        "0x39db8ff3721577453ab60b1730c99b3b8305414c4353f347c9786d73f525556",
+        "0x3ba87bfad499292b3521dd198b997e6bd4b64927042e9b92dfc93cc749d6f16",
       abi: [
         {
           type: "impl",
@@ -271,11 +271,11 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x1913d8e75f5a8c9059631aa6bcf1432258e2e1524feec8c5c6a211aa1a09ee0",
+        "0x64e98d1bb570ce3eebfeae6a9d15bc8073961efa477d83fd945a325637437e1",
     },
     AgoraDao: {
       address:
-        "0x29a811355e76bccbb58362906367cb87c7ba3d9b0823a40b629ed9ebd253a32",
+        "0x5d379331f1b587aea353625d380ac4c7feb7046db93ef3e672c72ffb7c5a24",
       abi: [
         {
           type: "impl",
@@ -411,6 +411,20 @@ const deployedContracts = {
             {
               name: "accepted_by",
               type: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "contracts::agora_dao::core::structs::TaskProof",
+          members: [
+            {
+              name: "proof",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "need_fix",
+              type: "core::bool",
             },
           ],
         },
@@ -869,6 +883,22 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_task_proof",
+              inputs: [
+                {
+                  name: "task_id",
+                  type: "core::integer::u16",
+                },
+              ],
+              outputs: [
+                {
+                  type: "contracts::agora_dao::core::structs::TaskProof",
                 },
               ],
               state_mutability: "view",
@@ -1302,7 +1332,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x10d9d6dced980fe917816db01ee8edd31a525c97fc995ac805e09beb5543bfb",
+        "0x3d3fbb94d7d003419ef99d7b45ddac069f008f14b553fe9d6b2f89abb12554b",
     },
   },
   sepolia: {
@@ -1712,6 +1742,20 @@ const deployedContracts = {
             {
               name: "accepted_by",
               type: "core::option::Option::<core::starknet::contract_address::ContractAddress>",
+            },
+          ],
+        },
+        {
+          type: "struct",
+          name: "contracts::agora_dao::core::structs::TaskProof",
+          members: [
+            {
+              name: "proof",
+              type: "core::byte_array::ByteArray",
+            },
+            {
+              name: "need_fix",
+              type: "core::bool",
             },
           ],
         },
@@ -2170,6 +2214,22 @@ const deployedContracts = {
               outputs: [
                 {
                   type: "core::array::Array::<core::byte_array::ByteArray>",
+                },
+              ],
+              state_mutability: "view",
+            },
+            {
+              type: "function",
+              name: "get_task_proof",
+              inputs: [
+                {
+                  name: "task_id",
+                  type: "core::integer::u16",
+                },
+              ],
+              outputs: [
+                {
+                  type: "contracts::agora_dao::core::structs::TaskProof",
                 },
               ],
               state_mutability: "view",

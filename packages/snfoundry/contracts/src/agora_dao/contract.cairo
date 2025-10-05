@@ -1,5 +1,5 @@
 use starknet::ContractAddress;
-use structs::Task;
+use structs::{Task, TaskProof};
 use super::core::{events, roles, structs};
 use super::modules::{dao, rol, task};
 
@@ -68,6 +68,7 @@ pub trait IAgoraDao<TContractState> {
 
     fn get_task_categories(self: @TContractState) -> Array<ByteArray>;
     fn get_task_difficulties(self: @TContractState) -> Array<ByteArray>;
+    fn get_task_proof(self: @TContractState, task_id: u16) -> TaskProof;
 }
 
 #[starknet::contract]
@@ -357,6 +358,10 @@ pub mod AgoraDao {
 
         fn get_available_tasks(self: @ContractState) -> Array<Task> {
             _get_available_tasks(self)
+        }
+
+        fn get_task_proof(self: @ContractState, task_id: u16) -> TaskProof {
+            self.task_proofs.read(task_id)
         }
     }
 }

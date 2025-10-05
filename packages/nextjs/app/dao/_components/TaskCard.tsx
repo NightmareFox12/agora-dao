@@ -1,6 +1,7 @@
 import { formatEther } from 'ethers';
 import { Check, Info, Loader } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { num } from 'starknet';
 import { InputBase } from '~~/components/scaffold-stark';
 import { Address } from '~~/components/scaffold-stark/Address';
@@ -91,7 +92,7 @@ const TaskInfoDialog: React.FC<TaskInfoDialogProps> = ({
       </p>
 
       <div>
-        <p className='my-1'>Deadline: {parsedDate}</p>
+        {task.deadline !== 0n && <p className='my-1'>Deadline: {parsedDate}</p>}
         <p className='my-1'>Creator:</p>
         <Address address={parsedCreatorAddress} />
         <p className='my-1'>Reward: {formatEther(task.reward)} STRK</p>
@@ -229,6 +230,8 @@ const FinishTaskDialog: React.FC<TaskInfoDialogProps> = ({
   );
 };
 
+//TODO: la mision ahora es poder leer la prueba enviada y creale 3 botones. para cancelar la prueba y se libere la tarea, para fix y enviar un mensaje para que el creador de la tarea pueda hacerla... teniendo en cuenta que queda time. Y el ultimo es aceptar y cambiar el state de la task a COMPLETED. Liberando el pago, obviamente
+
 const ProofTaskDialog: React.FC<TaskInfoDialogProps> = ({
   task,
   daoAddress,
@@ -333,6 +336,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   const handleAcceptTask = async () => {
     try {
       await sendAsync();
+
+      toast.dismiss();
+      toast.success('Task accepted successfully! Check Accepted Tab', {
+        duration: 3000,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -369,9 +377,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           <p className='text-sm my-0'>Create by:</p>
           <Address address={parsedCreatorAddress as `0x${string}`} />
           <p className='text-sm my-0'>Deadline:</p>
-          <CountdownTask
-            deadline={new Date(Number(task.deadline) * 1000).toISOString()}
-          />
+          {task.deadline === 0n ? (
+            <p className='my-0 font-semibold text-center'>
+              Expiration date not specified.
+            </p>
+          ) : (
+            <CountdownTask
+              deadline={new Date(Number(task.deadline) * 1000).toISOString()}
+            />
+          )}
+
           <p className='text-sm my-0'>
             Reward: <b>{formatEther(task.reward)} STRK</b>
           </p>
@@ -423,7 +438,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               </>
             )}
 
-            {type === 'created' && status === 'COMPLETED' && (
+            {type === 'created' && status === 'REVIEW' && (
               <>
                 {/* Modals */}
                 <ProofTaskDialog
