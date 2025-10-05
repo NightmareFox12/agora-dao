@@ -132,7 +132,6 @@ pub mod AgoraDao {
         pub task_counter: u16,
         pub task_category_counter: u16,
         pub task_difficulty_counter: u16,
-        pub task_proof_counter: u16,
         //Mappings
         pub members: Map<u16, ContractAddress>,
         //Role Mappings

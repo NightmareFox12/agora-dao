@@ -17,7 +17,6 @@ pub struct Task {
 
 #[derive(Drop, Serde, Clone, starknet::Store)]
 pub struct TaskProof {
-    pub task_id: u16,
     pub proof: ByteArray,
     pub need_fix: bool,
 }
